@@ -214,6 +214,16 @@ if(isset($_POST['addStudent']) && isset($_POST['name']) && isset($_POST['sex']) 
     }
 }
 
+if(isset($_POST['updateStudent']) && isset($_POST['name']) && isset($_POST['sex']) && isset($_POST['both']) && isset($_POST['phone']) && isset($_POST['idCard']) && isset($_POST['active']) )
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->updateStudent($_POST['updateStudent'],$_POST['name'],$_POST['sex'],$_POST['both'],$_POST['phone'],$_POST['idCard'],$_POST['active']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
 if(isset($_POST['delStudent']))
 {
     if($_SESSION['identity'] === 'admin'){
@@ -240,6 +250,37 @@ if (isset($_POST['getTeacherList'])  && isset($_POST['page']) && isset($_POST['n
 
     if($_SESSION['identity'] === 'admin'){
         exit($db->getTeacherList($_POST['page'],$_POST['num']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['addTeacher']) && isset($_POST['name']) && isset($_POST['sex']) && isset($_POST['both']) && isset($_POST['phone']) && isset($_POST['department']) && isset($_POST['idCard']) && isset($_POST['password']) && isset($_POST['active']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->addTeacher($_POST['name'],$_POST['sex'],$_POST['both'],$_POST['phone'],$_POST['department'],$_POST['idCard'],$_POST['password'],$_POST['active']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['updateTeacher']) && isset($_POST['name']) && isset($_POST['sex']) && isset($_POST['both']) && isset($_POST['phone']) && isset($_POST['idCard']) && isset($_POST['active']) )
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->updateTeacher($_POST['updateTeacher'],$_POST['name'],$_POST['sex'],$_POST['both'],$_POST['phone'],$_POST['idCard'],$_POST['active']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['delTeacher']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->delTeacher($_POST['delTeacher']));
     }
     else{
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));

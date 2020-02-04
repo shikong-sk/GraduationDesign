@@ -216,7 +216,7 @@ Class sqlHelper
     function teacherLogin($id, $password)
     {
         $database = $this->database;
-        $res = $database->query('SELECT `salt`,`password`,`name` FROM ' . $this::teacher . " WHERE id='$id'");
+        $res = $database->query('SELECT `salt`,`password`,`name` FROM ' . $this::teacher . " WHERE id='$id' AND active = 1");
         $res = $res->fetch_assoc();
         if ($res === null) {
             return json_encode(Array('error' => '该账号不存在 或 密码错误'), JSON_UNESCAPED_UNICODE);
@@ -599,6 +599,17 @@ Class sqlHelper
 
     }
 
+    function updateStudent($id,$name,$sex,$both,$phone,$idCard,$active){
+        $database = $this->database;
+        $res = $database->query("UPDATE " . $this::student . " SET `name` = '$name',`sex` = '$sex',`both` = '$both',`phone` = '$phone',`idCard` = '$idCard',`active` = $active WHERE `id` = '$id'");
+//        var_dump("UPDATE " . $this::student . " SET `name` = '$name',`sex` = '$sex',`both` = '$both',`phone` = '$phone',`idCard` = '$idCard',`active` = $active WHERE `id` = '$id'");
+        if($res){
+            return json_encode(Array('success' => '学生信息更新成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '学生信息更新失败'), JSON_UNESCAPED_UNICODE);
+        }
+    }
+
     function delStudent($id){
         $database = $this->database;
 
@@ -635,6 +646,57 @@ Class sqlHelper
         }
         $json = json_encode($json, JSON_UNESCAPED_UNICODE);
         return $json;
+    }
+
+    function addTeacher($name,$sex,$both,$phone,$department,$idCard,$password,$active)
+    {
+        $database = $this->database;
+        $idRes = $database->query("SELECT IFNULL(MAX((`id`))+1,1) as id FROM ".$this::teacher)->fetch_assoc();
+
+        $salt = ''; // 随机加密密钥
+        while (strlen($salt) < 6) {
+            $x = mt_rand(0, 9);
+            $salt .= $x;
+        }
+        $password = sha1($password . $salt); // sha1哈希加密
+
+        $id = $idRes['id'];
+        $res = $database->query("INSERT INTO " . $this::teacher. " (`id`,`name`,`sex`,`both`,`phone`,`department`,`idCard`,`salt`,`password`,`active`) VALUES ($id,'$name','$sex','$both','$phone','$department','$idCard','$salt','$password',$active)");
+        if ($res) {
+            return json_encode(Array('success' => '教师添加成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '教师添加失败'), JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
+    function updateTeacher($id,$name,$sex,$both,$phone,$idCard,$active){
+        $database = $this->database;
+        $res = $database->query("UPDATE " . $this::teacher . " SET `name` = '$name',`sex` = '$sex',`both` = '$both',`phone` = '$phone',`idCard` = '$idCard',`active` = $active WHERE `id` = '$id'");
+//        var_dump("UPDATE " . $this::student . " SET `name` = '$name',`sex` = '$sex',`both` = '$both',`phone` = '$phone',`idCard` = '$idCard',`active` = $active WHERE `id` = '$id'");
+        if($res){
+            return json_encode(Array('success' => '教工信息更新成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '教工信息更新失败'), JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    function delTeacher($id){
+        $database = $this->database;
+
+        $select_admin = $database->query("SELECT * FROM ".$this::admin." WHERE `id` = '$id'") ->fetch_assoc();
+        if(!$select_admin['id']) {
+            $delRes = $database->query("DELETE FROM " . $this::teacher . " WHERE `id` = '$id'");
+
+            if ($delRes) {
+                return json_encode(Array('success' => '教工删除成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '教工删除失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该教工为后台管理员，请先移除其管理员权限后再进行此操作'), JSON_UNESCAPED_UNICODE);
+        }
     }
 
     function getAdminListCount()
