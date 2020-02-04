@@ -1,0 +1,99 @@
+<div id="head" :style="{height:h_nav_height+'px','background-color':h_nav_bgColor}">
+    <div class="container-fluid row" style="padding-top: 10px;position: absolute;z-index: 9999999;width: 100%;top: 0;">
+        <div id="header" class="col-lg-4">
+            <img :style="{height:h_nav_height+'px',color:h_nav_color,top:'-10px',position:'relative'}" :src="h_nav_logo"
+                 alt="LOGO" class="wow flipInX"
+                 data-wow-duration="0.5s" data-wow-delay="0.2s">
+        </div>
+
+        <div id="menu-icon" style="position: fixed;right: 5%;top: 2px;">
+            <a class="header-menu-icon"><span></span></a>
+        </div>
+
+        <div id='h-nav' class="col-lg-8 row">
+            <div class="col" v-for="(v,k) in headerNav" :key="k">
+                <a :href="v.url" :style="{color:h_nav_color,'text-decoration': 'none'}"
+                   :target="v.target">{{v.name}}</a>
+            </div>
+            <?php
+            if(isset($_SESSION['user']) && isset($_SESSION['name']) && isset($_SESSION['identity']))
+            {
+                echo "
+                <div class=\"col\">
+            ";
+            if($_SESSION['identity'] === 'student') {
+            echo "<a href=\"#\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">学生中心";
+            }
+            else if ($_SESSION['identity'] === 'teacher'){
+            echo "<a href=\"#\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">教工中心";
+            }
+            else if ($_SESSION['identity'] === 'admin'){
+            echo "<a href=\"management.html\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">后台管理";
+            }
+            echo "</a>
+        </div>
+        <div class=\"col\">
+            <a href=\"Core/Global/frontInit.php?logout=''\" :style=\"{color:h_nav_color,'text-decoration':
+            'none'}\">退出登录</a>
+        </div>
+        ";
+        }
+        else{
+        echo "
+        <div class=\"col\">
+            <a href=\"login.php\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">登录</a>
+        </div>
+        <div class=\"col\">
+            <a href=\"register.php\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">注册</a>
+        </div>
+        ";
+        }
+
+        ?>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+    var head = new Vue({
+        el: '#head',
+        data() {
+            return {
+                title: "",
+                headerNav: "",
+                h_nav_logo: '',
+                h_nav_bgColor: "#fff",
+                h_nav_height: "60",
+                h_nav_color: '#000',
+                h_nav_M_bgColor: '#d8cec4'
+            }
+        },
+        watch: {
+            headerNav: function () {
+                head.$nextTick(function () {
+                    h_nav()
+                })
+            }
+        },
+        mounted() {
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "baseConfig": ''
+            }),).then(function (res) {
+                head.title = res.data.title
+                document.title = head.title
+                head.h_nav_bgColor = res.data.h_nav_bgColor
+                head.h_nav_height = res.data.h_nav_height
+                head.h_nav_logo = res.data.h_nav_logo
+                head.h_nav_color = res.data.h_nav_color
+                head.h_nav_M_bgColor = res.data.h_nav_M_bgColor
+            })
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "h_nav": ''
+            }),).then(function (res) {
+                head.headerNav = res.data
+                console.log(res.data)
+            })
+
+        }
+    })
+</script>

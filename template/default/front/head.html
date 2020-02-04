@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="Assets/js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/popper.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/qs.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="Assets/css/swiper.min.css" />
+
+    <script src="Assets/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="Assets/js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Assets/css/element-ui.css" />
+
+    <script src="Assets/js/tinymce/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="Core/Front/jquery.base64.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        /* 顶部导航栏 */
+        #menu-icon {
+            width: 50px;
+            height: 50px;
+            z-index: 99999999;
+        }
+
+        .header-menu-icon {
+            display: block;
+            width: 26px;
+            height: 2px;
+            margin-top: -1px;
+            right: auto;
+            bottom: auto;
+            background-color: white;
+            position: absolute;
+            left: 11px;
+            top: 50%;
+        }
+
+        .header-menu-icon::before,
+        .header-menu-icon::after {
+            content: '';
+            width: 100%;
+            height: 100%;
+            background-color: inherit;
+            position: absolute;
+            left: 0;
+        }
+
+        .header-menu-icon::before {
+            top: -8px;
+        }
+
+        .header-menu-icon::after {
+            bottom: -8px;
+        }
+
+        .header-nav__close {
+            z-index: 601;
+            display: block;
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            top: 50%;
+            right: auto;
+            font: 0/0 a;
+            text-shadow: none;
+            color: transparent;
+        }
+
+        .header-nav__close span::before,
+        .header-nav__close span::after {
+            content: "";
+            display: block;
+            height: 2px;
+            width: 30px;
+            background-color: #FFFFFF;
+            position: absolute;
+            top: 0%;
+            left: 7px;
+            margin-top: -1px;
+        }
+
+        .header-nav__close span::before {
+            -webkit-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .header-nav__close span::after {
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        #menu li a {
+            font-family: Simsun;
+            font-weight: bold;
+            color: #bbb;
+        }
+
+        #menu li:hover a {
+            transition-duration: 0.3s;
+            color: #fff;
+        }
+
+        #h-nav .col {
+            text-align: center;
+        }
+
+        #h-nav {
+            overflow: hidden;
+        }
+
+        /* 轮播 */
+        #LB::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 200px;
+            width: 100%;
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(50%, rgba(0, 0, 0, .5)), to(transparent));
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, .5) 50%, transparent);
+        }
+
+        #LB .img-fluid {
+            width: 100%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        //公用函数定义
+        function sleep(fun, ms) {
+            setTimeout(fun, ms);
+        }
+
+        function loop(fun, ms) {
+            fun();
+            setInterval(fun, ms);
+        }
+
+        addEventListener(
+            "load",
+            function() {
+                setTimeout(hideURLbar, 0);
+            },
+            false
+        );
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+
+        function h_nav() {
+            if ($(window).width() <= 995) {
+
+                $('#menu-icon').css({
+                    'display': 'block'
+                })
+
+
+                $('#h-nav').addClass('row').css({
+                    position: 'relative',
+                    top: 0,
+                    display: 'none'
+                })
+
+                $('#h-nav').removeClass('row').css({
+                    'position': 'fixed',
+                    'paddingTop': '5%'
+                })
+
+                $('#menu-icon a').css({
+                    display: 'block'
+                })
+
+                $('#h-nav .col').css({
+                    'position': 'relative',
+                    'left': '100%',
+                    'opacity': '0'
+                })
+
+                $('#h-nav').css({
+                    'backgroundColor': '',
+                    'height': '',
+                    'paddingTop': '5%'
+                })
+            } else {
+                $('#h-nav').css({
+                    'backgroundColor': '',
+                    'height': '',
+                    'paddingTop': '',
+                    'display': ''
+                })
+
+                $('#h-nav .col').css({
+                    'position': 'relative',
+                    'left': '0%',
+                    'opacity': '1'
+                })
+                $('#menu-icon a').css({
+                    display: 'none'
+                })
+
+
+                $('#h-nav').addClass('row').css({
+                    position: 'relative',
+                    top: 0,
+                    paddingTop: '5px'
+                })
+
+                $('#menu-icon').css({
+                    'display': 'none'
+                })
+            }
+            $('#menu-icon a').addClass('header-menu-icon').removeClass('header-nav__close text-white')
+        }
+
+        $(document).ready(function() {
+            h_nav()
+            $(window).resize(function() {
+                h_nav()
+            })
+
+            $('#menu-icon').click(function() {
+                if ($('#menu-icon a').hasClass('header-menu-icon')) {
+                    var speed = 300;
+                    $('#menu-icon a').removeClass('header-menu-icon').addClass('header-nav__close text-white')
+                    $('#h-nav .col').css({
+                        'position': 'relative',
+                        'left': '100%',
+                        'opacity': '0',
+                    })
+
+                    $('#h-nav').css({
+                        'backgroundColor': head.h_nav_M_bgColor,
+                        'height': '100%',
+                        'display': 'block'
+                    })
+
+                    $('#h-nav .col').each(function() {
+                        $('#h-nav div').css({
+                            'display': 'block',
+                            'height':'50px'
+                        })
+                        $(this).animate({
+                                left: "0%",
+                                opacity: "1"
+                            },
+                            300 + $(this).index() * speed
+                        );
+                    });
+                } else {
+                    // $('#h-nav div').css({
+                    // 	'display': 'none'
+                    // })
+                    $('#h-nav').css({
+                        'backgroundColor': '',
+                        'height': '',
+                        'display': 'none',
+                    })
+
+                    $('#h-nav .col').each(function() {
+                        $('#h-nav div').css({
+                            'display': 'block'
+                        })
+                        $(this).stop(true, true)
+                        $(this).animate({
+                                left: "100%",
+                                opacity: "0"
+                            },
+                            300 + $(this).index() * speed
+                        );
+                    });
+
+                    $('#h-nav .col').css({
+                        'left': '100%',
+                        'opacity': '1'
+                    })
+                    $('#menu-icon a').addClass('header-menu-icon').removeClass('header-nav__close text-white')
+                }
+            })
+        })
+    </script>
+</head>
+<body class="body">

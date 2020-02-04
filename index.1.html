@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<script src="Assets/js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/popper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/qs.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="Assets/css/bootstrap.min.css" />
+
+		<link rel="stylesheet" type="text/css" href="Assets/css/swiper.min.css" />
+
+		<script src="Assets/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="Assets/js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="Assets/css/element-ui.css" />
+
+		<script src="Assets/js/tinymce/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="Assets/handyEditor/HandyEditor.min.js" type="text/javascript" charset="utf-8"></script> -->
+
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+			}
+
+			/* 顶部导航栏 */
+			#menu-icon {
+				width: 50px;
+				height: 50px;
+				z-index: 99999999;
+			}
+
+			.header-menu-icon {
+				display: block;
+				width: 26px;
+				height: 2px;
+				margin-top: -1px;
+				right: auto;
+				bottom: auto;
+				background-color: white;
+				position: absolute;
+				left: 11px;
+				top: 50%;
+			}
+
+			.header-menu-icon::before,
+			.header-menu-icon::after {
+				content: '';
+				width: 100%;
+				height: 100%;
+				background-color: inherit;
+				position: absolute;
+				left: 0;
+			}
+
+			.header-menu-icon::before {
+				top: -8px;
+			}
+
+			.header-menu-icon::after {
+				bottom: -8px;
+			}
+
+			.header-nav__close {
+				z-index: 601;
+				display: block;
+				height: 30px;
+				width: 30px;
+				position: absolute;
+				top: 50%;
+				right: auto;
+				font: 0/0 a;
+				text-shadow: none;
+				color: transparent;
+			}
+
+			.header-nav__close span::before,
+			.header-nav__close span::after {
+				content: "";
+				display: block;
+				height: 2px;
+				width: 30px;
+				background-color: #FFFFFF;
+				position: absolute;
+				top: 0%;
+				left: 7px;
+				margin-top: -1px;
+			}
+
+			.header-nav__close span::before {
+				-webkit-transform: rotate(-45deg);
+				-ms-transform: rotate(-45deg);
+				transform: rotate(-45deg);
+			}
+
+			.header-nav__close span::after {
+				-webkit-transform: rotate(45deg);
+				-ms-transform: rotate(45deg);
+				transform: rotate(45deg);
+			}
+
+			#menu li a {
+				font-family: Simsun;
+				font-weight: bold;
+				color: #bbb;
+			}
+
+			#menu li:hover a {
+				transition-duration: 0.3s;
+				color: #fff;
+			}
+
+			#h-nav .col {
+				text-align: center;
+			}
+
+			#h-nav {
+				overflow: hidden;
+			}
+
+			/* 轮播 */
+			#LB::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 200px;
+				width: 100%;
+				background-image: -webkit-gradient(linear, left top, left bottom, color-stop(50%, rgba(0, 0, 0, .5)), to(transparent));
+				background-image: linear-gradient(to bottom, rgba(0, 0, 0, .5) 50%, transparent);
+			}
+
+			#LB .img-fluid {
+				width: 100%;
+			}
+		</style>
+
+		<script type="text/javascript">
+			//公用函数定义
+			function sleep(fun, ms) {
+				setTimeout(fun, ms);
+			}
+
+			function loop(fun, ms) {
+				fun();
+				setInterval(fun, ms);
+			}
+
+			addEventListener(
+				"load",
+				function() {
+					setTimeout(hideURLbar, 0);
+				},
+				false
+			);
+
+			function hideURLbar() {
+				window.scrollTo(0, 1);
+			}
+
+			function h_nav() {
+				if ($(window).width() <= 995) {
+
+					$('#menu-icon').css({
+						'display': 'block'
+					})
+
+
+					$('#h-nav').addClass('row').css({
+						position: 'relative',
+						top: 0,
+						display: 'none'
+					})
+
+					$('#h-nav').removeClass('row').css({
+						'position': 'fixed',
+						'paddingTop': '5%'
+					})
+
+					$('#menu-icon a').css({
+						display: 'block'
+					})
+
+					$('#h-nav .col').css({
+						'position': 'relative',
+						'left': '100%',
+						'opacity': '0'
+					})
+
+					$('#h-nav').css({
+						'backgroundColor': '',
+						'height': '',
+						'paddingTop': '5%'
+					})
+				} else {
+					$('#h-nav').css({
+						'backgroundColor': '',
+						'height': '',
+						'paddingTop': '',
+						'display': ''
+					})
+
+					$('#h-nav .col').css({
+						'position': 'relative',
+						'left': '0%',
+						'opacity': '1'
+					})
+					$('#menu-icon a').css({
+						display: 'none'
+					})
+
+
+					$('#h-nav').addClass('row').css({
+						position: 'relative',
+						top: 0,
+						paddingTop: '5px'
+					})
+
+					$('#menu-icon').css({
+						'display': 'none'
+					})
+				}
+				$('#menu-icon a').addClass('header-menu-icon').removeClass('header-nav__close text-white')
+			}
+
+			$(document).ready(function() {
+				h_nav()
+				$(window).resize(function() {
+					h_nav()
+				})
+
+				$('#menu-icon').click(function() {
+					if ($('#menu-icon a').hasClass('header-menu-icon')) {
+						var speed = 300;
+						$('#menu-icon a').removeClass('header-menu-icon').addClass('header-nav__close text-white')
+						$('#h-nav .col').css({
+							'position': 'relative',
+							'left': '100%',
+							'opacity': '0',
+						})
+
+						$('#h-nav').css({
+							'backgroundColor': head.h_nav_M_bgColor,
+							'height': '100%',
+							'display': 'block'
+						})
+
+						$('#h-nav .col').each(function() {
+							$('#h-nav div').css({
+								'display': 'block'
+							})
+							$(this).animate({
+									left: "0%",
+									opacity: "1"
+								},
+								300 + $(this).index() * speed
+							);
+						});
+					} else {
+						// $('#h-nav div').css({
+						// 	'display': 'none'
+						// })
+						$('#h-nav').css({
+							'backgroundColor': '',
+							'height': '',
+							'display': 'none',
+						})
+
+						$('#h-nav .col').each(function() {
+							$('#h-nav div').css({
+								'display': 'block'
+							})
+							$(this).stop(true, true)
+							$(this).animate({
+									left: "100%",
+									opacity: "0"
+								},
+								300 + $(this).index() * speed
+							);
+						});
+
+						$('#h-nav .col').css({
+							'left': '100%',
+							'opacity': '1'
+						})
+						$('#menu-icon a').addClass('header-menu-icon').removeClass('header-nav__close text-white')
+					}
+				})
+			})
+		</script>
+	</head>
+	<body class="body">
+
+		<div id="head" :style="{height:h_nav_height+'px','background-color':h_nav_bgColor}">
+			<div class="container-fluid row" style="padding-top: 10px;position: absolute;z-index: 9999999;width: 100%;top: 0;">
+				<div id="header" class="col-lg-4">
+					<img style="height: 120px;" :style="{color:h_nav_color}" width="200px" :src="h_nav_logo" alt="LOGO" class="wow flipInX"
+					 data-wow-duration="0.5s" data-wow-delay="0.2s">
+				</div>
+
+				<div id="menu-icon" style="position: fixed;right: 5%;top: 2px;">
+					<a class="header-menu-icon"><span></span></a>
+				</div>
+
+				<div id='h-nav' class="col-lg-8 row">
+					<div class="col" v-for="(v,k) in headerNav" :key="k">
+						<a :href="v.url" :style="{color:h_nav_color,'text-decoration': 'none'}" :target="v.target">{{v.name}}</a>
+					</div>
+					<div class="col">
+						<a href="#" :style="{color:h_nav_color,'text-decoration': 'none'}">登录</a>
+					</div>
+					<div class="col">
+						<a href="#" :style="{color:h_nav_color,'text-decoration': 'none'}">注册</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			var head = new Vue({
+				el: '#head',
+				data() {
+					return {
+						title: "",
+						headerNav: "",
+						h_nav_logo: '',
+						h_nav_bgColor: "#fff",
+						h_nav_height: "60",
+						h_nav_color: '#000',
+						h_nav_M_bgColor: '#d8cec4'
+					}
+				},
+				watch: {
+					headerNav: function() {
+						head.$nextTick(function() {
+							h_nav()
+						})
+					}
+				},
+				mounted() {
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"baseConfig": ''
+					}), ).then(function(res) {
+						head.title = res.data.title
+						document.title = head.title
+						head.h_nav_bgColor = res.data.h_nav_bgColor
+						head.h_nav_height = res.data.h_nav_height
+						head.h_nav_logo = res.data.h_nav_logo
+						head.h_nav_color = res.data.h_nav_color
+						head.h_nav_M_bgColor = res.data.h_nav_M_bgColor
+					})
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"h_nav": ''
+					}), ).then(function(res) {
+						head.headerNav = res.data
+						console.log(res.data)
+					})
+
+				}
+			})
+		</script>
+
+		<div id="topSwiper" class="swiper-container" style="">
+			<div id="top-swiper-Container" class="swiper-wrapper">
+				<div class="swiper-slide text-center" v-for="(data,i) in topSwiper" :key="i">
+					<a :href="data.url">
+						<img :src="data.img" width="100%" style="min-height: 180px;" class="img-fluid">
+					</a>
+				</div>
+			</div>
+			<!-- 如果需要分页器 -->
+			<div class="swiper-pagination"></div>
+
+			<!-- 如果需要导航按钮 -->
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+
+		</div>
+
+		<script type="text/javascript">
+			var topSwiper = new Vue({
+				el: '#topSwiper',
+				data() {
+					return {
+						topSwiper: "",
+					}
+				},
+				watch: {
+					topSwiper: function() {
+						topSwiper.$nextTick(function() {
+							var topSwiper = new Swiper('#topSwiper', {
+								autoplay: {
+									delay: 3000,
+									stopOnLastSlide: false,
+									disabledOnInteraction: true,
+								},
+								loop: true, // 循环滚动
+								// 如果需要分页器
+								pagination: {
+									el: '.swiper-pagination',
+								},
+								// 如果需要前进后退按钮
+								navigation: {
+									nextEl: '.swiper-button-next',
+									prevEl: '.swiper-button-prev',
+								},
+								observer: true, // 修改swiper自己或子元素时，自动初始化swiper
+								observeParents: true // 修改swiper的父元素时，自动初始化swiper
+							})
+						})
+					}
+				},
+				mounted() {
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"top_swiper": ''
+					}), ).then(function(res) {
+						topSwiper.topSwiper = res.data
+						console.log(res.data)
+					})
+				}
+			})
+		</script>
+
+
+		<div id="contain" class="mx-auto">
+			<el-row>
+				<el-col :md="6" :sm="12" class="mx-auto">
+					<el-card class="box-card" shadow="never">
+						<div slot="header" class="clearfix">
+							<span>卡片名称</span>
+							<el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+						</div>
+						<div v-for="o in 4" :key="o" class="text item">
+							{{'列表内容 ' + o }}
+						</div>
+					</el-card>
+				</el-col>
+				<el-col :md="6" :sm="12">
+					<el-card class="box-card" shadow="never">
+						<div slot="header" class="clearfix">
+							<span>卡片名称</span>
+							<el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+						</div>
+						<div v-for="o in 4" :key="o" class="text item">
+							{{'列表内容 ' + o }}
+						</div>
+					</el-card>
+				</el-col>
+				<el-col :md="6" :sm="12">
+					<el-card class="box-card" shadow="never">
+						<div slot="header" class="clearfix">
+							<span>卡片名称</span>
+							<el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+						</div>
+						<div v-for="o in 4" :key="o" class="text item">
+							{{'列表内容 ' + o }}
+						</div>
+					</el-card>
+				</el-col>
+				<el-col :md="6" :sm="12">
+					<el-card class="box-card" shadow="never">
+						<div slot="header" class="clearfix">
+							<span>卡片名称</span>
+							<el-button style="float: right; padding: 3px 0" type="text">更多</el-button>
+						</div>
+						<div v-for="o in 4" :key="o" class="text item">
+							{{'列表内容 ' + o }}
+						</div>
+					</el-card>
+				</el-col>
+			</el-row>
+
+
+
+		</div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var contain = new Vue({
+					el: '#contain',
+					data() {
+						return {}
+					},
+					mounted() {
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"channelTop10": 'message'
+						}), ).then(function(res) {
+							console.log(res.data)
+						})
+					}
+				})
+			})
+		</script>
+
+		<form action="" method="">
+			<textarea id="editor" rows="" cols="">
+			</textarea>
+			<button type="button" id="editor-save" class="btn btn-success">保存</button>
+		</form>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				tinymce.init({
+					selector: '#editor',
+					language: 'zh_CN',
+					skin: 'oxide',
+					statusbar: true,
+					plugins: 'image code insertdatetime indent2em preview autolink link quickbars autoresize hr',
+					branding: false,
+					menubar: false,
+					toolbar: 'undo redo preview | cut copy paste | alignleft aligncenter alignright indent2em bold italic | underline strikethrough hr | fontsizeselect forecolor backcolor styleselect removeformat link image insertdatetime code',
+					insertdatetime_formats: ["%Y-%m-%d %H:%M:%S"],
+					default_link_target: "_blank",
+					link_context_toolbar: true,
+					min_height: 350,
+					quickbars_insert_toolbar: 'cut copy paste | quickimage bold italic',
+					images_upload_handler: function(blobInfo, succFun, failFun) {
+						var xhr, formData;
+						var file = blobInfo.blob(); //转化为易于理解的file对象
+						xhr = new XMLHttpRequest();
+						xhr.withCredentials = false;
+						xhr.open('POST', './upload.php');
+						xhr.onload = function() {
+							var json;
+							if (xhr.status != 200) {
+								failFun('HTTP Error: ' + xhr.status);
+								return;
+							}
+							json = JSON.parse(xhr.responseText);
+							if (!json || typeof json.location != 'string') {
+								failFun('Invalid JSON: ' + xhr.responseText);
+								return;
+							}
+							succFun(json.location);
+						};
+						formData = new FormData();
+						formData.append('file', file, file.name); //此处与源文档不一样
+
+						formData.append('channel', 'test'); // 频道参数
+						xhr.send(formData);
+					}
+					// images_upload_url: './upload.php',
+				})
+
+				$('#editor-save').click(function() {
+					tinyMCE.editors['editor'].save();
+				})
+				// var editor = HE.getEditor('editor',{
+				// 	uploadPhoto:true,
+				// 	uploadPhotoHandler:'./upload.php'
+				// });
+			})
+		</script>
+
+		<div style="height: 800px;">
+			123
+		</div>
+
+		<div id="foot">
+			<el-backtop :bottom="100" :right="20">
+				<div style="{
+			        background-color: #f2f5f6;
+			        box-shadow: 0 0 6px rgba(0,0,0, .12);
+			        text-align: center;
+			        color: #1989fa;
+					width: 100%;
+					height: 100%;
+					border-radius: 50%;
+					line-height: 180%;
+			      }">
+					▲
+				</div>
+			</el-backtop>
+		</div>
+
+		<script type="text/javascript">
+			var foot = new Vue({
+				el: '#foot',
+				data() {
+					return {}
+				},
+				mounted() {
+
+				}
+			})
+		</script>
+
+	</body>
+</html>

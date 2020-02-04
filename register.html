@@ -1,0 +1,436 @@
+<?php
+//session_start();
+?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<script src="Assets/js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/popper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="Assets/js/qs.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="Assets/css/bootstrap.min.css" />
+
+		<link rel="stylesheet" type="text/css" href="Assets/css/swiper.min.css" />
+
+		<script src="Assets/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script src="Assets/js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="Assets/css/element-ui.css" />
+	</head>
+	<body>
+
+		<div id="register" class="page login-page">
+			<link rel="stylesheet" type="text/css" href="Assets/css/style.default.css" />
+			<div class="container d-flex align-items-center">
+				<div class="form-holder has-shadow">
+					<div class="row">
+						<!-- Logo & Information Panel-->
+						<div class="col-lg-6">
+							<div class="info d-flex align-items-center">
+								<div class="content" style="    margin: auto;">
+									<div class="logo" style="text-align: center;">
+										<h1>学生注册</h1>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Form Panel    -->
+						<div class="col-lg-6 bg-white">
+							<div class="form d-flex align-items-center mx-auto">
+								<div class="content">
+
+									<el-form ref="form" :model="form" label-width="80px" label-position="right" :rules="rules" style="max-width: none;">
+										<el-form-item label="姓名" prop="name">
+											<el-input v-model="form.name"></el-input>
+										</el-form-item>
+
+										<el-form-item label="身份证" prop="idCard">
+											<el-input v-model="form.idCard"></el-input>
+										</el-form-item>
+
+										<el-form-item label="密码" prop="password">
+											<el-input type="password" v-model="form.password"></el-input>
+										</el-form-item>
+
+										<el-form-item label="确认密码" prop="confirmPassword">
+											<el-input type="password" v-model="form.confirmPassword"></el-input>
+										</el-form-item>
+
+										<el-form-item label="学系" prop="department">
+											<el-select v-model="department" placeholder="请选择所在学系">
+												<el-option v-for="data in departmentList" :key="data.id" :label="data.departmentName" :value="data.id"></el-option>
+											</el-select>
+										</el-form-item>
+
+										<el-form-item label="专业" prop="major">
+											<el-select v-model="major" placeholder="请选择所在专业" :disabled="majorDisabled">
+												<el-option v-for="data in majorList" :key="data.id" :label="data.name" :value="data.id"></el-option>
+											</el-select>
+										</el-form-item>
+
+										<el-form-item label="年级" prop="grade">
+											<el-select v-model="grade" placeholder="请选择所在年级" :disabled="gradeDisabled">
+												<el-option v-for="data in gradeList" :key="data.grade" :label="data.grade + '级'" :value="data.grade"></el-option>
+											</el-select>
+										</el-form-item>
+
+										<el-form-item label="班次" prop="Class">
+											<el-select v-model="Class" placeholder="请选择所在班次" :disabled="classDisabled">
+												<el-option v-for="data in classList" :key="data.class" :label="data.class + '班'" :value="data.class"></el-option>
+											</el-select>
+										</el-form-item>
+
+										<div class="form-group">
+											<div class="row">
+												<img src="" id="authCodeImage" alt="验证码" class="col-5">
+												<!-- 									        <input id="register-authCode" class="input-material col-8" type="text"
+									               name="registerAuthCode" placeholder="请输入验证码" v-model="authCode"> -->
+												<el-form-item label="验证码" prop="authCode" class="col-7 w-100">
+													<el-input v-model="form.authCode"></el-input>
+												</el-form-item>
+											</div>
+										</div>
+									</el-form>
+
+
+									<div class="form-group">
+										<button id="regbtn" type="button" name="registerSubmit" class="btn btn-block btn-primary" @click="onSubmit">注册
+										</button>
+										<div id="RegisterMessage" class="invalid-feedback text-center">
+										</div>
+									</div>
+									<small>已有账号?</small>
+									<a href="login.php" class="signup">&nbsp;登录</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			var register = new Vue({
+				el: '#register',
+				data() {
+					var passWordExp = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/
+					var validatorPasswd = (rule, value, callback) => {
+						// console.log(value)
+						if (!value) {
+							return callback(new Error('请输入密码'))
+						} else if (value.length < 6) {
+							return callback(new Error('密码长度必须大于6个字符'))
+						} else if (!passWordExp.test(value)) {
+							return callback(new Error('密码必须包含数字、大小写英文字母和符号'))
+						} else {
+							return callback()
+						}
+					}
+					var validatorConfirmPasswd = (rule, value, callback) => {
+						if (!value) {
+							return callback(new Error('密码不能为空'))
+						} else if (value != register.form.password) {
+							return callback(new Error('两次输入的密码不一致'))
+						} else {
+							return callback()
+						}
+					}
+					var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+					var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
+					var validatoridCard = (rule, value, callback) => {
+						if (!value) {
+							return callback(new Error('请输入身份证号'))
+						} else if (!(id18.test(value) || id15.test(value))) {
+							return callback(new Error('身份证格式不正确'))
+						} else {
+							register.form.idCard = register.form.idCard.toUpperCase()
+							return callback()
+						}
+					}
+					return {
+						form: {
+							name: '',
+							idCard: '',
+							password: '',
+							confirmPassword: '',
+							authCode: '',
+							department: '',
+							major: '',
+							grade: '',
+							Class: '',
+						},
+						
+						department: '',
+						departmentList: '',
+						
+						major: '',
+						majorList: '',
+						grade: '',
+						gradeList: "",
+						Class: '',
+						classList: '',
+
+
+
+						majorDisabled: true,
+						gradeDisabled: true,
+						classDisabled: true,
+
+						rules: {
+							name: [{
+									required: true,
+									message: '请输入您的姓名',
+									trigger: 'blur'
+								},
+								{
+									min: 2,
+									max: 5,
+									message: '请输入正确的姓名',
+									trigger: 'blur'
+								},
+							],
+							idCard: [{
+								required: true,
+								validator: validatoridCard,
+								trigger: "blur"
+							}],
+							password: [{
+								required: true,
+								validator: validatorPasswd,
+								trigger: 'blur'
+							}],
+							confirmPassword: [{
+								required: true,
+								validator: validatorConfirmPasswd,
+								trigger: 'blur'
+							}],
+							department: [{
+								required: true,
+								message: '请选择学系',
+								trigger: 'blur'
+							}, ],
+							major: [{
+								required: true,
+								message: '请选择所在专业',
+								trigger: 'blur'
+							}, ],
+							grade: [{
+								required: true,
+								message: '请选择所在年级',
+								trigger: 'blur'
+							}, ],
+							Class: [{
+								required: true,
+								message: '请选择所在班级',
+								trigger: 'blur'
+							}, ],
+							authCode: [{
+								required: true,
+								message: '请输入验证码',
+								trigger: 'blur'
+							}, ],
+						},
+					}
+				},
+				watch: {
+					department: function() {
+						register.major = ''
+						register.$nextTick(function() {
+							if (register.department != '') {
+								register.majorDisabled = false
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"majorList": register.department
+								}), ).then(function(res) {
+									register.majorList = res.data
+									console.log(res.data)
+								})
+							} else {
+								if (register.majorDisabled == false)
+									register.majorDisabled = true
+								else {
+									register.major = ''
+									axios.post('/Core/Global/frontInit.php', Qs.stringify({
+										"majorList": register.department
+									}), ).then(function(res) {
+										register.majorList = res.data
+										console.log(res.data)
+									})
+								}
+							}
+						})
+						register.form.department = register.department
+						register.$refs['form'].validate((v)=>{})
+					},
+					major: function() {
+						register.grade = ''
+						register.$nextTick(function() {
+							if (register.major != '') {
+								register.gradeDisabled = false
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"gradeList": '',
+									"department": register.department,
+									"major": register.major,
+								}), ).then(function(res) {
+									register.gradeList = res.data
+									console.log(res.data)
+								})
+							} else {
+								if (register.gradeDisabled == false)
+									register.gradeDisabled = true
+								else {
+
+									axios.post('/Core/Global/frontInit.php', Qs.stringify({
+										"gradeList": '',
+										"department": register.department,
+										"major": register.major,
+									}), ).then(function(res) {
+										register.gradeList = res.data
+										console.log(res.data)
+									})
+
+								}
+							}
+						})
+						register.form.major = register.major
+						register.$refs['form'].validate((v)=>{})
+					},
+					grade: function() {
+						register.Class = ''
+						register.$nextTick(function() {
+							if (register.grade != '') {
+								register.classDisabled = false
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"classList": '',
+									"department": register.department,
+									"major": register.major,
+									"grade": register.grade
+								}), ).then(function(res) {
+									register.classList = res.data
+									console.log(res.data)
+								})
+							} else {
+								if (register.classDisabled == false)
+									register.classDisabled = true
+								else {
+									axios.post('/Core/Global/frontInit.php', Qs.stringify({
+										"classList": '',
+										"department": register.department,
+										"major": register.major,
+										"grade": register.grade
+									}), ).then(function(res) {
+										register.classList = res.data
+										console.log(res.data)
+									})
+								}
+							}
+						})
+						register.form.grade = register.grade
+						register.$refs['form'].validate((v)=>{})
+					},
+					Class:function(){
+						register.form.Class = register.Class
+						register.$refs['form'].validate((v)=>{})
+					}
+				},
+				methods: {
+					onSubmit() {
+						register.$refs['form'].validate((valid) => {
+							if (valid) {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"studentReg": '',
+									'name':register.form.name,
+									'idCard': register.form.idCard,
+									'password': register.form.confirmPassword,
+									'authCode': register.form.authCode,
+									'department': register.form.department,
+									'major': register.form.major,
+									'grade': register.form.grade,
+									'Class': register.form.Class,
+								}), ).then(function(res) {
+									console.log(res.data)
+									getAuthCode()
+									
+									if('error' in res.data)
+									{
+										register.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {
+												register.form.authCode = ''
+											}
+										})
+									}
+									else if('success' in res.data)
+									{
+										register.$alert('账号激活成功，点击确定返回网站首页', '账号激活成功', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
+												window.location = 'index.php'
+											}
+										})
+									}
+								})
+							} else {
+								register.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {
+
+									}
+								})
+							}
+						})
+					}
+				},
+				mounted() {
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"departmentList": ''
+					}), ).then(function(res) {
+						register.departmentList = res.data
+						console.log(res.data)
+					})
+				}
+			})
+		</script>
+
+		<!-- JavaScript files-->
+
+		<script>
+			function getAuthCode() {
+				$.ajax({
+					url: './Core/System/core.php',
+					type: 'POST',
+					data: {
+						'getAuthToken': ''
+					},
+					async: false,
+					success: function(data) {
+						$('#authCodeImage').prop({
+							'src': './Core/System/VerifyCode.php?authToken=' + data
+						})
+					}
+				})
+			}
+			
+			$(function() {
+
+
+				getAuthCode()
+
+				$('#authCodeImage').click(function() {
+					getAuthCode()
+				})
+
+			})
+		</script>
+	</body>
+</html>

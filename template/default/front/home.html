@@ -1,0 +1,153 @@
+<div id="contain" class="mx-auto">
+    <el-row>
+        <el-col :md="6" :sm="12" class="mx-auto">
+            <el-card class="box-card" shadow="never">
+                <div slot="header" class="clearfix">
+                    <span>信息公开</span>
+                    <el-button style="float: right; padding: 3px 0" type="text"><a href="channel.php?channel=message">更多</a></el-button>
+                </div>
+
+                <div v-for="(data,i) in message" :key="data.title + i" class="text item row">
+                    <a style="padding: 0;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" :href="'content.php?channel=message&id=' + data.id" class="col-8">{{data.title}}</a>
+                    <p style="padding: 0;" class="col-4 text-right">{{data.date}}</p>
+                </div>
+
+                <div v-if="message.length < 10" v-for="data in (10 - message.length)" :key="data" class="text item row">
+                    <div class="col-12" style="height: 40px;">&nbsp;</div>
+                </div>
+
+            </el-card>
+        </el-col>
+        <el-col :md="6" :sm="12">
+            <el-card class="box-card" shadow="never">
+                <div slot="header" class="clearfix">
+                    <span>学院要闻</span>
+                    <el-button style="float: right; padding: 3px 0" type="text"><a href="channel.php?channel=news">更多</a></el-button>
+                </div>
+
+                <div v-for="(data,i) in news" :key="data.title + i" class="text item row">
+                    <a style="padding: 0;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" :href="'content.php?channel=news&id=' + data.id" class="col-8">{{data.title}}</a>
+                    <p style="padding: 0;" class="col-4 text-right">{{data.date}}</p>
+                </div>
+
+                <div v-if="news.length < 10" v-for="data in (10 - news.length)" :key="data" class="text item row">
+                    <div class="col-12" style="height: 40px;">&nbsp;</div>
+                </div>
+
+            </el-card>
+        </el-col>
+        <el-col :md="6" :sm="12">
+            <el-card class="box-card" shadow="never">
+                <div slot="header" class="clearfix">
+                    <span>通知公告</span>
+                    <el-button style="float: right; padding: 3px 0" type="text"><a href="channel.php?channel=notice">更多</a></el-button>
+                </div>
+
+                <div v-for="(data,i) in notice" :key="data.title + i" class="text item row">
+                    <a style="padding: 0;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" :href="'content.php?channel=notice&id=' + data.id" class="col-8">{{data.title}}</a>
+                    <p style="padding: 0;" class="col-4 text-right">{{data.date}}</p>
+                </div>
+
+                <div v-if="notice.length < 10" v-for="data in (10 - notice.length)" :key="data" class="text item row">
+                    <div class="col-12" style="height: 40px;">&nbsp;</div>
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :md="6" :sm="12">
+            <el-card class="box-card" shadow="never">
+                <div slot="header" class="clearfix">
+                    <span>快捷入口</span>
+                    <!-- <el-button style="float: right; padding: 3px 0" type="text">更多</el-button> -->
+                </div>
+
+                <el-row>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-primary mx-auto" style="width:90%;margin:2px auto;"><a class="text-white" style="text-decoration:none"
+                                                                                                   href="#">学生中心</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-primary mx-auto" style="width:90%;margin:2px auto;"><a class="text-white" style="text-decoration:none"
+                                                                                                   href="#">教务中心</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-primary mx-auto" style="width:90%;margin:2px auto;"><a class="text-white" style="text-decoration:none"
+                                                                                                   href="#">校历查询</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-primary mx-auto" style="width:90%;margin:2px auto;"><a class="text-white" style="text-decoration:none"
+                                                                                                   href="#">招生就业</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">计算机系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">人文社科系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">机电工程系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">外语系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">经管系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">自然科学系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">艺术体育系</a></div>
+                    </el-col>
+                    <el-col :span="12" class="text-center">
+                        <div class="btn btn-outline-info mx-auto" style="width:90%;margin:2px auto;"><a class="text-dark" style="text-decoration:none"
+                                                                                                        href="#">学前教育系</a></div>
+                    </el-col>
+                </el-row>
+
+            </el-card>
+        </el-col>
+    </el-row>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var contain = new Vue({
+            el: '#contain',
+            data() {
+                return {
+                    message: '',
+                    news: "",
+                    notice: "",
+                }
+            },
+            mounted() {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "channelTop10": 'message'
+                }), ).then(function(res) {
+                    contain.message = res.data
+                    console.log(res.data)
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "channelTop10": 'news'
+                }), ).then(function(res) {
+                    contain.news = res.data
+                    console.log(res.data)
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "channelTop10": 'notice'
+                }), ).then(function(res) {
+                    contain.notice = res.data
+                    console.log(res.data)
+                })
+            }
+        })
+    })
+</script>

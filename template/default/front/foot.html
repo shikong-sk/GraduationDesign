@@ -1,0 +1,60 @@
+<div id="foot">
+    <el-backtop :bottom="100" :right="20">
+        <div style="{
+			        background-color: #f2f5f6;
+			        box-shadow: 0 0 6px rgba(0,0,0, .12);
+			        text-align: center;
+			        color: #1989fa;
+					width: 100%;
+					height: 100%;
+					border-radius: 50%;
+					line-height: 180%;
+			      }">
+            ▲
+        </div>
+    </el-backtop>
+
+
+
+    <el-row :style="{'background-color':foot_bgColor,'color':foot_color}" style="">
+        <el-col :md="24" class="text-center">
+            Copyright © {{siteName}} All Rights Reserved
+        </el-col>
+
+        <el-col :md="24" v-if="foot_extend">
+            <div v-html="foot_extend_contain" class="row" style="padding: 0;margin: 0;"></div>
+        </el-col>
+
+    </el-row>
+</div>
+
+<script type="text/javascript">
+    var foot = new Vue({
+        el: '#foot',
+        data() {
+            return {
+                siteName: '',
+                foot_bgColor: '#000',
+                foot_color: "#fff",
+                foot_extend: false,
+                foot_extend_contain: '',
+            }
+        },
+        mounted() {
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "baseConfig": ''
+            }), ).then(function(res) {
+                foot.siteName = res.data.title
+                foot.foot_bgColor = res.data.foot_bgColor
+                foot.foot_color = res.data.foot_color
+                foot.foot_extend = res.data.foot_extend == 'true'
+                if (foot.foot_extend) {
+                    foot.foot_extend_contain = res.data.foot_extend_contain
+                }
+            })
+        }
+    })
+</script>
+
+</body>
+</html>
