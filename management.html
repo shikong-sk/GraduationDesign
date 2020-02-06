@@ -812,22 +812,25 @@
 										</template>
 									</el-table-column>
 									<el-table-column label="操作">
-									<template slot-scope="scope">
-										<el-button size="mini" type="primary" class="mx-auto text-center" @click="updateTeacher(scope)" v-if="(addTeacher.currentEdit != scope.$index)">
-											修改信息
-										</el-button>
-										
-										<el-button size="mini" type="warning" class="mx-auto text-center" @click="updateTeacher(scope)" v-else >
-											保存修改
-										</el-button>
-										
-										<el-button size="mini" type="info" class="mx-auto text-center" @click="changeTeacherPassword(scope.row.id)">修改密码</el-button>
-										
-										<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteTeacher(scope.row.id)">
-											删除教工
-										</el-button>
-										
-									</template>
+										<template slot-scope="scope">
+											<div class="text-center">
+												<el-button size="mini" type="primary" class="mx-auto text-center" @click="updateTeacher(scope)" v-if="(addTeacher.currentEdit != scope.$index)">
+													修改信息
+												</el-button>
+												
+												<el-button size="mini" type="warning" class="mx-auto text-center" @click="updateTeacher(scope)" v-else >
+													保存修改
+												</el-button>
+												
+												<el-button size="mini" type="info" class="mx-auto text-center" @click="changeTeacherPassword(scope.row.id)">修改密码</el-button>
+												
+												<el-button size="mini" type="warning" class="mx-auto text-center" @click="upgradeToAdmin(scope)">设为管理员</el-button>
+												
+												<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteTeacher(scope.row.id)">
+													删除教工
+												</el-button>
+											</div>
+										</template>
 									</el-table-column>
 								</el-table>
 							
@@ -920,12 +923,15 @@
 							</el-table-column>
 							<el-table-column label="操作">
 								<template slot-scope="scope">
-									<el-button size="mini" @click="">
-										查看内容
-									</el-button>
-									<el-button size="mini" type="danger" @click="">
-										删除
-									</el-button>
+									<div class="text-center">
+										<el-button size="mini" type="info" @click="changeAdminPassword(scope.row.id)">
+											修改密码
+										</el-button>
+										
+										<el-button size="mini" type="danger" @click="deleteAdmin(scope.row.id)">
+											移除管理员权限
+										</el-button>
+									</div>
 								</template>
 							</el-table-column>
 						</el-table>
@@ -1710,6 +1716,156 @@
 					})
 				},
 				methods: {
+					deleteAdmin(id){
+						console.log(id)
+						management.$confirm('此操作将移除该账号的管理员权限, 是否继续?', '提示', {
+						          confirmButtonText: '确定',
+						          cancelButtonText: '取消',
+						          type: 'warning'
+						        }).then(() => {
+									axios.post('/Core/Global/frontInit.php', Qs.stringify({
+										"delAdmin": id,
+									}), ).then(function(res) {
+										if ('error' in res.data) {
+											management.$alert(res.data.error, '错误', {
+												confirmButtonText: '确定',
+												type: 'error',
+												center: true,
+												callback: action => {}
+											})
+										} else if ('success' in res.data) {
+											management.$alert(res.data.success, '操作成功', {
+												confirmButtonText: '确定',
+												type: 'success',
+												center: true,
+												callback: action => {
+													axios.post('/Core/Global/frontInit.php', Qs.stringify({
+														"getAdminList": '',
+														'page': '1',
+														'num': '10'
+													}), ).then(function(res) {
+														management.admin.data = res.data
+													})
+															
+													axios.post('/Core/Global/frontInit.php', Qs.stringify({
+														"getAdminListCount": ''
+													}), ).then(function(res) {
+														management.admin.count = res.data.num
+													})
+														
+												}
+											})
+										}
+									})
+						        }).catch(() => {
+						          management.$message({
+						            type: 'info',
+						            message: '已取消删除'
+						          });          
+						        });
+					},
+					changeAdminPassword(id){
+						management.$prompt('请输入新的密码', '提示', {
+						          confirmButtonText: '确定',
+						          cancelButtonText: '取消',
+						          inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+						          inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+						        }).then(({ value }) => {
+						          // management.$message({
+						          //   type: 'success',
+						          //   message: '你的密码是: ' + value
+						          // });
+								  axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								  	"changeAdminPassword": id,
+								  	'password':value,
+								  }), ).then(function(res) {
+								  	console.log(res.data)
+								  	
+								  	if('error' in res.data)
+								  	{
+								  		management.$alert(res.data.error, '错误', {
+								  			confirmButtonText: '确定',
+								  			type: 'error',
+								  			center: true,
+								  			callback: action => {
+								  			}
+								  		})
+								  	}
+								  	else if('success' in res.data)
+								  	{
+								  		management.$alert(res.data.success, '操作成功完成', {
+								  			confirmButtonText: '确定',
+								  			type: 'success',
+								  			center: true,
+								  			callback: action => {
+								  			}
+								  		})
+								  	}
+								  })
+						        }).catch(() => {  
+						});
+					},
+					upgradeToAdmin(scope){
+						management.$confirm('是否将【'+scope.row.departmentName+'】 '+scope.row.name+' 设置为系统管理员', '提示', {
+						          confirmButtonText: '确定',
+						          cancelButtonText: '取消',
+						          type: 'warning'
+						        }).then(() => {
+									management.$prompt('请设置管理员密码', '提示', {
+									          confirmButtonText: '确定',
+									          cancelButtonText: '取消',
+									          inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+									          inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+									        }).then(({ value }) => {
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"upgradeToAdmin": scope.row.id,
+													'password':value,
+												}), ).then(function(res) {
+													console.log(res.data)
+											  	
+											  	if('error' in res.data)
+											  	{
+											  		management.$alert(res.data.error, '错误', {
+											  			confirmButtonText: '确定',
+											  			type: 'error',
+											  			center: true,
+											  			callback: action => {
+											  			}
+											  		})
+											  	}
+											  	else if('success' in res.data)
+											  	{
+											  		management.$alert(res.data.success, '操作成功完成', {
+											  			confirmButtonText: '确定',
+											  			type: 'success',
+											  			center: true,
+											  			callback: action => {
+															axios.post('/Core/Global/frontInit.php', Qs.stringify({
+																"getAdminList": '',
+																'page': '1',
+																'num': '10'
+															}), ).then(function(res) {
+																management.admin.data = res.data
+															})
+															
+															axios.post('/Core/Global/frontInit.php', Qs.stringify({
+																"getAdminListCount": ''
+															}), ).then(function(res) {
+																management.admin.count = res.data.num
+															})
+											  			}
+											  		})
+											  	}
+											  })
+									        }).catch(() => {  
+									});
+						        }).catch(() => {
+						          management.$message({
+						            type: 'info',
+						            message: '已取消操作'
+						          });          
+						        });
+					},
 					changeTeacherPassword(id){
 						management.$prompt('请输入新的密码', '提示', {
 						          confirmButtonText: '确定',
@@ -1717,12 +1873,39 @@
 						          inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
 						          inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
 						        }).then(({ value }) => {
-						          management.$message({
-						            type: 'success',
-						            message: '你的密码是: ' + value
-						          });
+						          // management.$message({
+						          //   type: 'success',
+						          //   message: '你的密码是: ' + value
+						          // });
+								  axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								  	"changeTeacherPassword": id,
+								  	'password':value,
+								  }), ).then(function(res) {
+								  	console.log(res.data)
+								  	
+								  	if('error' in res.data)
+								  	{
+								  		management.$alert(res.data.error, '错误', {
+								  			confirmButtonText: '确定',
+								  			type: 'error',
+								  			center: true,
+								  			callback: action => {
+								  			}
+								  		})
+								  	}
+								  	else if('success' in res.data)
+								  	{
+								  		management.$alert(res.data.success, '操作成功完成', {
+								  			confirmButtonText: '确定',
+								  			type: 'success',
+								  			center: true,
+								  			callback: action => {
+								  			}
+								  		})
+								  	}
+								  })
 						        }).catch(() => {  
-						        });
+						});
 					},
 					deleteTeacher(id){
 						console.log(id)

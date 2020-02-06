@@ -105,12 +105,12 @@ if(isset($_POST['channelAddContain']) && isset($_POST['channel']) && isset($_POS
 
 if(isset($_POST['getChannelCount']))
 {
-    if($_SESSION['identity'] === 'admin'){
+//    if($_SESSION['identity'] === 'admin'){
         exit($db->getChannelCount($_POST['getChannelCount']));
-    }
-    else{
-        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
-    }
+//    }
+//    else{
+//        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+//    }
 }
 
 
@@ -287,6 +287,26 @@ if(isset($_POST['delTeacher']))
     }
 }
 
+if (isset($_POST['changeTeacherPassword']) && isset($_POST['password']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->changeTeacherPassword($_POST['changeTeacherPassword'],$_POST['password']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['upgradeToAdmin']) && isset($_POST['password']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->upgradeToAdmin($_POST['upgradeToAdmin'],$_POST['password']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
 if (isset($_POST['getAdminListCount']))
 {
 
@@ -303,6 +323,26 @@ if (isset($_POST['getAdminList'])  && isset($_POST['page']) && isset($_POST['num
 
     if($_SESSION['identity'] === 'admin'){
         exit($db->getAdminList($_POST['page'],$_POST['num']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['changeAdminPassword']) && isset($_POST['password']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->changeAdminPassword($_POST['changeAdminPassword'],$_POST['password']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['delAdmin']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->delAdmin($_POST['delAdmin']));
     }
     else{
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));

@@ -301,10 +301,10 @@ Class sqlHelper
     function getChannelCount($channel)
     {
         $database = $this->database;
-        $res = $database->query("SELECT count(*) as num FROM " . $this::channelContent . " WHERE `channel` = '$channel'");
+        $res = $database->query("SELECT count(*) as num FROM " . $this::channelContent . " WHERE `channel` = '$channel'")->fetch_assoc();
         $resNum = 0;
         $json = Array();
-        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        $json = json_encode($res, JSON_UNESCAPED_UNICODE);
         return $json;
     }
 
@@ -681,6 +681,60 @@ Class sqlHelper
         }
     }
 
+    function changeTeacherPassword($id,$password)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT id FROM " . $this::teacher . " WHERE `id` = '$id'");
+
+        $data = $res->fetch_assoc();
+
+        if ($data === null) {
+            return json_encode(Array('error' => '该教师不存在'), JSON_UNESCAPED_UNICODE);
+
+        }
+
+        $salt = ''; // 随机加密密钥
+        while (strlen($salt) < 6) {
+            $x = mt_rand(0, 9);
+            $salt .= $x;
+        }
+        $password = sha1($password . $salt); // sha1哈希加密
+
+        $res = $database->query("UPDATE " . $this::teacher . " SET `salt` = '$salt',`password` = '$password' WHERE `id` = '$id'");
+
+        if($res){
+            return json_encode(Array('success' => '密码更新成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '密码更新失败'), JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
+    function upgradeToAdmin($id,$password){
+        $database = $this->database;
+
+        $admin_res = $database->query("SELECT id FROM ".$this::admin." WHERE `id` = '$id'") ->fetch_assoc();
+        if(!$admin_res['id']){
+            $salt = ''; // 随机加密密钥
+            while (strlen($salt) < 6) {
+                $x = mt_rand(0, 9);
+                $salt .= $x;
+            }
+            $password = sha1($password . $salt); // sha1哈希加密
+
+            $res = $database->query("INSERT INTO " . $this::admin. " (`id`,`salt`,`password`,`active`) VALUES ($id,'$salt','$password',1)");
+
+            if ($res) {
+                return json_encode(Array('success' => '设置管理员成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '设置管理员失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该教工已经是后台管理员'), JSON_UNESCAPED_UNICODE);
+        }
+    }
+
     function delTeacher($id){
         $database = $this->database;
 
@@ -723,6 +777,53 @@ Class sqlHelper
         }
         $json = json_encode($json, JSON_UNESCAPED_UNICODE);
         return $json;
+    }
+
+    function changeAdminPassword($id,$password)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT id FROM " . $this::admin . " WHERE `id` = '$id'");
+
+        $data = $res->fetch_assoc();
+
+        if ($data === null) {
+            return json_encode(Array('error' => '该管理员不存在'), JSON_UNESCAPED_UNICODE);
+
+        }
+
+        $salt = ''; // 随机加密密钥
+        while (strlen($salt) < 6) {
+            $x = mt_rand(0, 9);
+            $salt .= $x;
+        }
+        $password = sha1($password . $salt); // sha1哈希加密
+
+        $res = $database->query("UPDATE " . $this::admin . " SET `salt` = '$salt',`password` = '$password' WHERE `id` = '$id'");
+
+        if($res){
+            return json_encode(Array('success' => '密码更新成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '密码更新失败'), JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
+    function delAdmin($id){
+        $database = $this->database;
+
+        $select_admin = $database->query("SELECT count(*) as num FROM ".$this::admin) ->fetch_assoc();
+        if($select_admin['num'] != 1) {
+            $delRes = $database->query("DELETE FROM " . $this::admin . " WHERE `id` = '$id'");
+
+            if ($delRes) {
+                return json_encode(Array('success' => '管理员删除成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '管理员删除失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该管理员为唯一的管理员，不可删除'), JSON_UNESCAPED_UNICODE);
+        }
     }
 
     function getMaxSeat($department, $major, $grade, $class)

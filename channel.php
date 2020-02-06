@@ -85,17 +85,17 @@ if(isset($_REQUEST['channel']))
 				mounted() {
 
 					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						\"getChannelCount\": '".$_REQUEST['channel']."'
+					}), ).then(function(res) {
+						channel.channelCount = res.data.num
+					})
+
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
 						\"getChannelTitle\": '".$_REQUEST['channel']."',
 						'page': '1',
 						'num': '10'
 					}), ).then(function(res) {
 						channel.channelData = res.data
-					})
-
-					axios.post('/Core/Global/frontInit.php', Qs.stringify({
-						\"getChannelCount\": '".$_REQUEST['channel']."'
-					}), ).then(function(res) {
-						channel.channelCount = res.data.num
 					})
 
 				},
