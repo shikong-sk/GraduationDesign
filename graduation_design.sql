@@ -11,7 +11,7 @@
  Target Server Version : 50529
  File Encoding         : 65001
 
- Date: 27/01/2020 17:31:20
+ Date: 07/02/2020 03:26:20
 */
 
 SET NAMES utf8mb4;
@@ -28,12 +28,13 @@ CREATE TABLE `admin`  (
   `active` tinyint(1) NOT NULL DEFAULT 0 COMMENT '账号是否激活（false:0/true:1）',
   PRIMARY KEY (`id`) USING BTREE,
   CONSTRAINT `admin_ibfk_1` FOREIGN KEY (`id`) REFERENCES `t_teacher` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 10002 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 10003 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (0000010000, '000000', '879570d718ba0c6750b444b1f61c8e8c78a4c6a5', 1);
+INSERT INTO `admin` VALUES (0000010000, '665684', 'ae4237fcef88ae494b31cc87899f600fbc975b05', 1);
+INSERT INTO `admin` VALUES (0000010002, '443563', '8ebcd73b6dccb4464a6076fe6bc9aec9d2d5961a', 1);
 
 -- ----------------------------
 -- Table structure for channel_content
@@ -68,12 +69,12 @@ INSERT INTO `channel_content` VALUES ('1579414470728', 'message', '13213213', '<
 INSERT INTO `channel_content` VALUES ('1579414478967', 'news', '133123213', '<p>123321313123</p>', 1);
 INSERT INTO `channel_content` VALUES ('1579414519372', 'message', '123123123', '<p>123123123123</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579414525989', 'message', '12312312', '<p>123123123</p>', 0);
-INSERT INTO `channel_content` VALUES ('1579414534494', 'message', '1221332321132231213', '<p>123321321321332133231214212132132132133132</p>', 1);
+INSERT INTO `channel_content` VALUES ('1579414534494', 'message', '1221332321132231213', '<p>123321321321332133231214212132132132133132</p>', 2);
 INSERT INTO `channel_content` VALUES ('1579419956225', 'message', '13123', '<p style=\"text-align: center;\">测试</p>', 2);
 INSERT INTO `channel_content` VALUES ('1579421274688', 'notice', '132123', '<p>132132</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579428603412', 'notice', 'tz', '<p>tz</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579428632173', 'notice', 'tztztztztz', '<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"Storage/notice/Logo.png\" alt=\"\" width=\"176\" height=\"86\" /></p>', 2);
-INSERT INTO `channel_content` VALUES ('1579448938513', 'news', '学院四项课题申报获省高校党建研究会2019年党建研究课题立项', '<p class=\"MsoNormal\" style=\"text-indent: 33px; mso-char-indent-count: 1.78; line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">近日，广东省高等学校党的建设研究会印发<span lang=\"EN-US\">2019</span>年党建课题研究立项通知，我院陈友义教授、黄小铭副教授、徐文副教授、黄彦旎老师申报的党建研究课题成功获得立项。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">据了解，本次共收到课题申报书<span lang=\"EN-US\">635</span>项，其中高职高专院校<span lang=\"EN-US\">139</span>项。经过专家组的严格评审后，评选出立项课题<span lang=\"EN-US\">300</span>项，其中高职高专院校<span lang=\"EN-US\">70</span>项。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">&nbsp; 自<span lang=\"EN-US\">2019</span>年<span lang=\"EN-US\">8</span>月份省高校党建研究会组织开展<span lang=\"EN-US\">2019</span>党建研究课题申报工作以来，学院党委办公室积极组织学院广大教师参与课题的申报立项工作，共收到课题申报书<span lang=\"EN-US\">6</span>份，其中<span lang=\"EN-US\">4</span>份获得立项，申报成功率达<span lang=\"EN-US\">66.7%</span>。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">&nbsp; 接下来，学院将继续加大党建理论研究的支持力度，充分依托和发挥高校人才优势，加大对院级党建课题资金支持力度，组织参加市级、省级党建课题申报，邀请专家莅院开展培训，提高课题申报立项成功率，开展联合党建课题攻关，以党建研究为抓手推进学院基层党建工作创新。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span lang=\"EN-US\" style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">&nbsp;</span></p>\n<p class=\"MsoNormal\" style=\"text-align: right; line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">（党委宣传部）</span></p>', 34);
+INSERT INTO `channel_content` VALUES ('1579448938513', 'news', '学院四项课题申报获省高校党建研究会2019年党建研究课题立项', '<p class=\"MsoNormal\" style=\"text-indent: 33px; mso-char-indent-count: 1.78; line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">近日，广东省高等学校党的建设研究会印发<span lang=\"EN-US\">2019</span>年党建课题研究立项通知，我院陈友义教授、黄小铭副教授、徐文副教授、黄彦旎老师申报的党建研究课题成功获得立项。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">据了解，本次共收到课题申报书<span lang=\"EN-US\">635</span>项，其中高职高专院校<span lang=\"EN-US\">139</span>项。经过专家组的严格评审后，评选出立项课题<span lang=\"EN-US\">300</span>项，其中高职高专院校<span lang=\"EN-US\">70</span>项。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">&nbsp; 自<span lang=\"EN-US\">2019</span>年<span lang=\"EN-US\">8</span>月份省高校党建研究会组织开展<span lang=\"EN-US\">2019</span>党建研究课题申报工作以来，学院党委办公室积极组织学院广大教师参与课题的申报立项工作，共收到课题申报书<span lang=\"EN-US\">6</span>份，其中<span lang=\"EN-US\">4</span>份获得立项，申报成功率达<span lang=\"EN-US\">66.7%</span>。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">&nbsp; 接下来，学院将继续加大党建理论研究的支持力度，充分依托和发挥高校人才优势，加大对院级党建课题资金支持力度，组织参加市级、省级党建课题申报，邀请专家莅院开展培训，提高课题申报立项成功率，开展联合党建课题攻关，以党建研究为抓手推进学院基层党建工作创新。</span></p>\n<p class=\"MsoNormal\" style=\"line-height: 150%;\"><span lang=\"EN-US\" style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">&nbsp;</span></p>\n<p class=\"MsoNormal\" style=\"text-align: right; line-height: 150%;\"><span style=\"font-size: 19px; line-height: 150%; font-family: 宋体;\">（党委宣传部）</span></p>', 38);
 
 -- ----------------------------
 -- Table structure for channel_list
@@ -156,6 +157,7 @@ CREATE TABLE `s_class`  (
 -- Records of s_class
 -- ----------------------------
 INSERT INTO `s_class` VALUES ('1', '17', '02', '05');
+INSERT INTO `s_class` VALUES ('2', '17', '02', '05');
 INSERT INTO `s_class` VALUES ('2', '17', '05', '05');
 
 -- ----------------------------
@@ -172,7 +174,14 @@ CREATE TABLE `s_department`  (
 -- ----------------------------
 -- Records of s_department
 -- ----------------------------
+INSERT INTO `s_department` VALUES ('01', '人文社科系', 1);
+INSERT INTO `s_department` VALUES ('02', '外语系', 1);
+INSERT INTO `s_department` VALUES ('03', '经管系', 1);
+INSERT INTO `s_department` VALUES ('04', '机电工程系', 1);
 INSERT INTO `s_department` VALUES ('05', '计算机系', 1);
+INSERT INTO `s_department` VALUES ('06', '艺术体育系', 1);
+INSERT INTO `s_department` VALUES ('07', '自然科学系', 1);
+INSERT INTO `s_department` VALUES ('08', '学前教育系', 1);
 
 -- ----------------------------
 -- Table structure for s_grade
@@ -345,6 +354,25 @@ INSERT INTO `s_student` VALUES (1730505246, '柯X杉', '男', '1996/08/02', NULL
 INSERT INTO `s_student` VALUES (1730505247, '文X杰', '男', '1998/06/12', NULL, NULL, '13800000842', '17', '3', '05', '05', '2', '47', 0, '440000199806122733');
 
 -- ----------------------------
+-- Table structure for t_class
+-- ----------------------------
+DROP TABLE IF EXISTS `t_class`;
+CREATE TABLE `t_class`  (
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程名',
+  `tid` int(10) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT COMMENT '教师id',
+  `class` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '班级编号',
+  `grade` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '年级',
+  `major` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '专业',
+  `department` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '系',
+  `stime` varchar(0) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程开始时间',
+  `etime` varchar(0) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程结束时间',
+  PRIMARY KEY (`tid`, `class`, `grade`, `major`, `department`) USING BTREE,
+  INDEX `class`(`class`, `grade`, `major`, `department`) USING BTREE,
+  CONSTRAINT `t_class_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `t_teacher` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `t_class_ibfk_2` FOREIGN KEY (`class`, `grade`, `major`, `department`) REFERENCES `s_class` (`class`, `grade`, `major`, `department`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
 -- Table structure for t_teacher
 -- ----------------------------
 DROP TABLE IF EXISTS `t_teacher`;
@@ -363,12 +391,14 @@ CREATE TABLE `t_teacher`  (
   INDEX `学系`(`department`) USING BTREE,
   INDEX `id`(`id`) USING BTREE,
   CONSTRAINT `t_teacher_ibfk_1` FOREIGN KEY (`department`) REFERENCES `s_department` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 10002 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 1730505249 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of t_teacher
 -- ----------------------------
-INSERT INTO `t_teacher` VALUES (0000010000, '测试', '男', '1990/10/01', '000000', '879570d718ba0c6750b444b1f61c8e8c78a4c6a5', NULL, '05', 0, '440508199010010000');
+INSERT INTO `t_teacher` VALUES (0000010000, '测试', '男', '1990/10/01', '665684', 'ae4237fcef88ae494b31cc87899f600fbc975b05', '12345678901', '05', 0, '440508199010010010');
+INSERT INTO `t_teacher` VALUES (0000010001, '邱伟发', '男', '1990/11/11', '665684', 'ae4237fcef88ae494b31cc87899f600fbc975b05', '13600000000', '05', 1, '440508199011111111');
+INSERT INTO `t_teacher` VALUES (0000010002, '徐逸', '女', '1990/10/01', '090939', '6016757fdfed0532605abced531bda87dbc562ca', '13600000000', '05', 1, '440508199010010000');
 
 -- ----------------------------
 -- Table structure for top_swiper
