@@ -562,200 +562,180 @@
 					<div id="student">
 						<el-tabs tab-position="top" style="">
 							<el-tab-pane label="学生信息">
-								
-							<el-table border :data="student.data" style="width: 100%" @sort-change="(x)=>studentSort(x)" @filter-change="(x)=>studentFilter(x)">
-	<!-- 							<el-table-column 
-									prop="id" 
-									label="学号" 
-									sortable="custom"
-								> -->
-								<el-table-column
-									prop="id" 
-									label="学号" 
-								>
-								</el-table-column>
-								<el-table-column
-									label="姓名"
-								>
-									<template slot-scope="scope">
-										<span v-text="scope.row.name" v-if="(addStudent.currentEdit != scope.$index)"></span>
-										<input type="text" v-else v-model="scope.row.name" />
-									</template>
-									
-								</el-table-column>
-	<!-- 							<el-table-column prop="sex" label="性别">
-								</el-table-column> -->
-								<el-table-column
-									label="性别"
-									:column-key="'sex'"
-									:filters="student.sexFilter"
-								>
-									<template slot-scope="scope">
-										<span v-text="scope.row.sex" v-if="(addStudent.currentEdit != scope.$index)"></span>
-<!-- 										<el-select v-model="scope.row.sex" v-else >
-											<el-option :label="'男'" :value="'男'"></el-option>
-											<el-option :label="'女'" :value="'女'"></el-option>
-										</el-select> -->
-										<span v-else class="text-danger">根据身份证号码自动选择</span>
-									</template>
-								</el-table-column>
-								<el-table-column label="出生日期">
-									<template slot-scope="scope">
-										<span v-text="scope.row.both" v-if="(addStudent.currentEdit != scope.$index)"></span>
-<!-- 										<el-date-picker
-											  v-else
-											  v-model="scope.row.both"
-											  type="date"
-											  value-format="yyyy/MM/dd"
-											  placeholder="根据身份证号自动填写">
-										</el-date-picker> -->
-										<span v-else class="text-danger">根据身份证号码自动生成</span>
-									</template>
-								</el-table-column>
-								<el-table-column label="手机号码">
-									<template slot-scope="scope">
-										<span v-text="scope.row.phone" v-if="(addStudent.currentEdit != scope.$index)"></span>
-										<input type="text" v-else v-model="scope.row.phone" />
-									</template>
-								</el-table-column>
-								<el-table-column prop="grade" label="年级"
-									:column-key="'grade'"
-									:filters="student.gradeFilter"
-								>
-								</el-table-column>
-								<el-table-column prop="years" label="学制">
-								</el-table-column>
-								<el-table-column prop="department" label="系"
-									:column-key="'department'"
-									:filters="student.departmentFilter"
-								>
-								</el-table-column>
-								<el-table-column prop="major" label="专业"
-									:column-key="'major'"
-									:filters="student.majorFilter"
-								>
-								</el-table-column>
-								<el-table-column prop="class" label="班级">
-								</el-table-column>
-								<el-table-column prop="seat" label="座号">
-								</el-table-column>
-								<el-table-column label="账号状态">
-<!-- 									<template slot-scope="scope">
-										<span v-if="scope.row.active == 0" class="text-danger">未激活</span>
-										<span v-else class="text-success">已激活</span>
-									</template> -->
-									<template slot-scope="scope">
-										<span v-if="((addStudent.currentEdit != scope.$index) && (scope.row.active == 0))" class="text-danger">未激活</span>
-										<span v-else-if="((addStudent.currentEdit != scope.$index) && (scope.row.active == 1))" class="text-success">已激活</span>
-										<el-select v-model="scope.row.active" v-else >
-											<el-option :label="'未激活'" :value="0"></el-option>
-											<el-option :label="'已激活'" :value="1"></el-option>
-										</el-select>
-									</template>
-								</el-table-column>
-								<el-table-column label="身份证">
-									<template slot-scope="scope">
-										<span v-text="scope.row.idCard" v-if="(addStudent.currentEdit != scope.$index)"></span>
-										<input type="text" v-else v-model="scope.row.idCard" />
-									</template>
-								</el-table-column>
-								<el-table-column label="操作">
-									<template slot-scope="scope">
-										<el-button size="mini" type="primary" class="mx-auto text-center" @click="updateStudent(scope)" v-if="(addStudent.currentEdit != scope.$index)">
-											修改
-										</el-button>
-										
-										<el-button size="mini" type="warning" class="mx-auto text-center" @click="updateStudent(scope)" v-else >
-											保存
-										</el-button>
-										
-										<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteStudent(scope.row.id)">
-											删除
-										</el-button>
-										
-									</template>
-								</el-table-column>
-							</el-table>
 
-							<el-pagination @size-change="" @current-change="(v)=>{studentCurrentChange(v)}" :current-page.sync="student.page"
-							 :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(student.count)">
-							</el-pagination>
-						
+								<el-table border :data="student.data" style="width: 100%" @sort-change="(x)=>studentSort(x)" @filter-change="(x)=>studentFilter(x)">
+									<!-- 							<el-table-column 
+										prop="id" 
+										label="学号" 
+										sortable="custom"
+									> -->
+									<el-table-column prop="id" label="学号">
+									</el-table-column>
+									<el-table-column label="姓名">
+										<template slot-scope="scope">
+											<span v-text="scope.row.name" v-if="(addStudent.currentEdit != scope.$index)"></span>
+											<input type="text" v-else v-model="scope.row.name" />
+										</template>
+
+									</el-table-column>
+									<!-- 							<el-table-column prop="sex" label="性别">
+									</el-table-column> -->
+									<el-table-column label="性别" :column-key="'sex'" :filters="student.sexFilter">
+										<template slot-scope="scope">
+											<span v-text="scope.row.sex" v-if="(addStudent.currentEdit != scope.$index)"></span>
+											<!-- 										<el-select v-model="scope.row.sex" v-else >
+												<el-option :label="'男'" :value="'男'"></el-option>
+												<el-option :label="'女'" :value="'女'"></el-option>
+											</el-select> -->
+											<span v-else class="text-danger">根据身份证号码自动选择</span>
+										</template>
+									</el-table-column>
+									<el-table-column label="出生日期">
+										<template slot-scope="scope">
+											<span v-text="scope.row.both" v-if="(addStudent.currentEdit != scope.$index)"></span>
+											<!-- 										<el-date-picker
+												  v-else
+												  v-model="scope.row.both"
+												  type="date"
+												  value-format="yyyy/MM/dd"
+												  placeholder="根据身份证号自动填写">
+											</el-date-picker> -->
+											<span v-else class="text-danger">根据身份证号码自动生成</span>
+										</template>
+									</el-table-column>
+									<el-table-column label="手机号码">
+										<template slot-scope="scope">
+											<span v-text="scope.row.phone" v-if="(addStudent.currentEdit != scope.$index)"></span>
+											<input type="text" v-else v-model="scope.row.phone" />
+										</template>
+									</el-table-column>
+									<el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="student.gradeFilter">
+									</el-table-column>
+									<el-table-column prop="years" label="学制">
+									</el-table-column>
+									<el-table-column prop="department" label="系" :column-key="'department'" :filters="student.departmentFilter">
+									</el-table-column>
+									<el-table-column prop="major" label="专业" :column-key="'major'" :filters="student.majorFilter">
+									</el-table-column>
+									<el-table-column prop="class" label="班级">
+									</el-table-column>
+									<el-table-column prop="seat" label="座号">
+									</el-table-column>
+									<el-table-column label="账号状态">
+										<!-- 									<template slot-scope="scope">
+											<span v-if="scope.row.active == 0" class="text-danger">未激活</span>
+											<span v-else class="text-success">已激活</span>
+										</template> -->
+										<template slot-scope="scope">
+											<span v-if="((addStudent.currentEdit != scope.$index) && (scope.row.active == 0))" class="text-danger">未激活</span>
+											<span v-else-if="((addStudent.currentEdit != scope.$index) && (scope.row.active == 1))" class="text-success">已激活</span>
+											<el-select v-model="scope.row.active" v-else>
+												<el-option :label="'未激活'" :value="0"></el-option>
+												<el-option :label="'已激活'" :value="1"></el-option>
+											</el-select>
+										</template>
+									</el-table-column>
+									<el-table-column label="身份证">
+										<template slot-scope="scope">
+											<span v-text="scope.row.idCard" v-if="(addStudent.currentEdit != scope.$index)"></span>
+											<input type="text" v-else v-model="scope.row.idCard" />
+										</template>
+									</el-table-column>
+									<el-table-column label="操作">
+										<template slot-scope="scope">
+											<el-button size="mini" type="primary" class="mx-auto text-center" @click="updateStudent(scope)" v-if="(addStudent.currentEdit != scope.$index)">
+												修改
+											</el-button>
+
+											<el-button size="mini" type="warning" class="mx-auto text-center" @click="updateStudent(scope)" v-else>
+												保存
+											</el-button>
+
+											<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteStudent(scope.row.id)">
+												删除
+											</el-button>
+
+										</template>
+									</el-table-column>
+								</el-table>
+
+								<el-pagination @size-change="" @current-change="(v)=>{studentCurrentChange(v)}" :current-page.sync="student.page"
+								 :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(student.count)">
+								</el-pagination>
+
 							</el-tab-pane>
-							
+
 							<el-tab-pane label="添加学生">
-								<el-form ref="addStudentForm" :model="addStudent" label-width="80px" label-position="right" :rules="addStudentRules" style="max-width: none;">
-								
+								<el-form ref="addStudentForm" :model="addStudent" label-width="80px" label-position="right" :rules="addStudentRules"
+								 style="max-width: none;">
+
 									<el-form-item label="学制" prop="years">
 										<el-input placeholder="请输入学制" v-model="addStudent.years" oninput="value=value.replace(/[^1-9]/g,'')">
 											<template slot="append">年</template>
 										</el-input>
 									</el-form-item>
-								
+
 									<el-form-item label="学系" prop="department">
 										<el-select v-model="addStudent.department" placeholder="请选择所在学系">
-											<el-option v-for="data in addStudent.departmentList" :key="data.id" :label="data.id +' '+ data.departmentName" :value="data.id"></el-option>
+											<el-option v-for="data in addStudent.departmentList" :key="data.id" :label="data.id +' '+ data.departmentName"
+											 :value="data.id"></el-option>
 										</el-select>
 									</el-form-item>
-								
+
 									<el-form-item label="专业" prop="major">
 										<el-select v-model="addStudent.major" placeholder="请选择所在专业" :disabled="addStudent.majorDisabled">
 											<el-option v-for="data in addStudent.majorList" :key="data.id" :label="data.id + ' ' + data.name" :value="data.id"></el-option>
 										</el-select>
 									</el-form-item>
-								
+
 									<el-form-item label="年级" prop="grade">
 										<el-select v-model="addStudent.grade" placeholder="请选择所在年级" :disabled="addStudent.gradeDisabled">
 											<el-option v-for="data in addStudent.gradeList" :key="data.grade" :label="data.grade + ' 级'" :value="data.grade"></el-option>
 										</el-select>
 									</el-form-item>
-								
+
 									<el-form-item label="班次" prop="Class">
 										<el-select v-model="addStudent.Class" placeholder="请选择所在班次" :disabled="addStudent.classDisabled">
 											<el-option v-for="data in addStudent.classList" :key="data.class" :label="data.class + ' 班'" :value="data.class"></el-option>
 										</el-select>
 									</el-form-item>
-								
+
 									<el-form-item label="学号" prop="seat">
-										 <el-input placeholder="请输入内容" v-model="addStudent.seat" v-if="!addStudent.seatDisabled" oninput="value=value.replace(/[^\d]/g,'')">
-										   <template slot="prepend">{{addStudent.grade + addStudent.years + addStudent.department + addStudent.major + addStudent.Class}}</template>
-										 </el-input>
-										 
-										 <p v-else class="text-danger"> 信息填写完整后自动生成 </p>
+										<el-input placeholder="请输入内容" v-model="addStudent.seat" v-if="!addStudent.seatDisabled" oninput="value=value.replace(/[^\d]/g,'')">
+											<template slot="prepend">{{addStudent.grade + addStudent.years + addStudent.department + addStudent.major + addStudent.Class}}</template>
+										</el-input>
+
+										<p v-else class="text-danger"> 信息填写完整后自动生成 </p>
 									</el-form-item>
-								
+
 									<el-form-item label="姓名" prop="name">
 										<el-input v-model="addStudent.name" placeholder="请输入姓名"></el-input>
 									</el-form-item>
-									
+
 									<el-form-item label="身份证" prop="idCard">
 										<el-input v-model="addStudent.idCard" placeholder="请填写身份证号"></el-input>
 									</el-form-item>
-									
+
 									<el-form-item label="性别" prop="sex">
 										<el-select v-model="addStudent.sex" placeholder="根据身份证号自动选择">
 											<el-option :label="'男'" :value="'男'"></el-option>
 											<el-option :label="'女'" :value="'女'"></el-option>
 										</el-select>
 									</el-form-item>
-									
+
 									<el-form-item label="出生日期" prop="both">
-										<el-date-picker
-											  v-model="addStudent.both"
-											  type="date"
-											  value-format="yyyy/MM/dd"
-											  placeholder="根据身份证号自动填写">
+										<el-date-picker v-model="addStudent.both" type="date" value-format="yyyy/MM/dd" placeholder="根据身份证号自动填写">
 										</el-date-picker>
 									</el-form-item>
-								
+
 									<el-form-item label="手机号码" prop="phone">
 										<el-input v-model="addStudent.phone" placeholder="请输入手机号码"></el-input>
 									</el-form-item>
-								
+
 									<div>
-										<el-button type="primary" class="mx-auto text-center btn-block" @click="addStudentSubmit" >添加学生</el-button>
+										<el-button type="primary" class="mx-auto text-center btn-block" @click="addStudentSubmit">添加学生</el-button>
 									</div>
-								
+
 								</el-form>
 							</el-tab-pane>
 						</el-tabs>
@@ -778,13 +758,13 @@
 									<el-table-column prop="sex" label="性别">
 										<template slot-scope="scope">
 											<span v-text="scope.row.sex" v-if="(addTeacher.currentEdit != scope.$index)"></span>
-											<span v-else class="text-danger" >根据身份证号码自动选择</span>
+											<span v-else class="text-danger">根据身份证号码自动选择</span>
 										</template>
 									</el-table-column>
 									<el-table-column prop="both" label="出生日期">
 										<template slot-scope="scope">
 											<span v-text="scope.row.both" v-if="(addTeacher.currentEdit != scope.$index)"></span>
-											<span v-else class="text-danger" >根据身份证号码自动生成</span>
+											<span v-else class="text-danger">根据身份证号码自动生成</span>
 										</template>
 									</el-table-column>
 									<el-table-column prop="phone" label="手机号码">
@@ -799,7 +779,7 @@
 										<template slot-scope="scope">
 											<span v-if="((addTeacher.currentEdit != scope.$index) && (scope.row.active == 0))" class="text-danger">未激活</span>
 											<span v-else-if="((addTeacher.currentEdit != scope.$index) && (scope.row.active == 1))" class="text-success">已激活</span>
-											<el-select v-model="scope.row.active" v-else >
+											<el-select v-model="scope.row.active" v-else>
 												<el-option :label="'未激活'" :value="0"></el-option>
 												<el-option :label="'已激活'" :value="1"></el-option>
 											</el-select>
@@ -817,15 +797,15 @@
 												<el-button size="mini" type="primary" class="mx-auto text-center" @click="updateTeacher(scope)" v-if="(addTeacher.currentEdit != scope.$index)">
 													修改信息
 												</el-button>
-												
-												<el-button size="mini" type="warning" class="mx-auto text-center" @click="updateTeacher(scope)" v-else >
+
+												<el-button size="mini" type="warning" class="mx-auto text-center" @click="updateTeacher(scope)" v-else>
 													保存修改
 												</el-button>
-												
+
 												<el-button size="mini" type="info" class="mx-auto text-center" @click="changeTeacherPassword(scope.row.id)">修改密码</el-button>
-												
+
 												<el-button size="mini" type="warning" class="mx-auto text-center" @click="upgradeToAdmin(scope)">设为管理员</el-button>
-												
+
 												<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteTeacher(scope.row.id)">
 													删除教工
 												</el-button>
@@ -833,71 +813,68 @@
 										</template>
 									</el-table-column>
 								</el-table>
-							
+
 								<el-pagination @size-change="" @current-change="(v)=>{teacherCurrentChange(v)}" :current-page.sync="teacher.page"
 								 :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(teacher.count)">
 								</el-pagination>
 							</el-tab-pane>
-							
+
 							<el-tab-pane label="添加教工">
-								<el-form ref="addTeacherForm" :model="addTeacher" label-width="80px" label-position="right" :rules="addTeacherRules" style="max-width: none;">
-								
+								<el-form ref="addTeacherForm" :model="addTeacher" label-width="80px" label-position="right" :rules="addTeacherRules"
+								 style="max-width: none;">
+
 									<el-form-item label="学系" prop="department">
 										<el-select v-model="addTeacher.department" placeholder="请选择所在学系">
 											<el-option v-for="data in addTeacher.departmentList" :key="data.id" :label="data.departmentName" :value="data.id"></el-option>
 										</el-select>
 									</el-form-item>
-								
+
 									<el-form-item label="账号状态" prop="active">
 										<el-select v-model="addTeacher.active" placeholder="请选择账号激活状态（默认激活）">
 											<el-option :label="'激活'" :value="1"></el-option>
 											<el-option :label="'未激活'" :value="0"></el-option>
 										</el-select>
 									</el-form-item>
-								
+
 									<el-form-item label="姓名" prop="name">
 										<el-input v-model="addTeacher.name" placeholder="请输入姓名"></el-input>
 									</el-form-item>
-									
+
 									<el-form-item label="身份证" prop="idCard">
 										<el-input v-model="addTeacher.idCard" placeholder="请填写身份证号"></el-input>
 									</el-form-item>
-									
+
 									<el-form-item label="性别" prop="sex">
 										<el-select v-model="addTeacher.sex" placeholder="根据身份证号自动选择">
 											<el-option :label="'男'" :value="'男'"></el-option>
 											<el-option :label="'女'" :value="'女'"></el-option>
 										</el-select>
 									</el-form-item>
-									
+
 									<el-form-item label="出生日期" prop="both">
-										<el-date-picker
-											  v-model="addTeacher.both"
-											  type="date"
-											  value-format="yyyy/MM/dd"
-											  placeholder="根据身份证号自动填写">
+										<el-date-picker v-model="addTeacher.both" type="date" value-format="yyyy/MM/dd" placeholder="根据身份证号自动填写">
 										</el-date-picker>
 									</el-form-item>
-								
+
 									<el-form-item label="手机号码" prop="phone">
 										<el-input v-model="addTeacher.phone" placeholder="请输入手机号码"></el-input>
 									</el-form-item>
-								
+
 									<el-form-item label="登录密码" prop="password">
 										<el-input v-model="addTeacher.password" placeholder="请输入登录号码"></el-input>
 									</el-form-item>
-								
+
 									<div>
-										<el-button type="primary" class="mx-auto text-center btn-block" @click="addTeacherSubmit" >添加教工</el-button>
+										<el-button type="primary" class="mx-auto text-center btn-block" @click="addTeacherSubmit">添加教工</el-button>
 									</div>
-								
+
 								</el-form>
 							</el-tab-pane>
-							
+
 						</el-tabs>
 					</div>
 				</el-tab-pane>
-				
+
 				<el-tab-pane label="管理员信息">
 					<div id="admin">
 						<el-table border :data="admin.data" style="width: 100%">
@@ -927,7 +904,7 @@
 										<el-button size="mini" type="info" @click="changeAdminPassword(scope.row.id)">
 											修改密码
 										</el-button>
-										
+
 										<el-button size="mini" type="danger" @click="deleteAdmin(scope.row.id)">
 											移除管理员权限
 										</el-button>
@@ -935,10 +912,43 @@
 								</template>
 							</el-table-column>
 						</el-table>
-					
+
 						<el-pagination @size-change="" @current-change="(v)=>{amdinCurrentChange(v)}" :current-page.sync="admin.page"
 						 :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(admin.count)">
 						</el-pagination>
+					</div>
+				</el-tab-pane>
+
+				<el-tab-pane label="班级管理">
+					<div id="Class">
+						<el-tabs tab-position="top" style="">
+							<el-tab-pane label="班级概览">
+								<el-table border :data="classes.data" style="width: 100%" @sort-change="" @filter-change="(x)=>classFilter(x)">
+									<el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="classes.gradeFilter">
+									</el-table-column>
+									<el-table-column prop="department" label="系" :column-key="'department'" :filters="classes.departmentFilter">
+									</el-table-column>
+									<el-table-column prop="major" label="专业" :column-key="'major'" :filters="classes.majorFilter">
+									</el-table-column>
+									<el-table-column prop="class" label="班级">
+									</el-table-column>
+									<el-table-column label="操作">
+										<template slot-scope="scope">
+											<div class="text-center">
+												<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteClass(scope)">
+													删除
+												</el-button>
+											</div>
+										</template>
+									</el-table-column>
+								</el-table>
+
+								<el-pagination @size-change="" @current-change="(v)=>{classCurrentChange(v)}" :current-page.sync="classes.page"
+								 :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(classes.count)">
+								</el-pagination>
+
+							</el-tab-pane>
+						</el-tabs>
 					</div>
 				</el-tab-pane>
 
@@ -1020,7 +1030,10 @@
 				$('#admin').css({
 					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
 				})
-				
+				$('#Class').css({
+					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+				})
+
 				if ($(window).width() <= 995) {
 					management.tabPosition = 'top'
 					$('#management').css({
@@ -1047,7 +1060,7 @@
 				watch: {
 					department(n, o) {
 						console.log(n)
-						
+
 						if (n != '') {
 							management.addStudent.majorDisabled = false
 							axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -1074,10 +1087,10 @@
 								})
 							}
 						}
-						
+
 						// management.$refs['addStudentForm'].validate((v) => {})
 					},
-					major(n,o){
+					major(n, o) {
 						if (n != '') {
 							management.addStudent.gradeDisabled = false
 							axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -1104,11 +1117,11 @@
 									management.addStudent.gradeList = res.data
 									console.log(res.data)
 								})
-						
+
 							}
 						}
 					},
-					grade(n,o){
+					grade(n, o) {
 						if (n != '') {
 							management.addStudent.classDisabled = false
 							axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -1138,7 +1151,7 @@
 							}
 						}
 					},
-					Class(n,o){
+					Class(n, o) {
 						if (n != '') {
 							management.addStudent.seatDisabled = false
 							management.addStudent.seat = ''
@@ -1149,8 +1162,7 @@
 								"grade": management.addStudent.grade,
 								"class": n,
 							}), ).then(function(res) {
-								if(res.data["seat"] < 10)
-								{
+								if (res.data["seat"] < 10) {
 									res.data["seat"] = '0' + res.data["seat"]
 								}
 								management.addStudent.seat = res.data["seat"]
@@ -1168,8 +1180,7 @@
 									"grade": management.addStudent.grade,
 									"class": n,
 								}), ).then(function(res) {
-									if(res.data["seat"] < 10)
-									{
+									if (res.data["seat"] < 10) {
 										res.data["seat"] = '0' + res.data["seat"]
 									}
 									management.addStudent.seat = res.data["seat"]
@@ -1178,36 +1189,38 @@
 							}
 						}
 					},
-					seat(n,o){
-						management.addStudent.id = management.addStudent.grade + management.addStudent.years + management.addStudent.department + management.addStudent.major + management.addStudent.Class + n
+					seat(n, o) {
+						management.addStudent.id = management.addStudent.grade + management.addStudent.years + management.addStudent.department +
+							management.addStudent.major + management.addStudent.Class + n
 					},
-					years(n,o){
-						management.addStudent.id = management.addStudent.grade + n + management.addStudent.department + management.addStudent.major + management.addStudent.Class + management.addStudent.seat
+					years(n, o) {
+						management.addStudent.id = management.addStudent.grade + n + management.addStudent.department + management.addStudent
+							.major + management.addStudent.Class + management.addStudent.seat
 					},
-					idCard(n,o){
-						
+					idCard(n, o) {
+
 					}
 				},
 				computed: {
-					years(){
+					years() {
 						return this.addStudent.years
 					},
 					department() {
 						return this.addStudent.department
 					},
-					major(){
+					major() {
 						return this.addStudent.major
 					},
-					grade(){
+					grade() {
 						return this.addStudent.grade
 					},
-					Class(){
+					Class() {
 						return this.addStudent.Class
 					},
-					seat(){
+					seat() {
 						return this.addStudent.seat
 					},
-					idCard(){
+					idCard() {
 						return this.addStudent.idCard
 					}
 				},
@@ -1221,7 +1234,7 @@
 							return callback()
 						}
 					}
-					
+
 					var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
 					var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
 					var validatoridCard = (rule, value, callback) => {
@@ -1231,37 +1244,31 @@
 							return callback(new Error('身份证格式不正确'))
 						} else {
 							management.addStudent.idCard = management.addStudent.idCard.toUpperCase()
-							if(management.addStudent.idCard.length == 18)
-							{
-								management.addStudent.both = management.addStudent.idCard.substring(6,10) + '/' 
-								+ management.addStudent.idCard.substring(10,12) + '/' 
-								+ management.addStudent.idCard.substring(12,14)
-								
-								if(management.addStudent.idCard.substring(16,17) % 2 == 1)
-								{
+							if (management.addStudent.idCard.length == 18) {
+								management.addStudent.both = management.addStudent.idCard.substring(6, 10) + '/' +
+									management.addStudent.idCard.substring(10, 12) + '/' +
+									management.addStudent.idCard.substring(12, 14)
+
+								if (management.addStudent.idCard.substring(16, 17) % 2 == 1) {
 									management.addStudent.sex = '男'
-								}
-								else{
+								} else {
 									management.addStudent.sex = '女'
 								}
-							}
-							else{
-								management.addStudent.both = '19' + management.addStudent.idCard.substring(6,8) + '/'
-								+ management.addStudent.idCard.substring(8,10) + '/' 
-								+ management.addStudent.idCard.substring(10,12)
-								
-								if(management.addStudent.idCard.substring(14,15) % 2 == 1)
-								{
+							} else {
+								management.addStudent.both = '19' + management.addStudent.idCard.substring(6, 8) + '/' +
+									management.addStudent.idCard.substring(8, 10) + '/' +
+									management.addStudent.idCard.substring(10, 12)
+
+								if (management.addStudent.idCard.substring(14, 15) % 2 == 1) {
 									management.addStudent.sex = '男'
-								}
-								else{
+								} else {
 									management.addStudent.sex = '女'
 								}
 							}
 							return callback()
 						}
 					}
-					
+
 					var validatorTeacherIdCard = (rule, value, callback) => {
 						if (!value) {
 							return callback(new Error('请输入身份证号'))
@@ -1269,37 +1276,31 @@
 							return callback(new Error('身份证格式不正确'))
 						} else {
 							management.addTeacher.idCard = management.addTeacher.idCard.toUpperCase()
-							if(management.addTeacher.idCard.length == 18)
-							{
-								management.addTeacher.both = management.addTeacher.idCard.substring(6,10) + '/' 
-								+ management.addTeacher.idCard.substring(10,12) + '/' 
-								+ management.addTeacher.idCard.substring(12,14)
-								
-								if(management.addTeacher.idCard.substring(16,17) % 2 == 1)
-								{
+							if (management.addTeacher.idCard.length == 18) {
+								management.addTeacher.both = management.addTeacher.idCard.substring(6, 10) + '/' +
+									management.addTeacher.idCard.substring(10, 12) + '/' +
+									management.addTeacher.idCard.substring(12, 14)
+
+								if (management.addTeacher.idCard.substring(16, 17) % 2 == 1) {
 									management.addTeacher.sex = '男'
-								}
-								else{
+								} else {
 									management.addTeacher.sex = '女'
 								}
-							}
-							else{
-								management.addTeacher.both = '19' + management.addTeacher.idCard.substring(6,8) + '/'
-								+ management.addTeacher.idCard.substring(8,10) + '/' 
-								+ management.addTeacher.idCard.substring(10,12)
-								
-								if(management.addTeacher.idCard.substring(14,15) % 2 == 1)
-								{
+							} else {
+								management.addTeacher.both = '19' + management.addTeacher.idCard.substring(6, 8) + '/' +
+									management.addTeacher.idCard.substring(8, 10) + '/' +
+									management.addTeacher.idCard.substring(10, 12)
+
+								if (management.addTeacher.idCard.substring(14, 15) % 2 == 1) {
 									management.addTeacher.sex = '男'
-								}
-								else{
+								} else {
 									management.addTeacher.sex = '女'
 								}
 							}
 							return callback()
 						}
 					}
-					
+
 					var passWordExp = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/
 					var validatorPasswd = (rule, value, callback) => {
 						// console.log(value)
@@ -1313,32 +1314,32 @@
 							return callback()
 						}
 					}
-					
+
 					return {
 						// openeds: ['1'],
 						// menuActive: "1-1",
 						tabPosition: 'left',
 
-						addStudent:{
-							currentEdit:-1,
-							
+						addStudent: {
+							currentEdit: -1,
+
 							department: '',
 							departmentList: '',
-							years:'3',
+							years: '3',
 							major: '',
 							majorList: '',
 							grade: '',
 							gradeList: "",
 							Class: '',
 							classList: '',
-							seat:'',
-							id:'',
-							name:'',
-							sex:'',
-							both:'',
-							phone:'',
-							idCard:'',
-							
+							seat: '',
+							id: '',
+							name: '',
+							sex: '',
+							both: '',
+							phone: '',
+							idCard: '',
+
 							majorDisabled: true,
 							gradeDisabled: true,
 							classDisabled: true,
@@ -1354,7 +1355,11 @@
 								required: true,
 								message: '请输入学制',
 								trigger: 'blur'
-							}, { max:1, message:'请输入不超过1个字符',trigger:['blur', 'change']}],
+							}, {
+								max: 1,
+								message: '请输入不超过1个字符',
+								trigger: ['blur', 'change']
+							}],
 							major: [{
 								required: true,
 								message: '请选择所在专业',
@@ -1402,46 +1407,63 @@
 							sex: [{
 								required: true,
 								message: '请选择性别',
-								trigger:['blur', 'change']
+								trigger: ['blur', 'change']
 							}, ],
 							both: [{
 								required: true,
 								message: '请填写出生日期',
-								trigger:['blur', 'change']
+								trigger: ['blur', 'change']
 							}, ],
+						},
+						classes: {
+							data: [''],
+							grade: '',
+							department: '',
+							major: '',
+							page: 1,
+							count: 0,
+							gradeFilter: [],
+							departmentFilter: [],
+							majorFilter: [],
 						},
 						student: {
 							data: [''],
-							sex:'',
-							grade:'',
-							department:'',
-							major:'',
+							sex: '',
+							grade: '',
+							department: '',
+							major: '',
 							page: 1,
 							count: 0,
-							
-							sexFilter:[{'text':'男',value:'男'},{'text':'女',value:'女'}],
-							gradeFilter:[],
-							departmentFilter:[],
-							majorFilter:[],
+
+							sexFilter: [{
+								'text': '男',
+								value: '男'
+							}, {
+								'text': '女',
+								value: '女'
+							}],
+							gradeFilter: [],
+							departmentFilter: [],
+							majorFilter: [],
 						},
-						
+
 						teacher: {
 							data: [''],
 							page: 1,
 							count: 0,
 						},
-						addTeacher:{
-							currentEdit:-1,
-							
-							name:'',
-							sex:'',
-							both:'',
-							phone:'',
+						addTeacher: {
+							currentEdit: -1,
+
+							name: '',
+							sex: '',
+							both: '',
+							phone: '',
 							department: '',
 							departmentList: '',
-							active:1,
-							idCard:'',
-							password:'',
+							active: 1,
+							idCard: '',
+							password: '',
 						},
 						addTeacherRules: {
 							department: [{
@@ -1486,15 +1508,15 @@
 							sex: [{
 								required: true,
 								message: '请选择性别',
-								trigger:['blur', 'change']
+								trigger: ['blur', 'change']
 							}, ],
 							both: [{
 								required: true,
 								message: '请填写出生日期',
-								trigger:['blur', 'change']
+								trigger: ['blur', 'change']
 							}, ],
 						},
-						
+
 						admin: {
 							data: [''],
 							page: 1,
@@ -1572,6 +1594,20 @@
 				mounted() {
 
 					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"getClass": '',
+						'page': '1',
+						'num': '10'
+					}), ).then(function(res) {
+						management.classes.data = res.data
+					})
+					
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"getClassCount": ''
+					}), ).then(function(res) {
+						management.classes.count = res.data.num
+					})
+
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
 						"departmentList": ''
 					}), ).then(function(res) {
 						management.addStudent.departmentList = res.data
@@ -1583,11 +1619,13 @@
 						"getDepartment": '',
 					}), ).then(function(res) {
 						management.student.departmentFilter = res.data
+						management.classes.departmentFilter = res.data
 						
 						axios.post('/Core/Global/frontInit.php', Qs.stringify({
 							"getMajor": '',
 						}), ).then(function(res) {
 							management.student.majorFilter = res.data
+							management.classes.majorFilter = res.data
 						})
 					})
 
@@ -1595,6 +1633,7 @@
 						"getGrade": '',
 					}), ).then(function(res) {
 						management.student.gradeFilter = res.data
+						management.classes.gradeFilter = res.data
 					})
 
 					axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -1716,344 +1755,411 @@
 					})
 				},
 				methods: {
-					deleteAdmin(id){
+					deleteClass(scope) {
+						console.log(scope)
+						management.$confirm('此操作将删除该班级, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"delClass": id,
+							}), ).then(function(res) {
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
+										confirmButtonText: '确定',
+										type: 'error',
+										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
+										callback: action => {
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getClass": '',
+												'page': management.classes.page,
+												'num': '10',
+												'grade': JSON.stringify(management.classes.grade),
+												'department': JSON.stringify(management.classes.department),
+												'major': JSON.stringify(management.classes.major),
+											}), ).then(function(res) {
+												management.classes.data = res.data
+											})
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getClassCount": '',
+												'grade': JSON.stringify(management.classes.grade),
+												'department': JSON.stringify(management.classes.department),
+												'major': JSON.stringify(management.classes.major),
+											}), ).then(function(res) {
+												management.classes.count = res.data.num
+											})
+										}
+									})
+								}
+							})
+						}).catch(() => {
+							management.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					},
+					classFilter(val) {
+						if ('grade' in val) {
+							management.classes.grade = val['grade']
+						}
+						if ('department' in val) {
+							management.classes.department = val['department']
+
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"getMajor": '',
+								'department': JSON.stringify(val['department'])
+							}), ).then(function(res) {
+								management.classes.majorFilter = res.data
+							})
+						}
+						if ('major' in val) {
+							management.classes.major = val['major']
+						}
+						management.classes.page = 1
+						this.classCurrentChange(management.classes.page)
+						console.log(val)
+					},
+					classCurrentChange(val) {
+						management.addStudent.currentEdit = -1
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"getClass": '',
+							'page': val,
+							'num': '10',
+							'grade': JSON.stringify(management.classes.grade),
+							'department': JSON.stringify(management.classes.department),
+							'major': JSON.stringify(management.classes.major),
+						}), ).then(function(res) {
+							management.classes.data = res.data
+						})
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"getClassCount": '',
+							'grade': JSON.stringify(management.classes.grade),
+							'department': JSON.stringify(management.classes.department),
+							'major': JSON.stringify(management.classes.major),
+						}), ).then(function(res) {
+							management.classes.count = res.data.num
+						})
+					},
+					deleteAdmin(id) {
 						console.log(id)
 						management.$confirm('此操作将移除该账号的管理员权限, 是否继续?', '提示', {
-						          confirmButtonText: '确定',
-						          cancelButtonText: '取消',
-						          type: 'warning'
-						        }).then(() => {
-									axios.post('/Core/Global/frontInit.php', Qs.stringify({
-										"delAdmin": id,
-									}), ).then(function(res) {
-										if ('error' in res.data) {
-											management.$alert(res.data.error, '错误', {
-												confirmButtonText: '确定',
-												type: 'error',
-												center: true,
-												callback: action => {}
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"delAdmin": id,
+							}), ).then(function(res) {
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
+										confirmButtonText: '确定',
+										type: 'error',
+										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
+										callback: action => {
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getAdminList": '',
+												'page': '1',
+												'num': '10'
+											}), ).then(function(res) {
+												management.admin.data = res.data
 											})
-										} else if ('success' in res.data) {
-											management.$alert(res.data.success, '操作成功', {
-												confirmButtonText: '确定',
-												type: 'success',
-												center: true,
-												callback: action => {
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getAdminList": '',
-														'page': '1',
-														'num': '10'
-													}), ).then(function(res) {
-														management.admin.data = res.data
-													})
-															
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getAdminListCount": ''
-													}), ).then(function(res) {
-														management.admin.count = res.data.num
-													})
-														
-												}
+
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getAdminListCount": ''
+											}), ).then(function(res) {
+												management.admin.count = res.data.num
 											})
+
 										}
 									})
-						        }).catch(() => {
-						          management.$message({
-						            type: 'info',
-						            message: '已取消删除'
-						          });          
-						        });
-					},
-					changeAdminPassword(id){
-						management.$prompt('请输入新的密码', '提示', {
-						          confirmButtonText: '确定',
-						          cancelButtonText: '取消',
-						          inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
-						          inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
-						        }).then(({ value }) => {
-						          // management.$message({
-						          //   type: 'success',
-						          //   message: '你的密码是: ' + value
-						          // });
-								  axios.post('/Core/Global/frontInit.php', Qs.stringify({
-								  	"changeAdminPassword": id,
-								  	'password':value,
-								  }), ).then(function(res) {
-								  	console.log(res.data)
-								  	
-								  	if('error' in res.data)
-								  	{
-								  		management.$alert(res.data.error, '错误', {
-								  			confirmButtonText: '确定',
-								  			type: 'error',
-								  			center: true,
-								  			callback: action => {
-								  			}
-								  		})
-								  	}
-								  	else if('success' in res.data)
-								  	{
-								  		management.$alert(res.data.success, '操作成功完成', {
-								  			confirmButtonText: '确定',
-								  			type: 'success',
-								  			center: true,
-								  			callback: action => {
-								  			}
-								  		})
-								  	}
-								  })
-						        }).catch(() => {  
+								}
+							})
+						}).catch(() => {
+							management.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
 						});
 					},
-					upgradeToAdmin(scope){
-						management.$confirm('是否将【'+scope.row.departmentName+'】 '+scope.row.name+' 设置为系统管理员', '提示', {
-						          confirmButtonText: '确定',
-						          cancelButtonText: '取消',
-						          type: 'warning'
-						        }).then(() => {
-									management.$prompt('请设置管理员密码', '提示', {
-									          confirmButtonText: '确定',
-									          cancelButtonText: '取消',
-									          inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
-									          inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
-									        }).then(({ value }) => {
+					changeAdminPassword(id) {
+						management.$prompt('请输入新的密码', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+							inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+						}).then(({
+							value
+						}) => {
+							// management.$message({
+							//   type: 'success',
+							//   message: '你的密码是: ' + value
+							// });
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"changeAdminPassword": id,
+								'password': value,
+							}), ).then(function(res) {
+								console.log(res.data)
+
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
+										confirmButtonText: '确定',
+										type: 'error',
+										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功完成', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
+										callback: action => {}
+									})
+								}
+							})
+						}).catch(() => {});
+					},
+					upgradeToAdmin(scope) {
+						management.$confirm('是否将【' + scope.row.departmentName + '】 ' + scope.row.name + ' 设置为系统管理员', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							management.$prompt('请设置管理员密码', '提示', {
+								confirmButtonText: '确定',
+								cancelButtonText: '取消',
+								inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+								inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+							}).then(({
+								value
+							}) => {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"upgradeToAdmin": scope.row.id,
+									'password': value,
+								}), ).then(function(res) {
+									console.log(res.data)
+
+									if ('error' in res.data) {
+										management.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {}
+										})
+									} else if ('success' in res.data) {
+										management.$alert(res.data.success, '操作成功完成', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
 												axios.post('/Core/Global/frontInit.php', Qs.stringify({
-													"upgradeToAdmin": scope.row.id,
-													'password':value,
+													"getAdminList": '',
+													'page': '1',
+													'num': '10'
 												}), ).then(function(res) {
-													console.log(res.data)
-											  	
-											  	if('error' in res.data)
-											  	{
-											  		management.$alert(res.data.error, '错误', {
-											  			confirmButtonText: '确定',
-											  			type: 'error',
-											  			center: true,
-											  			callback: action => {
-											  			}
-											  		})
-											  	}
-											  	else if('success' in res.data)
-											  	{
-											  		management.$alert(res.data.success, '操作成功完成', {
-											  			confirmButtonText: '确定',
-											  			type: 'success',
-											  			center: true,
-											  			callback: action => {
-															axios.post('/Core/Global/frontInit.php', Qs.stringify({
-																"getAdminList": '',
-																'page': '1',
-																'num': '10'
-															}), ).then(function(res) {
-																management.admin.data = res.data
-															})
-															
-															axios.post('/Core/Global/frontInit.php', Qs.stringify({
-																"getAdminListCount": ''
-															}), ).then(function(res) {
-																management.admin.count = res.data.num
-															})
-											  			}
-											  		})
-											  	}
-											  })
-									        }).catch(() => {  
-									});
-						        }).catch(() => {
-						          management.$message({
-						            type: 'info',
-						            message: '已取消操作'
-						          });          
-						        });
-					},
-					changeTeacherPassword(id){
-						management.$prompt('请输入新的密码', '提示', {
-						          confirmButtonText: '确定',
-						          cancelButtonText: '取消',
-						          inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
-						          inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
-						        }).then(({ value }) => {
-						          // management.$message({
-						          //   type: 'success',
-						          //   message: '你的密码是: ' + value
-						          // });
-								  axios.post('/Core/Global/frontInit.php', Qs.stringify({
-								  	"changeTeacherPassword": id,
-								  	'password':value,
-								  }), ).then(function(res) {
-								  	console.log(res.data)
-								  	
-								  	if('error' in res.data)
-								  	{
-								  		management.$alert(res.data.error, '错误', {
-								  			confirmButtonText: '确定',
-								  			type: 'error',
-								  			center: true,
-								  			callback: action => {
-								  			}
-								  		})
-								  	}
-								  	else if('success' in res.data)
-								  	{
-								  		management.$alert(res.data.success, '操作成功完成', {
-								  			confirmButtonText: '确定',
-								  			type: 'success',
-								  			center: true,
-								  			callback: action => {
-								  			}
-								  		})
-								  	}
-								  })
-						        }).catch(() => {  
+													management.admin.data = res.data
+												})
+
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getAdminListCount": ''
+												}), ).then(function(res) {
+													management.admin.count = res.data.num
+												})
+											}
+										})
+									}
+								})
+							}).catch(() => {});
+						}).catch(() => {
+							management.$message({
+								type: 'info',
+								message: '已取消操作'
+							});
 						});
 					},
-					deleteTeacher(id){
+					changeTeacherPassword(id) {
+						management.$prompt('请输入新的密码', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+							inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+						}).then(({
+							value
+						}) => {
+							// management.$message({
+							//   type: 'success',
+							//   message: '你的密码是: ' + value
+							// });
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"changeTeacherPassword": id,
+								'password': value,
+							}), ).then(function(res) {
+								console.log(res.data)
+
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
+										confirmButtonText: '确定',
+										type: 'error',
+										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功完成', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
+										callback: action => {}
+									})
+								}
+							})
+						}).catch(() => {});
+					},
+					deleteTeacher(id) {
 						console.log(id)
 						management.$confirm('此操作将删除该教工, 是否继续?', '提示', {
-						          confirmButtonText: '确定',
-						          cancelButtonText: '取消',
-						          type: 'warning'
-						        }).then(() => {
-									axios.post('/Core/Global/frontInit.php', Qs.stringify({
-										"delTeacher": id,
-									}), ).then(function(res) {
-										if ('error' in res.data) {
-											management.$alert(res.data.error, '错误', {
-												confirmButtonText: '确定',
-												type: 'error',
-												center: true,
-												callback: action => {}
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"delTeacher": id,
+							}), ).then(function(res) {
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
+										confirmButtonText: '确定',
+										type: 'error',
+										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
+										callback: action => {
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getTeacherList": '',
+												'page': management.teacher.page,
+												'num': '10'
+											}), ).then(function(res) {
+												management.teacher.data = res.data
 											})
-										} else if ('success' in res.data) {
-											management.$alert(res.data.success, '操作成功', {
-												confirmButtonText: '确定',
-												type: 'success',
-												center: true,
-												callback: action => {
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getTeacherList": '',
-														'page': management.teacher.page,
-														'num': '10'
-													}), ).then(function(res) {
-														management.teacher.data = res.data
-													})
-														
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getTeacherListCount": ''
-													}), ).then(function(res) {
-														management.teacher.count = res.data.num
-													})
-														
-												}
+
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getTeacherListCount": ''
+											}), ).then(function(res) {
+												management.teacher.count = res.data.num
 											})
+
 										}
 									})
-						        }).catch(() => {
-						          management.$message({
-						            type: 'info',
-						            message: '已取消删除'
-						          });          
-						        });
+								}
+							})
+						}).catch(() => {
+							management.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
 					},
-					updateTeacher(scope){
+					updateTeacher(scope) {
 						// if ($(window).width() < 995) {
 						// 	$('#head').hide()
 						// }
-						
-						if(management.addTeacher.currentEdit == scope.$index)
-						{		
+
+						if (management.addTeacher.currentEdit == scope.$index) {
 							var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
 							var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
-							
-								if (!scope.row.idCard) {
-									management.$alert('请输入身份证号', '错误', {
-										confirmButtonText: '确定',
-										type: 'error',
-										center: true,
-										callback: action => {}
-									})
-								} 
-								else if (!(id18.test(scope.row.idCard) || id15.test(scope.row.idCard))) {
-									management.$alert('身份证格式不正确', '错误', {
-										confirmButtonText: '确定',
-										type: 'error',
-										center: true,
-										callback: action => {}
-									})
-								} 
-								else {
-									scope.row.idCard = scope.row.idCard.toUpperCase()
-									if(scope.row.idCard.length == 18)
-									{
-										scope.row.both = scope.row.idCard.substring(6,10) + '/' 
-										+ scope.row.idCard.substring(10,12) + '/' 
-										+ scope.row.idCard.substring(12,14)
-										
-										if(scope.row.idCard.substring(16,17) % 2 == 1)
-										{
-											scope.row.sex = '男'
-										}
-										else{
-											scope.row.sex = '女'
-										}
+
+							if (!scope.row.idCard) {
+								management.$alert('请输入身份证号', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {}
+								})
+							} else if (!(id18.test(scope.row.idCard) || id15.test(scope.row.idCard))) {
+								management.$alert('身份证格式不正确', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {}
+								})
+							} else {
+								scope.row.idCard = scope.row.idCard.toUpperCase()
+								if (scope.row.idCard.length == 18) {
+									scope.row.both = scope.row.idCard.substring(6, 10) + '/' +
+										scope.row.idCard.substring(10, 12) + '/' +
+										scope.row.idCard.substring(12, 14)
+
+									if (scope.row.idCard.substring(16, 17) % 2 == 1) {
+										scope.row.sex = '男'
+									} else {
+										scope.row.sex = '女'
 									}
-									else{
-										scope.row.both = '19' + scope.row.idCard.substring(6,8) + '/'
-										+ scope.row.idCard.substring(8,10) + '/' 
-										+ scope.row.idCard.substring(10,12)
-										
-										if(scope.row.idCard.substring(14,15) % 2 == 1)
-										{
-											scope.row.sex = '男'
-										}
-										else{
-											scope.row.sex = '女'
-										}
+								} else {
+									scope.row.both = '19' + scope.row.idCard.substring(6, 8) + '/' +
+										scope.row.idCard.substring(8, 10) + '/' +
+										scope.row.idCard.substring(10, 12)
+
+									if (scope.row.idCard.substring(14, 15) % 2 == 1) {
+										scope.row.sex = '男'
+									} else {
+										scope.row.sex = '女'
 									}
-								if(!scope.row.name || scope.row.name.length < 2 || scope.row.name.length > 5)
-								{
+								}
+								if (!scope.row.name || scope.row.name.length < 2 || scope.row.name.length > 5) {
 									management.$alert('姓名长度不正确', '错误', {
 										confirmButtonText: '确定',
 										type: 'error',
 										center: true,
 										callback: action => {}
 									})
-								}
-								else{
-									if(!scope.row.phone || scope.row.phone.length != 11){
+								} else {
+									if (!scope.row.phone || scope.row.phone.length != 11) {
 										management.$alert('手机号码长度不正确', '错误', {
 											confirmButtonText: '确定',
 											type: 'error',
 											center: true,
 											callback: action => {}
 										})
-									}
-									else{
+									} else {
 										axios.post('/Core/Global/frontInit.php', Qs.stringify({
 											"updateTeacher": scope.row.id,
-											'name':scope.row.name,
-											'sex':scope.row.sex,
-											'both':scope.row.both,
-											'phone':scope.row.phone,
+											'name': scope.row.name,
+											'sex': scope.row.sex,
+											'both': scope.row.both,
+											'phone': scope.row.phone,
 											'idCard': scope.row.idCard,
-											'active':scope.row.active
+											'active': scope.row.active
 										}), ).then(function(res) {
 											console.log(res.data)
-											
-											if('error' in res.data)
-											{
+
+											if ('error' in res.data) {
 												management.$alert(res.data.error, '错误', {
 													confirmButtonText: '确定',
 													type: 'error',
 													center: true,
-													callback: action => {
-													}
+													callback: action => {}
 												})
-											}
-											else if('success' in res.data)
-											{
+											} else if ('success' in res.data) {
 												management.$alert('教工信息更新成功', '操作成功完成', {
-													
+
 													confirmButtonText: '确定',
 													type: 'success',
 													center: true,
@@ -2065,13 +2171,13 @@
 														}), ).then(function(res) {
 															management.teacher.data = res.data
 														})
-														
+
 														axios.post('/Core/Global/frontInit.php', Qs.stringify({
 															"getTeacherListCount": ''
 														}), ).then(function(res) {
 															management.teacher.count = res.data.num
 														})
-														
+
 														management.addTeacher.currentEdit = -1
 													}
 												})
@@ -2080,208 +2186,187 @@
 									}
 								}
 							}
-						}
-						else{
+						} else {
 							management.addTeacher.currentEdit = scope.$index
 						}
 						console.log(scope.$index)
-					
+
 					},
-					addTeacherSubmit(){
+					addTeacherSubmit() {
 						management.$refs['addTeacherForm'].validate((valid) => {
-								if (valid) {
-									axios.post('/Core/Global/frontInit.php', Qs.stringify({
-										"addTeacher": '',
-										'name':management.addTeacher.name,
-										'sex':management.addTeacher.sex,
-										'both':management.addTeacher.both,
-										'phone':management.addTeacher.phone,
-										'department': management.addTeacher.department,
-										'idCard': management.addTeacher.idCard,
-										'password':management.addTeacher.password,
-										'active':management.addTeacher.active,
-									}), ).then(function(res) {
-										console.log(res.data)
-										
-										if('error' in res.data)
-										{
-											management.$alert(res.data.error, '错误', {
-												confirmButtonText: '确定',
-												type: 'error',
-												center: true,
-												callback: action => {
-												}
-											})
-										}
-										else if('success' in res.data)
-										{
-											management.$alert('教工添加成功', '操作成功完成', {
-												confirmButtonText: '确定',
-												type: 'success',
-												center: true,
-												callback: action => {
-													management.addTeacher.department = ''
-													management.addTeacher.name = ''
-													management.addTeacher.idCard = ''
-													management.addTeacher.both = ''
-													management.addTeacher.phone = ''
-													management.addTeacher.sex = ''
-													management.addTeacher.password = ''
-													
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getTeacherList": '',
-														'page': management.teacher.page,
-														'num': '10'
-													}), ).then(function(res) {
-														management.teacher.data = res.data
-													})
-													
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getTeacherListCount": ''
-													}), ).then(function(res) {
-														management.teacher.count = res.data.num
-													})
-												}
-											})
-										}
-									})
-								} else {
-									management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
-										confirmButtonText: '确定',
-										type: 'error',
-										center: true,
-										callback: action => {
-						
-										}
-									})
-								}
-							})
+							if (valid) {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"addTeacher": '',
+									'name': management.addTeacher.name,
+									'sex': management.addTeacher.sex,
+									'both': management.addTeacher.both,
+									'phone': management.addTeacher.phone,
+									'department': management.addTeacher.department,
+									'idCard': management.addTeacher.idCard,
+									'password': management.addTeacher.password,
+									'active': management.addTeacher.active,
+								}), ).then(function(res) {
+									console.log(res.data)
+
+									if ('error' in res.data) {
+										management.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {}
+										})
+									} else if ('success' in res.data) {
+										management.$alert('教工添加成功', '操作成功完成', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
+												management.addTeacher.department = ''
+												management.addTeacher.name = ''
+												management.addTeacher.idCard = ''
+												management.addTeacher.both = ''
+												management.addTeacher.phone = ''
+												management.addTeacher.sex = ''
+												management.addTeacher.password = ''
+
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getTeacherList": '',
+													'page': management.teacher.page,
+													'num': '10'
+												}), ).then(function(res) {
+													management.teacher.data = res.data
+												})
+
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getTeacherListCount": ''
+												}), ).then(function(res) {
+													management.teacher.count = res.data.num
+												})
+											}
+										})
+									}
+								})
+							} else {
+								management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {
+
+									}
+								})
+							}
+						})
 					},
-					updateStudent(scope){
+					updateStudent(scope) {
 						// if ($(window).width() < 995) {
 						// 	$('#head').hide()
 						// }
-						
-						if(management.addStudent.currentEdit == scope.$index)
-						{
+
+						if (management.addStudent.currentEdit == scope.$index) {
 							// $('.updateStudent').eq(scope.$index).removeClass('el-button--warning').children().eq(0).text('修改')				
 							var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
 							var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
-							
-								if (!scope.row.idCard) {
-									management.$alert('请输入身份证号', '错误', {
-										confirmButtonText: '确定',
-										type: 'error',
-										center: true,
-										callback: action => {}
-									})
-								} 
-								else if (!(id18.test(scope.row.idCard) || id15.test(scope.row.idCard))) {
-									management.$alert('身份证格式不正确', '错误', {
-										confirmButtonText: '确定',
-										type: 'error',
-										center: true,
-										callback: action => {}
-									})
-								} 
-								else {
-									scope.row.idCard = scope.row.idCard.toUpperCase()
-									if(scope.row.idCard.length == 18)
-									{
-										scope.row.both = scope.row.idCard.substring(6,10) + '/' 
-										+ scope.row.idCard.substring(10,12) + '/' 
-										+ scope.row.idCard.substring(12,14)
-										
-										if(scope.row.idCard.substring(16,17) % 2 == 1)
-										{
-											scope.row.sex = '男'
-										}
-										else{
-											scope.row.sex = '女'
-										}
+
+							if (!scope.row.idCard) {
+								management.$alert('请输入身份证号', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {}
+								})
+							} else if (!(id18.test(scope.row.idCard) || id15.test(scope.row.idCard))) {
+								management.$alert('身份证格式不正确', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {}
+								})
+							} else {
+								scope.row.idCard = scope.row.idCard.toUpperCase()
+								if (scope.row.idCard.length == 18) {
+									scope.row.both = scope.row.idCard.substring(6, 10) + '/' +
+										scope.row.idCard.substring(10, 12) + '/' +
+										scope.row.idCard.substring(12, 14)
+
+									if (scope.row.idCard.substring(16, 17) % 2 == 1) {
+										scope.row.sex = '男'
+									} else {
+										scope.row.sex = '女'
 									}
-									else{
-										scope.row.both = '19' + scope.row.idCard.substring(6,8) + '/'
-										+ scope.row.idCard.substring(8,10) + '/' 
-										+ scope.row.idCard.substring(10,12)
-										
-										if(scope.row.idCard.substring(14,15) % 2 == 1)
-										{
-											scope.row.sex = '男'
-										}
-										else{
-											scope.row.sex = '女'
-										}
+								} else {
+									scope.row.both = '19' + scope.row.idCard.substring(6, 8) + '/' +
+										scope.row.idCard.substring(8, 10) + '/' +
+										scope.row.idCard.substring(10, 12)
+
+									if (scope.row.idCard.substring(14, 15) % 2 == 1) {
+										scope.row.sex = '男'
+									} else {
+										scope.row.sex = '女'
 									}
-								if(!scope.row.name || scope.row.name.length < 2 || scope.row.name.length > 5)
-								{
+								}
+								if (!scope.row.name || scope.row.name.length < 2 || scope.row.name.length > 5) {
 									management.$alert('姓名长度不正确', '错误', {
 										confirmButtonText: '确定',
 										type: 'error',
 										center: true,
 										callback: action => {}
 									})
-								}
-								else{
-									if(!scope.row.phone || scope.row.phone.length != 11){
+								} else {
+									if (!scope.row.phone || scope.row.phone.length != 11) {
 										management.$alert('手机号码长度不正确', '错误', {
 											confirmButtonText: '确定',
 											type: 'error',
 											center: true,
 											callback: action => {}
 										})
-									}
-									else{
+									} else {
 										axios.post('/Core/Global/frontInit.php', Qs.stringify({
 											"updateStudent": scope.row.id,
-											'name':scope.row.name,
-											'sex':scope.row.sex,
-											'both':scope.row.both,
-											'phone':scope.row.phone,
+											'name': scope.row.name,
+											'sex': scope.row.sex,
+											'both': scope.row.both,
+											'phone': scope.row.phone,
 											'idCard': scope.row.idCard,
-											'active':scope.row.active
+											'active': scope.row.active
 										}), ).then(function(res) {
 											console.log(res.data)
-											
-											if('error' in res.data)
-											{
+
+											if ('error' in res.data) {
 												management.$alert(res.data.error, '错误', {
 													confirmButtonText: '确定',
 													type: 'error',
 													center: true,
-													callback: action => {
-													}
+													callback: action => {}
 												})
-											}
-											else if('success' in res.data)
-											{
+											} else if ('success' in res.data) {
 												management.$alert('学生信息更新成功', '操作成功完成', {
 													confirmButtonText: '确定',
 													type: 'success',
 													center: true,
 													callback: action => {
 														axios.post('/Core/Global/frontInit.php', Qs.stringify({
-															"getStudentList":'',
+															"getStudentList": '',
 															'page': management.student.page,
 															'num': '10',
-															'sex':JSON.stringify(management.student.sex),
-															'grade':JSON.stringify(management.student.grade),
-															'department':JSON.stringify(management.student.department),
-															'major':JSON.stringify(management.student.major),
+															'sex': JSON.stringify(management.student.sex),
+															'grade': JSON.stringify(management.student.grade),
+															'department': JSON.stringify(management.student.department),
+															'major': JSON.stringify(management.student.major),
 														}), ).then(function(res) {
 															management.student.data = res.data
 														})
-														
+
 														axios.post('/Core/Global/frontInit.php', Qs.stringify({
 															"getStudentListCount": '',
-															'sex':JSON.stringify(management.student.sex),
-															'grade':JSON.stringify(management.student.grade),
-															'department':JSON.stringify(management.student.department),
-															'major':JSON.stringify(management.student.major),
+															'sex': JSON.stringify(management.student.sex),
+															'grade': JSON.stringify(management.student.grade),
+															'department': JSON.stringify(management.student.department),
+															'major': JSON.stringify(management.student.major),
 														}), ).then(function(res) {
 															management.student.count = res.data.num
 														})
-														
+
 														management.addStudent.currentEdit = -1
 													}
 												})
@@ -2290,160 +2375,150 @@
 									}
 								}
 							}
-						}
-						else{
+						} else {
 							management.addStudent.currentEdit = scope.$index
 						}
 						console.log(scope.$index)
 
 					},
-					deleteStudent(id){
+					deleteStudent(id) {
 						console.log(id)
 						management.$confirm('此操作将删除该学生, 是否继续?', '提示', {
-						          confirmButtonText: '确定',
-						          cancelButtonText: '取消',
-						          type: 'warning'
-						        }).then(() => {
-									axios.post('/Core/Global/frontInit.php', Qs.stringify({
-										"delStudent": id,
-									}), ).then(function(res) {
-										if ('error' in res.data) {
-											management.$alert(res.data.error, '错误', {
-												confirmButtonText: '确定',
-												type: 'error',
-												center: true,
-												callback: action => {}
-											})
-										} else if ('success' in res.data) {
-											management.$alert(res.data.success, '操作成功', {
-												confirmButtonText: '确定',
-												type: 'success',
-												center: true,
-												callback: action => {
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getStudentList": '',
-														'page': management.student.page,
-														'num': '10',
-														'sex':JSON.stringify(management.student.sex),
-														'grade':JSON.stringify(management.student.grade),
-														'department':JSON.stringify(management.student.department),
-														'major':JSON.stringify(management.student.major),
-													}), ).then(function(res) {
-														management.student.data = res.data
-													})
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getStudentListCount": '',
-														'sex':JSON.stringify(management.student.sex),
-														'grade':JSON.stringify(management.student.grade),
-														'department':JSON.stringify(management.student.department),
-														'major':JSON.stringify(management.student.major),
-													}), ).then(function(res) {
-														management.student.count = res.data.num
-													})
-												}
-											})
-										}
-									})
-						        }).catch(() => {
-						          management.$message({
-						            type: 'info',
-						            message: '已取消删除'
-						          });          
-						        });
-					},
-					addStudentSubmit(){
-						management.$refs['addStudentForm'].validate((valid) => {
-								if (valid) {
-									axios.post('/Core/Global/frontInit.php', Qs.stringify({
-										"addStudent": '',
-										'name':management.addStudent.name,
-										'sex':management.addStudent.sex,
-										'both':management.addStudent.both,
-										'phone':management.addStudent.phone,
-										'grade': management.addStudent.grade,
-										'years':management.addStudent.years,
-										'department': management.addStudent.department,
-										'major': management.addStudent.major,
-										'class': management.addStudent.Class,
-										'seat':management.addStudent.seat,
-										'idCard': management.addStudent.idCard
-									}), ).then(function(res) {
-										console.log(res.data)
-										
-										if('error' in res.data)
-										{
-											management.$alert(res.data.error, '错误', {
-												confirmButtonText: '确定',
-												type: 'error',
-												center: true,
-												callback: action => {
-												}
-											})
-										}
-										else if('success' in res.data)
-										{
-											management.$alert('学生添加成功', '操作成功完成', {
-												confirmButtonText: '确定',
-												type: 'success',
-												center: true,
-												callback: action => {
-													management.addStudent.name = ''
-													management.addStudent.idCard = ''
-													management.addStudent.both = ''
-													management.addStudent.phone = ''
-													management.addStudent.sex = ''
-													management.addStudent.seat = ''
-													axios.post('/Core/Global/frontInit.php', Qs.stringify({
-														"getMaxSeat": '',
-														"department": management.addStudent.department,
-														"major": management.addStudent.major,
-														"grade": management.addStudent.grade,
-														"class": management.addStudent.Class,
-													}), ).then(function(res) {
-														if(res.data["seat"] < 10)
-														{
-															res.data["seat"] = '0' + res.data["seat"]
-														}
-														management.addStudent.seat = res.data["seat"]
-													})
-												}
-											})
-										}
-									})
-								} else {
-									management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"delStudent": id,
+							}), ).then(function(res) {
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
 										confirmButtonText: '确定',
 										type: 'error',
 										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
 										callback: action => {
-						
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getStudentList": '',
+												'page': management.student.page,
+												'num': '10',
+												'sex': JSON.stringify(management.student.sex),
+												'grade': JSON.stringify(management.student.grade),
+												'department': JSON.stringify(management.student.department),
+												'major': JSON.stringify(management.student.major),
+											}), ).then(function(res) {
+												management.student.data = res.data
+											})
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getStudentListCount": '',
+												'sex': JSON.stringify(management.student.sex),
+												'grade': JSON.stringify(management.student.grade),
+												'department': JSON.stringify(management.student.department),
+												'major': JSON.stringify(management.student.major),
+											}), ).then(function(res) {
+												management.student.count = res.data.num
+											})
 										}
 									})
 								}
 							})
+						}).catch(() => {
+							management.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
 					},
-					studentFilter(val){
-						if('sex' in val)
-						{
+					addStudentSubmit() {
+						management.$refs['addStudentForm'].validate((valid) => {
+							if (valid) {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									"addStudent": '',
+									'name': management.addStudent.name,
+									'sex': management.addStudent.sex,
+									'both': management.addStudent.both,
+									'phone': management.addStudent.phone,
+									'grade': management.addStudent.grade,
+									'years': management.addStudent.years,
+									'department': management.addStudent.department,
+									'major': management.addStudent.major,
+									'class': management.addStudent.Class,
+									'seat': management.addStudent.seat,
+									'idCard': management.addStudent.idCard
+								}), ).then(function(res) {
+									console.log(res.data)
+
+									if ('error' in res.data) {
+										management.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {}
+										})
+									} else if ('success' in res.data) {
+										management.$alert('学生添加成功', '操作成功完成', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
+												management.addStudent.name = ''
+												management.addStudent.idCard = ''
+												management.addStudent.both = ''
+												management.addStudent.phone = ''
+												management.addStudent.sex = ''
+												management.addStudent.seat = ''
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getMaxSeat": '',
+													"department": management.addStudent.department,
+													"major": management.addStudent.major,
+													"grade": management.addStudent.grade,
+													"class": management.addStudent.Class,
+												}), ).then(function(res) {
+													if (res.data["seat"] < 10) {
+														res.data["seat"] = '0' + res.data["seat"]
+													}
+													management.addStudent.seat = res.data["seat"]
+												})
+											}
+										})
+									}
+								})
+							} else {
+								management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {
+
+									}
+								})
+							}
+						})
+					},
+					studentFilter(val) {
+						if ('sex' in val) {
 							management.student.sex = val['sex']
 						}
-						if('grade' in val)
-						{
+						if ('grade' in val) {
 							management.student.grade = val['grade']
 						}
-						if('department' in val)
-						{
+						if ('department' in val) {
 							management.student.department = val['department']
-							
+
 							axios.post('/Core/Global/frontInit.php', Qs.stringify({
 								"getMajor": '',
-								'department':JSON.stringify(val['department'])
+								'department': JSON.stringify(val['department'])
 							}), ).then(function(res) {
 								management.student.majorFilter = res.data
 							})
 						}
-						if('major' in val)
-						{
+						if ('major' in val) {
 							management.student.major = val['major']
 						}
 						management.student.page = 1
@@ -2456,19 +2531,19 @@
 							"getStudentList": '',
 							'page': val,
 							'num': '10',
-							'sex':JSON.stringify(management.student.sex),
-							'grade':JSON.stringify(management.student.grade),
-							'department':JSON.stringify(management.student.department),
-							'major':JSON.stringify(management.student.major),
+							'sex': JSON.stringify(management.student.sex),
+							'grade': JSON.stringify(management.student.grade),
+							'department': JSON.stringify(management.student.department),
+							'major': JSON.stringify(management.student.major),
 						}), ).then(function(res) {
 							management.student.data = res.data
 						})
 						axios.post('/Core/Global/frontInit.php', Qs.stringify({
 							"getStudentListCount": '',
-							'sex':JSON.stringify(management.student.sex),
-							'grade':JSON.stringify(management.student.grade),
-							'department':JSON.stringify(management.student.department),
-							'major':JSON.stringify(management.student.major),
+							'sex': JSON.stringify(management.student.sex),
+							'grade': JSON.stringify(management.student.grade),
+							'department': JSON.stringify(management.student.department),
+							'major': JSON.stringify(management.student.major),
 						}), ).then(function(res) {
 							management.student.count = res.data.num
 						})

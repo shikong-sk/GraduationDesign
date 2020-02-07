@@ -348,5 +348,29 @@ if(isset($_POST['delAdmin']))
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if (isset($_POST['getClassCount']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getClassCount($_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['getClass'])  && isset($_POST['page']) && isset($_POST['num']))
+{
+
+//
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getClass($_POST['page'],$_POST['num'],$_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');
