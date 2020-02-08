@@ -948,6 +948,29 @@
 								</el-pagination>
 
 							</el-tab-pane>
+							
+							<el-tab-pane label="添加班级">
+								<el-form ref="addClassesForm" :model="addClasses" label-width="80px" label-position="right" :rules="addClassesRules"
+								 style="max-width: none;">
+							
+									<el-form-item label="年级" prop="grade">
+										<el-select v-model="addClasses.grade" placeholder="请选择年级" @change="(v)=>{addClassesGrade(v)}">
+											<el-option v-for="data in addClasses.gradeList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="系" prop="department">
+										<el-select v-model="addClasses.department" placeholder="请选择系" @change="(v)=>{addClassesDepartment(v)}">
+											<el-option v-for="data in addClasses.departmentList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<div>
+										<el-button type="primary" class="mx-auto text-center btn-block" @click="addClassesSubmit">添加班级</el-button>
+									</div>
+							
+								</el-form>
+							</el-tab-pane>
 						</el-tabs>
 					</div>
 				</el-tab-pane>
@@ -1415,6 +1438,7 @@
 								trigger: ['blur', 'change']
 							}, ],
 						},
+						
 						classes: {
 							data: [''],
 							grade: '',
@@ -1426,6 +1450,38 @@
 							departmentFilter: [],
 							majorFilter: [],
 						},
+						addClasses: {
+						
+							department: '',
+							departmentList: '',
+							years: '3',
+							major: '',
+							majorList: '',
+							grade: '',
+							gradeList: "",
+						
+							majorDisabled: true,
+							gradeDisabled: true,
+							classDisabled: true,
+						},
+						addClassesRules: {
+							grade: [{
+								required: true,
+								message: '请选择年级',
+								trigger: 'blur'
+							}, ],
+							department: [{
+								required: true,
+								message: '请选择学系',
+								trigger: 'blur'
+							}, ],
+							major: [{
+								required: true,
+								message: '请选择专业',
+								trigger: 'blur'
+							}, ],
+						},
+						
 						student: {
 							data: [''],
 							sex: '',
@@ -1594,6 +1650,13 @@
 				mounted() {
 
 					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"getGrade": ''
+					}), ).then(function(res) {
+						management.addClasses.gradeList = res.data
+						console.log(res.data)
+					})
+
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
 						"getClass": '',
 						'page': '1',
 						'num': '10'
@@ -1755,6 +1818,71 @@
 					})
 				},
 				methods: {
+					addClassesSubmit(){
+						management.$refs['addClassesForm'].validate((valid) => {
+							if (valid) {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								}), ).then(function(res) {
+									console.log(res.data)
+						
+									if ('error' in res.data) {
+										management.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {}
+										})
+									} else if ('success' in res.data) {
+										management.$alert('班级添加成功', '操作成功完成', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
+												management.addStudent.name = ''
+												management.addStudent.idCard = ''
+												management.addStudent.both = ''
+												management.addStudent.phone = ''
+												management.addStudent.sex = ''
+												management.addStudent.seat = ''
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getMaxSeat": '',
+													"department": management.addStudent.department,
+													"major": management.addStudent.major,
+													"grade": management.addStudent.grade,
+													"class": management.addStudent.Class,
+												}), ).then(function(res) {
+													if (res.data["seat"] < 10) {
+														res.data["seat"] = '0' + res.data["seat"]
+													}
+													management.addStudent.seat = res.data["seat"]
+												})
+											}
+										})
+									}
+								})
+							} else {
+								management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {
+						
+									}
+								})
+							}
+						})
+					},
+					addClassesDepartment(v){
+						console.log(v)
+					},
+					addClassesGrade(v){
+						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"DepartmentList": v
+						}), ).then(function(res) {
+							management.addClasses.departmentList = res.data
+						})
+					},
 					deleteClass(scope) {
 						console.log(scope)
 						management.$confirm('此操作将删除该班级, 是否继续?', '提示', {
@@ -1763,7 +1891,11 @@
 							type: 'warning'
 						}).then(() => {
 							axios.post('/Core/Global/frontInit.php', Qs.stringify({
-								"delClass": id,
+								"delClass": '',
+								"class":scope.row.class,
+								"grade":scope.row.grade,
+								"department":scope.row.department,
+								"major":scope.row.major,
 							}), ).then(function(res) {
 								if ('error' in res.data) {
 									management.$alert(res.data.error, '错误', {

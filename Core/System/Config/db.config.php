@@ -380,6 +380,21 @@ Class sqlHelper
         return $json;
     }
 
+    function DepartmentList($grade)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT DISTINCT g.department,d.departmentName FROM ".$this::grade." g,".$this::department." d WHERE d.id = g.department AND g.grade = '$grade'");
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['departmentName'], 'value' => $data['department']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
     function getDepartment()
     {
         $database = $this->database;
@@ -955,6 +970,36 @@ Class sqlHelper
         }
         $json = json_encode($json, JSON_UNESCAPED_UNICODE);
         return $json;
+    }
+
+    function delClass($grade,$department,$major,$class){
+        $database = $this->database;
+
+        $department = $database->query("SELECT id FROM ".$this::department." WHERE departmentName = '$department'") ->fetch_assoc()['id'];
+        if(!$department)
+        {
+            return json_encode(Array('error' => '该学系不存在'), JSON_UNESCAPED_UNICODE);
+        }
+        $major = $database->query("SELECT id FROM ".$this::major." WHERE `name` = '$major' AND `department` = '$department'") ->fetch_assoc()['id'];
+        if(!$major)
+        {
+            return json_encode(Array('error' => '该专业不存在'), JSON_UNESCAPED_UNICODE);
+        }
+
+        $select = $database->query("SELECT count(*) as num FROM ".$this::student." WHERE `grade` = '$grade' AND `department` = '$department' AND `major` = '$major' AND `class` = '$class'") ->fetch_assoc();
+
+        if($select['num'] == '0') {
+            $query = "DELETE FROM ".$this::_class." WHERE `grade` = '$grade' AND `department` = '$department' AND `major` = '$major' AND `class` = '$class'";
+            $delRes = $database->query($query);
+            if ($delRes) {
+                return json_encode(Array('success' => '班级删除成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '班级删除失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该班级已有学生，不可删除'), JSON_UNESCAPED_UNICODE);
+        }
     }
 
 }
