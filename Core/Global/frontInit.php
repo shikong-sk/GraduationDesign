@@ -392,5 +392,15 @@ if(isset($_POST['DepartmentList']))
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if(isset($_POST['MajorList']) && isset($_POST['grade']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->MajorList($_POST['MajorList'],$_POST['grade']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

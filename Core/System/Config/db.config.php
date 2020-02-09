@@ -395,6 +395,21 @@ Class sqlHelper
         return $json;
     }
 
+    function MajorList($department,$grade)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT DISTINCT g.major,m.name FROM ".$this::grade." g,".$this::department." d,".$this::major." m WHERE d.id = g.department AND m.department = g.department AND m.id = g.major AND g.grade = '$grade' AND g.department = '$department'");
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['name'], 'value' => $data['major']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
     function getDepartment()
     {
         $database = $this->database;

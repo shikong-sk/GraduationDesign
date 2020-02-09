@@ -965,6 +965,12 @@
 										</el-select>
 									</el-form-item>
 							
+									<el-form-item label="专业" prop="major">
+										<el-select v-model="addClasses.major" placeholder="请选择专业" @change="(v)=>{addClassesMajor(v)}">
+											<el-option v-for="data in addClasses.majorList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
 									<div>
 										<el-button type="primary" class="mx-auto text-center btn-block" @click="addClassesSubmit">添加班级</el-button>
 									</div>
@@ -1872,8 +1878,17 @@
 							}
 						})
 					},
+					addClassesMajor(v){
+						console.log(v)
+					},
 					addClassesDepartment(v){
 						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"MajorList": v,
+							'grade':management.addClasses.grade
+						}), ).then(function(res) {
+							management.addClasses.majorList = res.data
+						})
 					},
 					addClassesGrade(v){
 						console.log(v)
