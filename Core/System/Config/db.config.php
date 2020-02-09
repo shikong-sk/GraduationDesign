@@ -410,6 +410,28 @@ Class sqlHelper
         return $json;
     }
 
+    function getMaxClass($grade,$department, $major)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT IFNULL(MAX((`class`))+1,1) as classes FROM ".$this::_class." WHERE grade = '$grade' AND department = '$department' AND major = '$major'");
+        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function addClass($grade,$department,$major,$class)
+    {
+
+        $database = $this->database;
+
+        $res = $database->query("INSERT INTO ".$this::_class."(`class`, `grade`, `major`, `department`) VALUES ('$class', '$grade', '$major', '$department');");
+        if ($res) {
+            return json_encode(Array('success' => '班级添加成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '班级添加失败'), JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
     function getDepartment()
     {
         $database = $this->database;

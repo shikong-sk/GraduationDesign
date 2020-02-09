@@ -971,6 +971,11 @@
 										</el-select>
 									</el-form-item>
 							
+									<el-form-item label="班级" prop="Class">
+										<el-input placeholder="请输入班号" v-model="addClasses.Class" oninput="value=value.replace(/[^(1-9)]/g,'')">
+										</el-input>
+									</el-form-item>
+							
 									<div>
 										<el-button type="primary" class="mx-auto text-center btn-block" @click="addClassesSubmit">添加班级</el-button>
 									</div>
@@ -1465,6 +1470,7 @@
 							majorList: '',
 							grade: '',
 							gradeList: "",
+							Class:'',
 						
 							majorDisabled: true,
 							gradeDisabled: true,
@@ -1486,6 +1492,17 @@
 								message: '请选择专业',
 								trigger: 'blur'
 							}, ],
+							Class:[{
+								required: true,
+								message: '请输入班级编号',
+								trigger: ['blur', 'change'],
+							},								
+							{
+								min: 1,
+								max: 1,
+								message: '请输入1~9的班级编号',
+								trigger: ['blur', 'change']
+							},],
 						},
 						
 						student: {
@@ -1828,6 +1845,11 @@
 						management.$refs['addClassesForm'].validate((valid) => {
 							if (valid) {
 								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									'addClass':'',
+									'grade':management.addClasses.grade,
+									'department':management.addClasses.department,
+									'major':management.addClasses.major,
+									'class':management.addClasses.Class
 								}), ).then(function(res) {
 									console.log(res.data)
 						
@@ -1844,24 +1866,35 @@
 											type: 'success',
 											center: true,
 											callback: action => {
-												management.addStudent.name = ''
-												management.addStudent.idCard = ''
-												management.addStudent.both = ''
-												management.addStudent.phone = ''
-												management.addStudent.sex = ''
-												management.addStudent.seat = ''
+												
 												axios.post('/Core/Global/frontInit.php', Qs.stringify({
-													"getMaxSeat": '',
-													"department": management.addStudent.department,
-													"major": management.addStudent.major,
-													"grade": management.addStudent.grade,
-													"class": management.addStudent.Class,
+													"getMaxClass": '',
+													'grade':management.addClasses.grade,
+													'department':management.addClasses.department,
+													'major':management.addClasses.major
 												}), ).then(function(res) {
-													if (res.data["seat"] < 10) {
-														res.data["seat"] = '0' + res.data["seat"]
-													}
-													management.addStudent.seat = res.data["seat"]
+													management.addClasses.Class = res.data.classes
 												})
+												
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getClass": '',
+													'page': management.classes.page,
+													'num': '10',
+													'grade': JSON.stringify(management.classes.grade),
+													'department': JSON.stringify(management.classes.department),
+													'major': JSON.stringify(management.classes.major),
+												}), ).then(function(res) {
+													management.classes.data = res.data
+												})
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getClassCount": '',
+													'grade': JSON.stringify(management.classes.grade),
+													'department': JSON.stringify(management.classes.department),
+													'major': JSON.stringify(management.classes.major),
+												}), ).then(function(res) {
+													management.classes.count = res.data.num
+												})
+												
 											}
 										})
 									}
@@ -1880,6 +1913,14 @@
 					},
 					addClassesMajor(v){
 						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"getMaxClass": '',
+							'grade':management.addClasses.grade,
+							'department':management.addClasses.department,
+							'major':v
+						}), ).then(function(res) {
+							management.addClasses.Class = res.data.classes
+						})
 					},
 					addClassesDepartment(v){
 						console.log(v)
@@ -1888,6 +1929,8 @@
 							'grade':management.addClasses.grade
 						}), ).then(function(res) {
 							management.addClasses.majorList = res.data
+							management.addClasses.major = ''
+							management.addClasses.Class = ''
 						})
 					},
 					addClassesGrade(v){
@@ -1896,6 +1939,10 @@
 							"DepartmentList": v
 						}), ).then(function(res) {
 							management.addClasses.departmentList = res.data
+							
+							management.addClasses.department = ''
+							management.addClasses.major = ''
+							management.addClasses.Class = ''
 						})
 					},
 					deleteClass(scope) {
@@ -1943,6 +1990,11 @@
 											}), ).then(function(res) {
 												management.classes.count = res.data.num
 											})
+											
+											management.addClasses.department = ''
+											management.addClasses.major = ''
+											management.addClasses.Class = ''
+											management.addClasses.grade = ''
 										}
 									})
 								}
@@ -1976,7 +2028,6 @@
 						console.log(val)
 					},
 					classCurrentChange(val) {
-						management.addStudent.currentEdit = -1
 						axios.post('/Core/Global/frontInit.php', Qs.stringify({
 							"getClass": '',
 							'page': val,
