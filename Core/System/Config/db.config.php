@@ -1139,6 +1139,38 @@ Class sqlHelper
 
     }
 
+    function delMajor($department,$major){
+        $database = $this->database;
+
+        $department = $database->query("SELECT id FROM ".$this::department." WHERE departmentName = '$department'") ->fetch_assoc()['id'];
+        if(!$department)
+        {
+            return json_encode(Array('error' => '该学系不存在'), JSON_UNESCAPED_UNICODE);
+        }
+
+        $major = $database->query("SELECT id FROM ".$this::major." WHERE `name` = '$major' AND `department` = '$department'") ->fetch_assoc()['id'];
+        if(!$major)
+        {
+            return json_encode(Array('error' => '该专业不存在'), JSON_UNESCAPED_UNICODE);
+        }
+
+        $select = $database->query("SELECT count(*) as num FROM ".$this::student." WHERE `department` = '$department' AND `major` = '$major'") ->fetch_assoc();
+
+        if($select['num'] == '0') {
+            $query = "DELETE FROM ".$this::major." WHERE `department` = '$department' AND `id` = '$major'";
+
+            $delRes = $database->query($query);
+            if ($delRes) {
+                return json_encode(Array('success' => '专业删除成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '专业删除失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该专业已有学生，不可删除'), JSON_UNESCAPED_UNICODE);
+        }
+    }
+
 }
 
 ?>

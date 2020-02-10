@@ -457,5 +457,15 @@ if(isset($_POST['addMajor']) && isset($_POST['department']) && isset($_POST['maj
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if(isset($_POST['delMajor']) && isset($_POST['department']) && isset($_POST['major']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->delMajor($_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');
