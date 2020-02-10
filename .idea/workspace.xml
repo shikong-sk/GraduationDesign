@@ -10,20 +10,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="431" lean-forward="true" selection-start-line="431" selection-end-line="431" />
+            <state relative-caret-position="-741">
+              <caret line="1077" column="35" lean-forward="true" selection-start-line="1077" selection-start-column="35" selection-end-line="1077" selection-end-column="35" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="432">
-              <caret line="418" column="93" selection-start-line="418" selection-start-column="93" selection-end-line="418" selection-end-column="93" />
+              <caret line="453" column="27" selection-start-line="453" selection-start-column="27" selection-end-line="453" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -167,6 +167,10 @@
       <find>getStudentList</find>
       <find>getGrade</find>
       <find>seat</find>
+      <find>DepartmentList</find>
+      <find>Major</find>
+      <find>limit</find>
+      <find>Department</find>
     </findStrings>
     <replaceStrings>
       <replace>department</replace>
@@ -195,14 +199,14 @@
         <option value="$PROJECT_DIR$/template/default/front/home.html" />
         <option value="$PROJECT_DIR$/template/default/front/login.html" />
         <option value="$PROJECT_DIR$/channel.php" />
-        <option value="$PROJECT_DIR$/Core/System/Config/db.config.php" />
         <option value="$PROJECT_DIR$/Core/Global/frontInit.php" />
+        <option value="$PROJECT_DIR$/Core/System/Config/db.config.php" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="28" />
+    <option name="x" value="-70" />
+    <option name="y" value="73" />
     <option name="width" value="1863" />
     <option name="height" value="972" />
   </component>
@@ -310,15 +314,15 @@
       <updated>1578834597637</updated>
       <workItem from="1578834598974" duration="78565000" />
       <workItem from="1579720462144" duration="44164000" />
-      <workItem from="1580618436211" duration="31636000" />
+      <workItem from="1580618436211" duration="38750000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="154365000" />
+    <option name="totallyTimeSpent" value="161479000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="23" width="1490" height="777" extended-state="0" />
+    <frame x="-56" y="59" width="1490" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1892458" />
@@ -531,17 +535,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="431" lean-forward="true" selection-start-line="431" selection-end-line="431" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="432">
-          <caret line="418" column="93" selection-start-line="418" selection-start-column="93" selection-end-line="418" selection-end-column="93" />
+          <caret line="453" column="27" selection-start-line="453" selection-start-column="27" selection-end-line="453" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-741">
+          <caret line="1077" column="35" lean-forward="true" selection-start-line="1077" selection-start-column="35" selection-end-line="1077" selection-end-column="35" />
         </state>
       </provider>
     </entry>

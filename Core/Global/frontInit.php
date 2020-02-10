@@ -26,6 +26,10 @@ if (isset($_POST['departmentList'])) {
     exit($db->getDepartmentList());
 }
 
+if (isset($_POST['Department'])) {
+    exit($db->Department());
+}
+
 if (isset($_POST['majorList'])) {
     exit($db->getMajorList($_POST['majorList']));
 }
@@ -417,6 +421,37 @@ if(isset($_POST['addClass']) && isset($_POST['grade']) && isset($_POST['departme
 {
     if($_SESSION['identity'] === 'admin'){
         exit($db->addClass($_POST['grade'],$_POST['department'],$_POST['major'],$_POST['class']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['Major']) && isset($_POST['page']) && isset($_POST['num']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->Major($_POST['department'],$_POST['page'],$_POST['num']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['MajorCount']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->MajorCount($_POST['department']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['addMajor']) && isset($_POST['department']) && isset($_POST['major']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->addMajor($_POST['department'],$_POST['major']));
     }
     else{
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));

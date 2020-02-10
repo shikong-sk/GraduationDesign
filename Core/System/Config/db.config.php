@@ -395,6 +395,21 @@ Class sqlHelper
         return $json;
     }
 
+    function Department()
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT id,departmentName FROM ".$this::department);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['departmentName'], 'value' => $data['id']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
     function MajorList($department,$grade)
     {
         $database = $this->database;
@@ -1037,6 +1052,91 @@ Class sqlHelper
         else{
             return json_encode(Array('error' => '该班级已有学生，不可删除'), JSON_UNESCAPED_UNICODE);
         }
+    }
+
+    function Major($department = '',$page,$num)
+    {
+        $database = $this->database;
+        $query = "SELECT d.departmentName as department,m.name as major FROM ".$this::department." d,".$this::major." m WHERE m.department = d.id";
+
+        if ((strlen($department) != 0)) {
+            $department = json_decode($department);
+            if (is_array($department) && count($department) != 0) {
+                if (count($department) > 1) {
+                    $query .= " AND (d.id = '" . $department[0] . "'";
+                    foreach (array_slice($department, 1) as $s) {
+                        $query .= " OR d.id='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND d.id = '" . $department[0] . "'";
+                }
+            }
+        }
+
+
+        $page = ($page - 1) * $num;
+        $query .=" LIMIT $page,$num";
+
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function MajorCount($department = "")
+    {
+        $database = $this->database;
+        $query = "SELECT count(*) as num FROM ".$this::department." d,".$this::major." m WHERE m.department = d.id";
+
+        if ((strlen($department) != 0)) {
+            $department = json_decode($department);
+            if (is_array($department) && count($department) != 0) {
+                if (count($department) > 1) {
+                    $query .= " AND (d.id = '" . $department[0] . "'";
+                    foreach (array_slice($department, 1) as $s) {
+                        $query .= " OR d.id='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND d.id = '" . $department[0] . "'";
+                }
+            }
+        }
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function addMajor($department,$name)
+    {
+
+        $database = $this->database;
+
+        $id = $database->query("select IFNULL(MAX((`id`))+1,1) as id FROM ".$this::major." WHERE department = '$department'")->fetch_assoc()['id'];
+
+        if(intval($id)<10)
+        {
+            $id = '0'. strval($id);
+        }
+
+        $res = $database->query("INSERT INTO ".$this::major."(`id`, `name`, `department`, `active`) VALUES ('$id', '$name', '$department', 1)");
+        if ($res) {
+            return json_encode(Array('success' => '专业添加成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '专业添加失败'), JSON_UNESCAPED_UNICODE);
+        }
+
     }
 
 }
