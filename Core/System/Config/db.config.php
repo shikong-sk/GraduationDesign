@@ -1171,6 +1171,84 @@ Class sqlHelper
         }
     }
 
+    function DepartmentDetail($page,$num)
+    {
+        $database = $this->database;
+        $query = "SELECT id,departmentName as department FROM ".$this::department;
+
+        $page = ($page - 1) * $num;
+        $query .=" LIMIT $page,$num";
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function DepartmentCount()
+    {
+        $database = $this->database;
+        $query = "SELECT count(*) as num FROM ".$this::department;
+
+
+        $res = $database->query($query);
+        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function addDepartment($name)
+    {
+
+        $database = $this->database;
+
+        $id = $database->query("select IFNULL(MAX((`id`))+1,1) as id FROM ".$this::department)->fetch_assoc()['id'];
+
+        if(intval($id)<10)
+        {
+            $id = '0'. strval($id);
+        }
+
+        $res = $database->query("INSERT INTO ".$this::department."(`id`, `departmentName`, `active`) VALUES ('$id', '$name', 1)");
+        if ($res) {
+            return json_encode(Array('success' => '院系添加成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '院系添加失败'), JSON_UNESCAPED_UNICODE);
+        }
+
+    }
+
+    function delDepartment($department){
+        $database = $this->database;
+
+        $department = $database->query("SELECT id FROM ".$this::department." WHERE departmentName = '$department'") ->fetch_assoc()['id'];
+        if(!$department)
+        {
+            return json_encode(Array('error' => '该学系不存在'), JSON_UNESCAPED_UNICODE);
+        }
+
+        $select = $database->query("SELECT count(*) as num FROM ".$this::student." WHERE `department` = '$department'") ->fetch_assoc();
+
+        if($select['num'] == '0') {
+            $query = "DELETE FROM ".$this::department." WHERE `id` = '$department'";
+
+            $delRes = $database->query($query);
+            if ($delRes) {
+                return json_encode(Array('success' => '院系删除成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '院系删除失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该院系已有学生，不可删除'), JSON_UNESCAPED_UNICODE);
+        }
+    }
+
 }
 
 ?>

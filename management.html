@@ -1164,7 +1164,10 @@
 				$('#major').css({
 					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
 				})
-
+				$('#department').css({
+					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+				})
+				
 				if ($(window).width() <= 995) {
 					management.tabPosition = 'top'
 					$('#management').css({
@@ -1548,7 +1551,7 @@
 						},
 						
 						Department: {
-							data: [''],
+							data: [],
 						
 							page: 1,
 							count: 0,
@@ -1568,7 +1571,7 @@
 						},
 						
 						Major: {
-							data: [''],
+							data: [],
 
 							department: '',
 							major: '',
@@ -1599,7 +1602,7 @@
 						},
 						
 						classes: {
-							data: [''],
+							data: [],
 							grade: '',
 							department: '',
 							major: '',
@@ -1654,7 +1657,7 @@
 						},
 						
 						student: {
-							data: [''],
+							data: [],
 							sex: '',
 							grade: '',
 							department: '',
@@ -1675,7 +1678,7 @@
 						},
 
 						teacher: {
-							data: [''],
+							data: [],
 							page: 1,
 							count: 0,
 						},
@@ -1745,7 +1748,7 @@
 						},
 
 						admin: {
-							data: [''],
+							data: [],
 							page: 1,
 							count: 0,
 						},
@@ -1833,6 +1836,19 @@
 						management.addClasses.gradeList = res.data
 
 						console.log(res.data)
+					})
+
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"DepartmentDetail": '',
+						'page': '1',
+						'num': '10',
+					}), ).then(function(res) {
+						management.Department.data = res.data
+					})
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"DepartmentCount": '',
+					}), ).then(function(res) {
+						management.Department.count = res.data.num
 					})
 
 					axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -2017,7 +2033,6 @@
 								axios.post('/Core/Global/frontInit.php', Qs.stringify({
 									'addDepartment':'',
 									'department':management.addDepartment.department,
-									'major':management.addDepartment.major,
 								}), ).then(function(res) {
 									console.log(res.data)
 						
@@ -2029,7 +2044,7 @@
 											callback: action => {}
 										})
 									} else if ('success' in res.data) {
-										management.$alert('专业添加成功', '操作成功完成', {
+										management.$alert('院系添加成功', '操作成功完成', {
 											confirmButtonText: '确定',
 											type: 'success',
 											center: true,
@@ -2037,7 +2052,7 @@
 												management.addDepartment.major = ''
 												
 												axios.post('/Core/Global/frontInit.php', Qs.stringify({
-													"Department": '',
+													"DepartmentDetail": '',
 													'page': management.Department.page,
 													'num': '10',
 												}), ).then(function(res) {
@@ -2045,7 +2060,6 @@
 												})
 												axios.post('/Core/Global/frontInit.php', Qs.stringify({
 													"DepartmentCount": '',
-													'department': JSON.stringify(management.Department.department),
 												}), ).then(function(res) {
 													management.Department.count = res.data.num
 												})
@@ -2068,7 +2082,7 @@
 					},
 					deleteDepartment(scope) {
 						console.log(scope)
-						management.$confirm('此操作将删除该专业, 是否继续?', '提示', {
+						management.$confirm('此操作将删除该院系, 是否继续?', '提示', {
 							confirmButtonText: '确定',
 							cancelButtonText: '取消',
 							type: 'warning'
@@ -2090,7 +2104,7 @@
 										center: true,
 										callback: action => {
 											axios.post('/Core/Global/frontInit.php', Qs.stringify({
-												"Department": '',
+												"DepartmentDetail": '',
 												'page': management.Department.page,
 												'num': '10',
 											}), ).then(function(res) {
@@ -2117,7 +2131,7 @@
 					},
 					departmentCurrentChange(val) {
 						axios.post('/Core/Global/frontInit.php', Qs.stringify({
-							"Department": '',
+							"DepartmentDetail": '',
 							'page': val,
 							'num': '10',
 						}), ).then(function(res) {

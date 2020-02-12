@@ -467,5 +467,46 @@ if(isset($_POST['delMajor']) && isset($_POST['department']) && isset($_POST['maj
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if(isset($_POST['DepartmentDetail']) && isset($_POST['page']) && isset($_POST['num']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->DepartmentDetail($_POST['page'],$_POST['num']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['DepartmentCount']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->DepartmentCount());
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['addDepartment']) && isset($_POST['department']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->addDepartment($_POST['department']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if(isset($_POST['delDepartment']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->delDepartment($_POST['delDepartment']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');
