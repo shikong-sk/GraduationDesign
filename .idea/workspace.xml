@@ -13,8 +13,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="950">
-              <caret line="1247" column="52" selection-start-line="1247" selection-start-column="52" selection-end-line="1247" selection-end-column="52" />
+            <state relative-caret-position="383">
+              <caret line="1269" column="134" selection-start-line="1269" selection-start-column="134" selection-end-line="1269" selection-end-column="134" />
             </state>
           </provider>
         </entry>
@@ -22,8 +22,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="501" column="33" selection-start-line="501" selection-start-column="33" selection-end-line="501" selection-end-column="33" />
+            <state relative-caret-position="307">
+              <caret line="522" column="1" lean-forward="true" selection-start-line="522" selection-start-column="1" selection-end-line="522" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -32,7 +32,7 @@
         <entry file="file://$PROJECT_DIR$/content.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="152">
-              <caret line="8" column="57" lean-forward="true" selection-end-line="108" selection-end-column="50" />
+              <caret line="8" column="57" selection-end-line="108" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -40,7 +40,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/channel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
+            <state relative-caret-position="988">
               <caret line="52" column="24" lean-forward="true" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
             </state>
           </provider>
@@ -165,7 +165,6 @@
       <find>del</find>
       <find>grade</find>
       <find>getStudentList</find>
-      <find>getGrade</find>
       <find>seat</find>
       <find>Major</find>
       <find>limit</find>
@@ -174,6 +173,9 @@
       <find>DepartmentList</find>
       <find>Department</find>
       <find>getDepartment</find>
+      <find>getGrade</find>
+      <find>getClass</find>
+      <find>majorList</find>
     </findStrings>
     <replaceStrings>
       <replace>department</replace>
@@ -208,16 +210,17 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="72" />
-    <option name="y" value="58" />
-    <option name="width" value="1863" />
-    <option name="height" value="972" />
+    <option name="x" value="-50" />
+    <option name="y" value="22" />
+    <option name="width" value="1865" />
+    <option name="height" value="975" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -278,7 +281,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -318,17 +320,18 @@
       <workItem from="1578834598974" duration="78565000" />
       <workItem from="1579720462144" duration="44164000" />
       <workItem from="1580618436211" duration="43068000" />
+      <workItem from="1581507440605" duration="3159000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165797000" />
+    <option name="totallyTimeSpent" value="168956000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="58" y="47" width="1490" height="777" extended-state="0" />
+    <frame x="-40" y="18" width="1492" height="780" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1892458" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19177127" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -434,10 +437,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Core/System/core.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="138" column="36" lean-forward="true" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/content.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
-          <caret line="8" column="57" lean-forward="true" selection-end-line="108" selection-end-column="50" />
+          <caret line="8" column="57" selection-end-line="108" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/channel.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="988">
+          <caret line="52" column="24" lean-forward="true" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -524,31 +541,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/System/core.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
-          <caret line="138" column="36" lean-forward="true" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/channel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="52" column="24" lean-forward="true" selection-start-line="52" selection-start-column="24" selection-end-line="52" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="950">
-          <caret line="1247" column="52" selection-start-line="1247" selection-start-column="52" selection-end-line="1247" selection-end-column="52" />
+        <state relative-caret-position="383">
+          <caret line="1269" column="134" selection-start-line="1269" selection-start-column="134" selection-end-line="1269" selection-end-column="134" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="501" column="33" selection-start-line="501" selection-start-column="33" selection-end-line="501" selection-end-column="33" />
+        <state relative-caret-position="307">
+          <caret line="522" column="1" lean-forward="true" selection-start-line="522" selection-start-column="1" selection-end-line="522" selection-end-column="1" />
         </state>
       </provider>
     </entry>

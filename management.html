@@ -1080,6 +1080,42 @@
 					</div>
 				</el-tab-pane>
 
+				<el-tab-pane label="开设专业">
+					<div id="department">
+						<el-tabs tab-position="top" style="">
+							
+							<el-tab-pane label="开设专业">
+								<el-form ref="addGradeForm" :model="addGrade" label-width="80px" label-position="right" :rules="addGradeRules"
+								 style="max-width: none;">
+							
+									<el-form-item label="年级" prop="grade">
+										<el-select v-model="addGrade.grade" placeholder="请选择年级" @change="(v)=>{addGradeGrade(v)}">
+											<el-option v-for="data in addGrade.gradeList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="院系" prop="department">
+										<el-select v-model="addGrade.department" placeholder="请选择院系" @change="(v)=>{addGradeDepartment(v)}">
+											<el-option v-for="data in addGrade.departmentList" :key="data.id" :label="data.departmentName" :value="data.id"></el-option>
+										</el-select>
+									</el-form-item>
+										
+									<el-form-item label="专业" prop="major">
+										<el-select v-model="addGrade.major" placeholder="请选择专业" @change="(v)=>{addGradeMajor(v)}">
+											<el-option v-for="data in addGrade.majorList" :key="data.id" :label="data.name" :value="data.id"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<div>
+										<el-button type="primary" class="mx-auto text-center btn-block" @click="addGradeSubmit">开设专业</el-button>
+									</div>
+							
+								</el-form>
+							</el-tab-pane>
+						</el-tabs>
+					</div>
+				</el-tab-pane>
+
 			</el-tabs>
 
 		</div>
@@ -1550,6 +1586,37 @@
 							}, ],
 						},
 						
+						addGrade: {
+						
+							department: '',
+							departmentList: '',
+							major: '',
+							majorList: '',
+							grade: '',
+							gradeList: "",
+						
+							majorDisabled: true,
+							gradeDisabled: true,
+							classDisabled: true,
+						},
+						addGradeRules: {
+							grade: [{
+								required: true,
+								message: '请选择年级',
+								trigger: 'blur'
+							}, ],
+							department: [{
+								required: true,
+								message: '请选择学系',
+								trigger: 'blur'
+							}, ],
+							major: [{
+								required: true,
+								message: '请选择专业',
+								trigger: 'blur'
+							}, ],
+						},
+						
 						Department: {
 							data: [],
 						
@@ -1837,6 +1904,14 @@
 
 						console.log(res.data)
 					})
+					
+					axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						"getClassGrade": ''
+					}), ).then(function(res) {
+						management.addGrade.gradeList = res.data
+					
+						console.log(res.data)
+					})
 
 					axios.post('/Core/Global/frontInit.php', Qs.stringify({
 						"DepartmentDetail": '',
@@ -2027,6 +2102,70 @@
 					})
 				},
 				methods: {
+					addGradeSubmit(){
+						management.$refs['addGradeForm'].validate((valid) => {
+							if (valid) {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									'addGrade':'',
+									'grade':management.addGrade.grade,
+									'department':management.addGrade.department,
+									'major':management.addGrade.major,
+								}), ).then(function(res) {
+									console.log(res.data)
+						
+									if ('error' in res.data) {
+										management.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {}
+										})
+									} else if ('success' in res.data) {
+										management.$alert('专业开设成功', '操作成功完成', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
+												
+											}
+										})
+									}
+								})
+							} else {
+								management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {
+						
+									}
+								})
+							}
+						})
+					},
+					addGradeMajor(v){
+						console.log(v)
+					},
+					addGradeDepartment(v){
+						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"majorList": v
+						}), ).then(function(res) {
+							management.addGrade.majorList = res.data
+							management.addGrade.major = ''
+						})
+					},
+					addGradeGrade(v){
+						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"departmentList": ''
+						}), ).then(function(res) {
+							management.addGrade.departmentList = res.data
+							
+							management.addGrade.department = ''
+							management.addGrade.major = ''
+						})
+					},
 					addDepartmentSubmit(){
 						management.$refs['addDepartmentForm'].validate((valid) => {
 							if (valid) {

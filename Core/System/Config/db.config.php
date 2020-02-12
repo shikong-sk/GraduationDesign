@@ -960,7 +960,8 @@ Class sqlHelper
 
     function getClass($page, $num, $grade = '', $department = "", $major = '')
     {
-        $query = "SELECT DISTINCT c.class,g.grade,m.name as major,d.departmentName as department FROM s_class c,s_grade g,s_major m,s_department d WHERE c.grade = g.grade AND c.major = m.id AND c.department = d.id";
+        $query = "SELECT DISTINCT c.class,g.grade,m.name as major,d.departmentName as department FROM s_class c,s_grade g,s_major m,s_department d WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.department = m.department";
+
 
         if ((strlen($major) != 0)) {
             $major = json_decode($major);
@@ -1246,6 +1247,31 @@ Class sqlHelper
         }
         else{
             return json_encode(Array('error' => '该院系已有学生，不可删除'), JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    function getClassGrade()
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT DISTINCT grade FROM ".$this::grade." union select IFNULL(MAX((`grade`))+1,SUBSTR(YEAR(NOW()),3,2)) as grade FROM ".$this::grade." ORDER BY grade DESC");
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['grade'] . '级', 'value' => $data['grade']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function addGrade($grade,$department,$major){
+        $database = $this->database;
+        $res = $database->query("INSERT INTO ".$this::grade."(`grade`, `major`, `department`) VALUES ('$grade', '$major', '$department')");
+        if ($res) {
+            return json_encode(Array('success' => '专业开设成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '专业开设失败，可能该专业已开设'), JSON_UNESCAPED_UNICODE);
         }
     }
 

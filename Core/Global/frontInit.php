@@ -150,6 +150,16 @@ if(isset($_POST['getGrade']))
     }
 }
 
+if(isset($_POST['getClassGrade']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getClassGrade());
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
 if(isset($_POST['getDepartment']))
 {
     if($_SESSION['identity'] === 'admin'){
@@ -508,5 +518,16 @@ if(isset($_POST['delDepartment']))
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if(isset($_POST['addGrade']) && isset($_POST['grade']) && isset($_POST['department']) && isset($_POST['major']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->addGrade($_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

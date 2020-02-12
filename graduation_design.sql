@@ -11,7 +11,7 @@
  Target Server Version : 50529
  File Encoding         : 65001
 
- Date: 09/02/2020 03:05:07
+ Date: 13/02/2020 01:36:31
 */
 
 SET NAMES utf8mb4;
@@ -99,7 +99,7 @@ INSERT INTO `channel_list` VALUES ('notice', '通知公告');
 -- ----------------------------
 DROP TABLE IF EXISTS `course`;
 CREATE TABLE `course`  (
-  `id` int(10) NOT NULL DEFAULT 20000 COMMENT '课程id',
+  `id` int(10) NOT NULL COMMENT '课程id',
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '课程名',
   `tid` int(10) UNSIGNED ZEROFILL NOT NULL COMMENT '教师id',
   `class` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '班级编号',
@@ -168,17 +168,20 @@ CREATE TABLE `s_class`  (
   `major` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `department` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`class`, `grade`, `major`, `department`) USING BTREE,
-  INDEX `grade`(`grade`, `major`, `department`) USING BTREE,
   INDEX `major`(`major`) USING BTREE,
   INDEX `department`(`department`) USING BTREE,
   INDEX `class`(`class`) USING BTREE,
+  INDEX `grade`(`grade`, `major`, `department`) USING BTREE,
   CONSTRAINT `s_class_ibfk_4` FOREIGN KEY (`grade`, `major`, `department`) REFERENCES `s_grade` (`grade`, `major`, `department`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of s_class
 -- ----------------------------
+INSERT INTO `s_class` VALUES ('1', '16', '02', '05');
 INSERT INTO `s_class` VALUES ('1', '17', '02', '05');
+INSERT INTO `s_class` VALUES ('1', '18', '01', '01');
+INSERT INTO `s_class` VALUES ('2', '17', '02', '05');
 INSERT INTO `s_class` VALUES ('2', '17', '05', '05');
 
 -- ----------------------------
@@ -213,18 +216,20 @@ CREATE TABLE `s_grade`  (
   `major` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `department` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`grade`, `major`, `department`) USING BTREE,
-  INDEX `major`(`major`) USING BTREE,
   INDEX `department`(`department`) USING BTREE,
   INDEX `grade`(`grade`) USING BTREE,
-  CONSTRAINT `s_grade_ibfk_1` FOREIGN KEY (`major`) REFERENCES `s_major` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `s_grade_ibfk_2` FOREIGN KEY (`department`) REFERENCES `s_department` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  INDEX `major`(`major`, `department`) USING BTREE,
+  CONSTRAINT `s_grade_ibfk_1` FOREIGN KEY (`major`, `department`) REFERENCES `s_major` (`id`, `department`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of s_grade
 -- ----------------------------
+INSERT INTO `s_grade` VALUES ('18', '01', '01');
+INSERT INTO `s_grade` VALUES ('16', '02', '05');
 INSERT INTO `s_grade` VALUES ('17', '02', '05');
 INSERT INTO `s_grade` VALUES ('17', '05', '05');
+INSERT INTO `s_grade` VALUES ('18', '02', '05');
 
 -- ----------------------------
 -- Table structure for s_major
@@ -244,6 +249,8 @@ CREATE TABLE `s_major`  (
 -- ----------------------------
 -- Records of s_major
 -- ----------------------------
+INSERT INTO `s_major` VALUES ('01', '语文教育', '01', 1);
+INSERT INTO `s_major` VALUES ('02', '数学教育', '01', 1);
 INSERT INTO `s_major` VALUES ('02', '计算机应用技术', '05', 1);
 INSERT INTO `s_major` VALUES ('03', '计算机软件技术', '05', 1);
 INSERT INTO `s_major` VALUES ('04', '数字媒体技术', '05', 1);
