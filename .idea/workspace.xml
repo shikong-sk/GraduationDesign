@@ -10,16 +10,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="1269" column="134" selection-start-line="1269" selection-start-column="134" selection-end-line="1269" selection-end-column="134" />
+            <state relative-caret-position="402">
+              <caret line="1273" column="64" selection-start-line="1273" selection-start-column="64" selection-end-line="1273" selection-end-column="64" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="307">
@@ -173,9 +173,9 @@
       <find>DepartmentList</find>
       <find>Department</find>
       <find>getDepartment</find>
-      <find>getGrade</find>
       <find>getClass</find>
       <find>majorList</find>
+      <find>getGrade</find>
     </findStrings>
     <replaceStrings>
       <replace>department</replace>
@@ -204,13 +204,13 @@
         <option value="$PROJECT_DIR$/template/default/front/home.html" />
         <option value="$PROJECT_DIR$/template/default/front/login.html" />
         <option value="$PROJECT_DIR$/channel.php" />
-        <option value="$PROJECT_DIR$/Core/System/Config/db.config.php" />
         <option value="$PROJECT_DIR$/Core/Global/frontInit.php" />
+        <option value="$PROJECT_DIR$/Core/System/Config/db.config.php" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-50" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="-8" />
     <option name="y" value="22" />
     <option name="width" value="1865" />
     <option name="height" value="975" />
@@ -320,15 +320,15 @@
       <workItem from="1578834598974" duration="78565000" />
       <workItem from="1579720462144" duration="44164000" />
       <workItem from="1580618436211" duration="43068000" />
-      <workItem from="1581507440605" duration="3159000" />
+      <workItem from="1581507440605" duration="3804000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168956000" />
+    <option name="totallyTimeSpent" value="169601000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-40" y="18" width="1492" height="780" extended-state="0" />
+    <frame x="-6" y="18" width="1492" height="780" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19177127" />
@@ -541,17 +541,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="1269" column="134" selection-start-line="1269" selection-start-column="134" selection-end-line="1269" selection-end-column="134" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="307">
           <caret line="522" column="1" lean-forward="true" selection-start-line="522" selection-start-column="1" selection-end-line="522" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="402">
+          <caret line="1273" column="64" selection-start-line="1273" selection-start-column="64" selection-end-line="1273" selection-end-column="64" />
         </state>
       </provider>
     </entry>

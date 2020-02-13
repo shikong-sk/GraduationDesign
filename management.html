@@ -1116,6 +1116,87 @@
 					</div>
 				</el-tab-pane>
 
+				<el-tab-pane label="课程管理">
+					<div id="course">
+						<el-tabs tab-position="top" style="">
+							<el-tab-pane label="课程概览">
+								<el-table border :data="course.data" style="width: 100%" @sort-change="" @filter-change="(x)=>courseFilter(x)">
+									<el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="course.gradeFilter">
+									</el-table-column>
+									<el-table-column prop="department" label="系" :column-key="'department'" :filters="course.departmentFilter">
+									</el-table-column>
+									<el-table-column prop="major" label="专业" :column-key="'major'" :filters="course.majorFilter">
+									</el-table-column>
+									<el-table-column prop="class" label="班级">
+									</el-table-column>
+									<el-table-column prop="course" label="课程">
+									</el-table-column>
+									<el-table-column label="操作">
+										<template slot-scope="scope">
+											<div class="text-center">
+												<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteCourse(scope)">
+													删除
+												</el-button>
+											</div>
+										</template>
+									</el-table-column>
+								</el-table>
+				
+								<el-pagination @size-change="" @current-change="(v)=>{courseCurrentChange(v)}" :current-page.sync="course.page"
+								 :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(course.count)">
+								</el-pagination>
+				
+							</el-tab-pane>
+							
+							<el-tab-pane label="添加课程">
+								<el-form ref="addCourseForm" :model="addCourse" label-width="80px" label-position="right" :rules="addCourseRules"
+								 style="max-width: none;">
+							
+									<el-form-item label="年级" prop="grade">
+										<el-select v-model="addCourse.grade" placeholder="请选择年级" @change="(v)=>{addCourseGrade(v)}">
+											<el-option v-for="data in addCourse.gradeList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="系" prop="department">
+										<el-select v-model="addCourse.department" placeholder="请选择系" @change="(v)=>{addCourseDepartment(v)}">
+											<el-option v-for="data in addCourse.departmentList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="专业" prop="major">
+										<el-select v-model="addCourse.major" placeholder="请选择专业" @change="(v)=>{addCourseMajor(v)}">
+											<el-option v-for="data in addCourse.majorList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="班级" prop="Class">
+										<el-select v-model="addCourse.Class" placeholder="请选择班级">
+											<el-option v-for="data in addCourse.ClassList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="任课教师" prop="teacher">
+										<el-select v-model="addCourse.teacher" placeholder="请选择任课教师">
+											<el-option v-for="data in addCourse.teacherList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+										</el-select>
+									</el-form-item>
+							
+									<el-form-item label="课程名" prop="course">
+										<el-input placeholder="请输入课程名称" v-model="addCourse.course">
+										</el-input>
+									</el-form-item>
+							
+									<div>
+										<el-button type="primary" class="mx-auto text-center btn-block" @click="addCourseSubmit">添加课程</el-button>
+									</div>
+							
+								</el-form>
+							</el-tab-pane>
+						</el-tabs>
+					</div>
+				</el-tab-pane>
+
 			</el-tabs>
 
 		</div>
@@ -1201,6 +1282,9 @@
 					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
 				})
 				$('#department').css({
+					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+				})
+				$('#course').css({
 					'min-height': $(window).height() - $('#head').height() - $('#foot').height()
 				})
 				
@@ -1489,6 +1573,68 @@
 						// openeds: ['1'],
 						// menuActive: "1-1",
 						tabPosition: 'left',
+
+						course: {
+							data: [],
+							grade: '',
+							department: '',
+							major: '',
+							page: 1,
+							count: 0,
+							gradeFilter: [],
+							departmentFilter: [],
+							majorFilter: [],
+						},
+						addCourse: {
+						
+							department: '',
+							departmentList: '',
+							major: '',
+							majorList: '',
+							grade: '',
+							gradeList: "",
+							Class:'',
+							ClassList:'',
+							teacher:'',
+							teacherList:'',
+							course:'',
+							
+							majorDisabled: true,
+							gradeDisabled: true,
+							classDisabled: true,
+						},
+						addCourseRules: {
+							grade: [{
+								required: true,
+								message: '请选择年级',
+								trigger: 'blur'
+							}, ],
+							department: [{
+								required: true,
+								message: '请选择学系',
+								trigger: 'blur'
+							}, ],
+							major: [{
+								required: true,
+								message: '请选择专业',
+								trigger: 'blur'
+							}, ],
+							Class:[{
+								required: true,
+								message: '请选择班级',
+								trigger: 'blur',
+							},],
+							teacher:[{
+								required: true,
+								message: '请选择任课教师',
+								trigger: 'blur',
+							},],
+							course:[{
+								required: true,
+								message: '请输入课程名称',
+								trigger: 'blur',
+							},],
+						},
 
 						addStudent: {
 							currentEdit: -1,
@@ -2102,6 +2248,218 @@
 					})
 				},
 				methods: {
+					addCourseSubmit(){
+						management.$refs['addCourseForm'].validate((valid) => {
+							if (valid) {
+								axios.post('/Core/Global/frontInit.php', Qs.stringify({
+									'addCourse':'',
+									'grade':management.addCourse.grade,
+									'department':management.addCourse.department,
+									'major':management.addCourse.major,
+									'class':management.addCourse.Class
+								}), ).then(function(res) {
+									console.log(res.data)
+						
+									if ('error' in res.data) {
+										management.$alert(res.data.error, '错误', {
+											confirmButtonText: '确定',
+											type: 'error',
+											center: true,
+											callback: action => {}
+										})
+									} else if ('success' in res.data) {
+										management.$alert('班级添加成功', '操作成功完成', {
+											confirmButtonText: '确定',
+											type: 'success',
+											center: true,
+											callback: action => {
+												
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getMaxClass": '',
+													'grade':management.addCourse.grade,
+													'department':management.addCourse.department,
+													'major':management.addCourse.major
+												}), ).then(function(res) {
+													management.addCourse.Class = res.data.classes
+												})
+												
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getClass": '',
+													'page': management.course.page,
+													'num': '10',
+													'grade': JSON.stringify(management.course.grade),
+													'department': JSON.stringify(management.course.department),
+													'major': JSON.stringify(management.course.major),
+												}), ).then(function(res) {
+													management.course.data = res.data
+												})
+												axios.post('/Core/Global/frontInit.php', Qs.stringify({
+													"getClassCount": '',
+													'grade': JSON.stringify(management.course.grade),
+													'department': JSON.stringify(management.course.department),
+													'major': JSON.stringify(management.course.major),
+												}), ).then(function(res) {
+													management.course.count = res.data.num
+												})
+												
+											}
+										})
+									}
+								})
+							} else {
+								management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+									confirmButtonText: '确定',
+									type: 'error',
+									center: true,
+									callback: action => {
+						
+									}
+								})
+							}
+						})
+					},
+					addCourseMajor(v){
+						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"getMaxClass": '',
+							'grade':management.addCourse.grade,
+							'department':management.addCourse.department,
+							'major':v
+						}), ).then(function(res) {
+							management.addCourse.Class = res.data.classes
+						})
+					},
+					addCourseDepartment(v){
+						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"MajorList": v,
+							'grade':management.addCourse.grade
+						}), ).then(function(res) {
+							management.addCourse.majorList = res.data
+							management.addCourse.major = ''
+							management.addCourse.Class = ''
+						})
+					},
+					addCourseGrade(v){
+						console.log(v)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"DepartmentList": v
+						}), ).then(function(res) {
+							management.addCourse.departmentList = res.data
+							
+							management.addCourse.department = ''
+							management.addCourse.major = ''
+							management.addCourse.Class = ''
+						})
+					},
+					deleteCourse(scope) {
+						console.log(scope)
+						management.$confirm('此操作将删除该班级, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"delCourse": '',
+								"class":scope.row.class,
+								"grade":scope.row.grade,
+								"department":scope.row.department,
+								"major":scope.row.major,
+								'id':scope.row.id
+							}), ).then(function(res) {
+								if ('error' in res.data) {
+									management.$alert(res.data.error, '错误', {
+										confirmButtonText: '确定',
+										type: 'error',
+										center: true,
+										callback: action => {}
+									})
+								} else if ('success' in res.data) {
+									management.$alert(res.data.success, '操作成功', {
+										confirmButtonText: '确定',
+										type: 'success',
+										center: true,
+										callback: action => {
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getClass": '',
+												'page': management.course.page,
+												'num': '10',
+												'grade': JSON.stringify(management.course.grade),
+												'department': JSON.stringify(management.course.department),
+												'major': JSON.stringify(management.course.major),
+											}), ).then(function(res) {
+												management.course.data = res.data
+											})
+											axios.post('/Core/Global/frontInit.php', Qs.stringify({
+												"getClassCount": '',
+												'grade': JSON.stringify(management.course.grade),
+												'department': JSON.stringify(management.course.department),
+												'major': JSON.stringify(management.course.major),
+											}), ).then(function(res) {
+												management.course.count = res.data.num
+											})
+											
+											management.addCourse.department = ''
+											management.addCourse.major = ''
+											management.addCourse.Class = ''
+											management.addCourse.grade = ''
+											management.addCourse.teacher = ''
+											management.addCourse.course = ''
+										}
+									})
+								}
+							})
+						}).catch(() => {
+							management.$message({
+								type: 'info',
+								message: '已取消删除'
+							});
+						});
+					},
+					courseFilter(val) {
+						if ('grade' in val) {
+							management.course.grade = val['grade']
+						}
+						if ('department' in val) {
+							management.course.department = val['department']
+					
+							axios.post('/Core/Global/frontInit.php', Qs.stringify({
+								"getMajor": '',
+								'department': JSON.stringify(val['department'])
+							}), ).then(function(res) {
+								management.course.majorFilter = res.data
+							})
+						}
+						if ('major' in val) {
+							management.course.major = val['major']
+						}
+						management.course.page = 1
+						this.classCurrentChange(management.course.page)
+						console.log(val)
+					},
+					courseCurrentChange(val) {
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"getCourse": '',
+							'page': val,
+							'num': '10',
+							'grade': JSON.stringify(management.course.grade),
+							'department': JSON.stringify(management.course.department),
+							'major': JSON.stringify(management.course.major),
+						}), ).then(function(res) {
+							management.course.data = res.data
+						})
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+							"getCourseCount": '',
+							'grade': JSON.stringify(management.course.grade),
+							'department': JSON.stringify(management.course.department),
+							'major': JSON.stringify(management.course.major),
+						}), ).then(function(res) {
+							management.course.count = res.data.num
+						})
+					},
+					
+					
+					
 					addGradeSubmit(){
 						management.$refs['addGradeForm'].validate((valid) => {
 							if (valid) {
