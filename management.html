@@ -1111,6 +1111,26 @@
                                 </el-table-column>
                                 <el-table-column prop="course" label="课程">
                                 </el-table-column>
+								<el-table-column prop="teacher" label="任课教师">
+								</el-table-column>
+								<el-table-column prop="stime" label="课程开始时间">
+								</el-table-column>
+								<el-table-column prop="etime" label="课程结束时间">
+								</el-table-column>
+								<el-table-column prop="period" label="总课时">
+								</el-table-column>
+								<el-table-column label="公开课">
+								    <template slot-scope="scope">
+											<span v-if="scope.row.public == '0' ">否</span>
+											<span v-else>是</span>
+										</template>
+								</el-table-column>
+								<el-table-column label="限制人数">
+								    <template slot-scope="scope">
+											<span v-if="scope.row.num == '0' ">不限制</span>
+											<span v-else>{{scope.row.num}}</span>
+										</template>
+								</el-table-column>
                                 <el-table-column label="操作">
                                     <template slot-scope="scope">
 											<div class="text-center">
@@ -1181,7 +1201,7 @@
 								</el-form-item>
 
 								<el-form-item label="总课时" prop="period">
-								    <el-input placeholder="请输入班号" v-model="addCourse.period" oninput="value=value.replace(/[^(0-9)]/g,'')">
+								    <el-input placeholder="请输入总课时" v-model="addCourse.period" oninput="value=value.replace(/[^(0-9)]/g,'')">
 								    </el-input>
 								</el-form-item>
 
@@ -2332,7 +2352,7 @@
                                         callback: action => {
 
                                             axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                                "getClass": '',
+                                                "getCourse": '',
                                                 'page': management.course.page,
                                                 'num': '10',
                                                 'grade': JSON.stringify(management.course.grade),
@@ -2342,7 +2362,7 @@
                                                 management.course.data = res.data
                                             })
                                             axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                                "getClassCount": '',
+                                                "getCourseCount": '',
                                                 'grade': JSON.stringify(management.course.grade),
                                                 'department': JSON.stringify(management.course.department),
                                                 'major': JSON.stringify(management.course.major),
@@ -2442,11 +2462,7 @@
                     }).then(() => {
                         axios.post('/Core/Global/frontInit.php', Qs.stringify({
                             "delCourse": '',
-                            "class": scope.row.class,
-                            "grade": scope.row.grade,
-                            "department": scope.row.department,
-                            "major": scope.row.major,
-                            'id': scope.row.id
+                            'cid': scope.row.id
                         }), ).then(function(res) {
                             if ('error' in res.data) {
                                 management.$alert(res.data.error, '错误', {

@@ -563,5 +563,25 @@ if (isset($_POST['getCourse'])  && isset($_POST['page']) && isset($_POST['num'])
     }
 }
 
+if(isset($_POST['addCourse']) && isset($_POST['name']) && isset($_POST['tid']) && isset($_POST['class']) && isset($_POST['grade']) && isset($_POST['major']) && isset($_POST['department']) && isset($_POST['stime']) && isset($_POST['etime']) && isset($_POST['period']) && isset($_POST['public']) && isset($_POST['num']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->addCourse($_POST['name'],$_POST['tid'],$_POST['class'],$_POST['grade'],$_POST['major'],$_POST['department'],$_POST['stime'],$_POST['etime'],$_POST['period'],$_POST['public'],$_POST['num']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['delCourse'])  && isset($_POST['cid']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->delCourse($_POST['cid']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

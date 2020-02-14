@@ -1373,7 +1373,8 @@ Class sqlHelper
 
     function getCourse($page, $num, $grade = '', $department = "", $major = '')
     {
-        $query = "SELECT DISTINCT c.id as id,c.name as course,c.class as class,g.grade,m.name as major,d.departmentName as department FROM ".$this::course." c,s_grade g,s_major m,s_department d WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.department = m.department";
+        $query = "SELECT DISTINCT c.id as id,c.name as course,t.name as teacher,cl.class,g.grade,m.name as major,d.departmentName as department,c.stime,c.etime,c.public,c.period,c.num FROM ".$this::course." c,s_grade g,s_major m,s_department d,t_teacher t,s_class cl
+WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.department = m.department AND c.tid = t.id AND cl.department = d.id AND cl.major = m.id AND cl.grade = g.grade AND cl.class = c.class";
 
 
         if ((strlen($major) != 0)) {
@@ -1436,6 +1437,25 @@ Class sqlHelper
         }
         $json = json_encode($json, JSON_UNESCAPED_UNICODE);
         return $json;
+    }
+
+    function delCourse($id){
+        $database = $this->database;
+
+        $select = $database->query("SELECT count(*) as num FROM ".$this::score." WHERE `cid` = '$id'") ->fetch_assoc();
+
+        if($select['num'] == '0') {
+            $query = "DELETE FROM ".$this::course." WHERE `id` = '$id'";
+            $delRes = $database->query($query);
+            if ($delRes) {
+                return json_encode(Array('success' => '课程删除成功'), JSON_UNESCAPED_UNICODE);
+            } else {
+                return json_encode(Array('error' => '课程删除失败'), JSON_UNESCAPED_UNICODE);
+            }
+        }
+        else{
+            return json_encode(Array('error' => '该课程已登记成绩，不可删除'), JSON_UNESCAPED_UNICODE);
+        }
     }
 }
 
