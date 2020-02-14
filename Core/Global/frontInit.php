@@ -539,5 +539,29 @@ if(isset($_POST['addGrade']) && isset($_POST['grade']) && isset($_POST['departme
     }
 }
 
+if (isset($_POST['getCourseCount']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getCourseCount($_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['getCourse'])  && isset($_POST['page']) && isset($_POST['num']))
+{
+
+//
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getCourse($_POST['page'],$_POST['num'],$_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

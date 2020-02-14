@@ -1165,6 +1165,11 @@
                                     </el-input>
                                 </el-form-item>
 
+                                <el-form-item label="公选课" prop="public">
+									<el-radio v-model="addCourse.public" label="1">是</el-radio>
+									<el-radio v-model="addCourse.public" label="0">否</el-radio>
+                                </el-form-item>
+
 								<el-form-item label="开始时间" prop="stime">
 								    <el-date-picker v-model="addCourse.stime" type="date" value-format="yyyy/MM/dd" placeholder="请填写课程开始时间" @change="(v)=>{addCourseStime(v)}">
 								    </el-date-picker>
@@ -1173,6 +1178,21 @@
 								<el-form-item label="结束时间" prop="etime">
 								    <el-date-picker v-model="addCourse.etime" type="date" value-format="yyyy/MM/dd" placeholder="请填写课程结束时间">
 								    </el-date-picker>
+								</el-form-item>
+
+								<el-form-item label="总课时" prop="period">
+								    <el-input placeholder="请输入班号" v-model="addCourse.period" oninput="value=value.replace(/[^(0-9)]/g,'')">
+								    </el-input>
+								</el-form-item>
+
+								<el-form-item label="限制人数" prop="numLock">
+									<el-radio v-model="addCourse.numLock" label="1">是</el-radio>
+									<el-radio v-model="addCourse.numLock" label="0">否</el-radio>
+								</el-form-item>
+
+								<el-form-item label="总人数" prop="num" v-if="addCourse.numLock == '1' ">
+								    <el-input placeholder="请输入限制人数(0为不限制)" v-model="addCourse.num" oninput="value=value.replace(/[^(0-9)]/g,'')">
+								    </el-input>
 								</el-form-item>
 
                                 <div>
@@ -1589,8 +1609,9 @@
 						stime:'',
 						etime:'',
 						period:'',
-						period:'',
-						num:'',
+						public:'0',
+						num:'0',
+						numLock:'0',
 
                         majorDisabled: true,
                         gradeDisabled: true,
@@ -1630,13 +1651,33 @@
 						etime: [{
 						    required: true,
 						    message: '请选择课程结束时间',
-						    trigger: 'blur',
+						    trigger: ['blur','change'],
 						}, ],
                         course: [{
                             required: true,
                             message: '请输入课程名称',
                             trigger: 'blur',
                         }, ],
+						public: [{
+						    required: true,
+						    message: '请选择是否为公选课',
+						    trigger: 'blur',
+						}, ],
+						period: [{
+						    required: true,
+						    message: '请输入总课时',
+						    trigger: 'blur',
+						}, ],
+						numLock: [{
+						    required: true,
+						    message: '请选择',
+						    trigger: 'blur',
+						}, ],
+						num: [{
+						    required: true,
+						    message: '请输入限制人数(0为不限制)',
+						    trigger: 'blur',
+						}, ],
                     },
 
                     addStudent: {
@@ -2028,6 +2069,20 @@
             },
             mounted() {
 
+				axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				    "getCourse": '',
+				    'page': '1',
+				    'num': '10'
+				}), ).then(function(res) {
+				    management.course.data = res.data
+				})
+				
+				axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				    "getCourseCount": ''
+				}), ).then(function(res) {
+				    management.course.count = res.data.num
+				})
+
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
                     "Department": ''
                 }), ).then(function(res) {
@@ -2093,6 +2148,7 @@
                     management.student.departmentFilter = res.data
                     management.classes.departmentFilter = res.data
                     management.Major.departmentFilter = res.data
+                    management.course.departmentFilter = res.data
 
                     axios.post('/Core/Global/frontInit.php', Qs.stringify({
                         "getMajor": '',
@@ -2107,6 +2163,7 @@
                 }), ).then(function(res) {
                     management.student.gradeFilter = res.data
                     management.classes.gradeFilter = res.data
+                    management.course.gradeFilter = res.data
                 })
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -2246,10 +2303,17 @@
                         if (valid) {
                             axios.post('/Core/Global/frontInit.php', Qs.stringify({
                                 'addCourse': '',
+								'name': management.addCourse.course,
+								'tid':management.addCourse.teacher,
                                 'grade': management.addCourse.grade,
                                 'department': management.addCourse.department,
                                 'major': management.addCourse.major,
-                                'class': management.addCourse.Class
+                                'class': management.addCourse.Class,
+								'stime': management.addCourse.stime,
+								'etime': management.addCourse.etime,
+								'period': management.addCourse.period,
+								'public': management.addCourse.public,
+								'num': management.addCourse.num,
                             }), ).then(function(res) {
                                 console.log(res.data)
 
@@ -2261,7 +2325,7 @@
                                         callback: action => {}
                                     })
                                 } else if ('success' in res.data) {
-                                    management.$alert('班级添加成功', '操作成功完成', {
+                                    management.$alert('课程添加成功', '操作成功完成', {
                                         confirmButtonText: '确定',
                                         type: 'success',
                                         center: true,
@@ -2398,7 +2462,7 @@
                                     center: true,
                                     callback: action => {
                                         axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                            "getClass": '',
+                                            "getCourse": '',
                                             'page': management.course.page,
                                             'num': '10',
                                             'grade': JSON.stringify(management.course.grade),
@@ -2408,7 +2472,7 @@
                                             management.course.data = res.data
                                         })
                                         axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                            "getClassCount": '',
+                                            "getCourseCount": '',
                                             'grade': JSON.stringify(management.course.grade),
                                             'department': JSON.stringify(management.course.department),
                                             'major': JSON.stringify(management.course.major),
@@ -2451,7 +2515,7 @@
                         management.course.major = val['major']
                     }
                     management.course.page = 1
-                    this.classCurrentChange(management.course.page)
+                    this.courseCurrentChange(management.course.page)
                     console.log(val)
                 },
                 courseCurrentChange(val) {
