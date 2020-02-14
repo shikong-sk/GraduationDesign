@@ -425,6 +425,21 @@ Class sqlHelper
         return $json;
     }
 
+    function teacherList($department)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT `id`,`name` FROM ".$this::teacher." WHERE department='$department'");
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['name'], 'value' => $data['id']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
     function getMaxClass($grade,$department, $major)
     {
         $database = $this->database;

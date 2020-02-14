@@ -417,6 +417,16 @@ if(isset($_POST['MajorList']) && isset($_POST['grade']))
     }
 }
 
+if(isset($_POST['teacherList']))
+{
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->teacherList($_POST['teacherList']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
 if(isset($_POST['getMaxClass']) && isset($_POST['grade']) && isset($_POST['department']) && isset($_POST['major']))
 {
     if($_SESSION['identity'] === 'admin'){
