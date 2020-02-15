@@ -1119,7 +1119,7 @@
 								</el-table-column>
 								<el-table-column prop="period" label="总课时">
 								</el-table-column>
-								<el-table-column label="公开课">
+								<el-table-column label="公选课">
 								    <template slot-scope="scope">
 											<span v-if="scope.row.public == '0' ">否</span>
 											<span v-else>是</span>
@@ -1225,6 +1225,47 @@
                 </div>
             </el-tab-pane>
 
+			<el-tab-pane label="成绩查询">
+			    <div id="score">
+			        <el-tabs tab-position="top" style="">
+			            <el-tab-pane label="成绩概览">
+			                <el-table border :data="score.data" style="width: 100%" @sort-change="" @filter-change="(x)=>scoreFilter(x)">
+			                    <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="score.gradeFilter">
+			                    </el-table-column>
+			                    <el-table-column prop="department" label="系" :column-key="'department'" :filters="score.departmentFilter">
+			                    </el-table-column>
+			                    <el-table-column prop="major" label="专业" :column-key="'major'" :filters="score.majorFilter">
+			                    </el-table-column>
+			                    <el-table-column prop="class" label="班级">
+			                    </el-table-column>
+			                    <el-table-column prop="course" label="课程">
+			                    </el-table-column>
+								<el-table-column prop="id" label="学号">
+								</el-table-column>
+								<el-table-column prop="name" label="学生">
+								</el-table-column>
+								<el-table-column prop="teacher" label="任课教师">
+								</el-table-column>
+								<el-table-column prop="score" label="分数">
+								</el-table-column>
+								<el-table-column label="补考">
+								    <template slot-scope="scope">
+											<span v-if="parseInt(scope.row.score) >= 60 ">无</span>
+											<span v-else>{{scope.row.makeUp}}</span>
+										</template>
+								</el-table-column>
+
+			                </el-table>
+			
+			                <el-pagination @size-change="" @current-change="(v)=>{scoreCurrentChange(v)}" :current-page.sync="score.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(score.count)">
+			                </el-pagination>
+			
+			            </el-tab-pane>
+			
+			        </el-tabs>
+			    </div>
+			</el-tab-pane>
+
         </el-tabs>
 
     </div>
@@ -1315,6 +1356,9 @@
             $('#course').css({
                 'min-height': $(window).height() - $('#head').height() - $('#foot').height()
             })
+			$('#score').css({
+			    'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+			})
 
             if ($(window).width() <= 995) {
                 management.tabPosition = 'top'
@@ -1602,6 +1646,17 @@
                     // menuActive: "1-1",
                     tabPosition: 'left',
 
+                    score: {
+                        data: [],
+                        grade: '',
+                        department: '',
+                        major: '',
+                        page: 1,
+                        count: 0,
+                        gradeFilter: [],
+                        departmentFilter: [],
+                        majorFilter: [],
+                    },
                     course: {
                         data: [],
                         grade: '',
@@ -2088,6 +2143,13 @@
                 }
             },
             mounted() {
+				axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				    "getScore": '',
+				    'page': '1',
+				    'num': '10'
+				}), ).then(function(res) {
+				    management.score.data = res.data
+				})
 
 				axios.post('/Core/Global/frontInit.php', Qs.stringify({
 				    "getCourse": '',
@@ -2169,6 +2231,7 @@
                     management.classes.departmentFilter = res.data
                     management.Major.departmentFilter = res.data
                     management.course.departmentFilter = res.data
+                    management.score.departmentFilter = res.data
 
                     axios.post('/Core/Global/frontInit.php', Qs.stringify({
                         "getMajor": '',
@@ -2184,6 +2247,7 @@
                     management.student.gradeFilter = res.data
                     management.classes.gradeFilter = res.data
                     management.course.gradeFilter = res.data
+                    management.score.gradeFilter = res.data
                 })
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
@@ -2318,6 +2382,49 @@
                 })
             },
             methods: {
+				
+				scoreFilter(val) {
+				    if ('grade' in val) {
+				        management.score.grade = val['grade']
+				    }
+				    if ('department' in val) {
+				        management.score.department = val['department']
+				
+				        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				            "getMajor": '',
+				            'department': JSON.stringify(val['department'])
+				        }), ).then(function(res) {
+				            management.score.majorFilter = res.data
+				        })
+				    }
+				    if ('major' in val) {
+				        management.score.major = val['major']
+				    }
+				    management.score.page = 1
+				    this.scoreCurrentChange(management.score.page)
+				    console.log(val)
+				},
+				scoreCurrentChange(val) {
+				    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				        "getScore": '',
+				        'page': val,
+				        'num': '10',
+				        'grade': JSON.stringify(management.score.grade),
+				        'department': JSON.stringify(management.score.department),
+				        'major': JSON.stringify(management.score.major),
+				    }), ).then(function(res) {
+				        management.score.data = res.data
+				    })
+				    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				        "getScoreCount": '',
+				        'grade': JSON.stringify(management.score.grade),
+				        'department': JSON.stringify(management.score.department),
+				        'major': JSON.stringify(management.score.major),
+				    }), ).then(function(res) {
+				        management.score.count = res.data.num
+				    })
+				},
+				
                 addCourseSubmit() {
                     management.$refs['addCourseForm'].validate((valid) => {
                         if (valid) {

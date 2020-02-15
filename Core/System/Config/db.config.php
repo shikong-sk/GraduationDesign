@@ -1457,6 +1457,129 @@ WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.departm
             return json_encode(Array('error' => '该课程已登记成绩，不可删除'), JSON_UNESCAPED_UNICODE);
         }
     }
+
+    function getScoreCount($grade = "", $department = "", $major = '')
+    {
+        $database = $this->database;
+        $query = "SELECT count(*) FROM score s,s_student ss,course c,s_major sm,s_department sd,s_class sc WHERE s.sid = ss.id AND s.cid = c.id AND c.major = sm.id AND c.department = sd.id AND sm.department = sd.id AND c.department = sc.department AND c.major = sc.major AND c.class = sc.class AND ss.class = c.class AND ss.class = sc.class AND c.major = sc.major AND c.department = sc.department AND ss.grade = sc.grade";
+
+        if ((strlen($major) != 0)) {
+            $major = json_decode($major);
+            if (is_array($major) && count($major) != 0) {
+                if (count($major) > 1) {
+                    $query .= " AND (ss.major = '" . $major[0] . "'";
+                    foreach (array_slice($major, 1) as $s) {
+                        $query .= " OR ss.major='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND ss.major = '" . $major[0] . "'";
+                }
+            }
+        }
+
+        if ((strlen($department) != 0)) {
+            $department = json_decode($department);
+            if (is_array($department) && count($department) != 0) {
+                if (count($department) > 1) {
+                    $query .= " AND (ss.department = '" . $department[0] . "'";
+                    foreach (array_slice($department, 1) as $s) {
+                        $query .= " OR ss.department='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND ss.department = '" . $department[0] . "'";
+                }
+            }
+        }
+
+        if ((strlen($grade) != 0)) {
+            $grade = json_decode($grade);
+            if (is_array($grade) && count($grade) != 0) {
+                if (count($grade) > 1) {
+                    $query .= " AND (ss.grade = '" . $grade[0] . "'";
+                    foreach (array_slice($grade, 1) as $s) {
+                        $query .= " OR ss.grade='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND ss.grade = '" . $grade[0] . "'";
+                }
+            }
+        }
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function getScore($page, $num, $grade = '', $department = "", $major = '')
+    {
+        $query = "SELECT ss.grade,sd.departmentName as department,sm.name as major,c.class,c.name as course,ss.id,ss.name as name,t.name as teacher,s.score,s.makeUp FROM score s,s_student ss,course c,s_major sm,s_department sd,s_class sc,t_teacher t WHERE s.sid = ss.id AND s.cid = c.id AND c.major = sm.id AND c.department = sd.id AND sm.department = sd.id AND c.department = sc.department AND c.major = sc.major AND c.class = sc.class AND ss.class = c.class AND ss.class = sc.class AND c.major = sc.major AND c.department = sc.department AND ss.grade = sc.grade AND c.tid = t.id";
+
+        if ((strlen($major) != 0)) {
+            $major = json_decode($major);
+            if (is_array($major) && count($major) != 0) {
+                if (count($major) > 1) {
+                    $query .= " AND (ss.major = '" . $major[0] . "'";
+                    foreach (array_slice($major, 1) as $s) {
+                        $query .= " OR ss.major ='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND ss.major = '" . $major[0] . "'";
+                }
+            }
+        }
+
+        if ((strlen($department) != 0)) {
+            $department = json_decode($department);
+            if (is_array($department) && count($department) != 0) {
+                if (count($department) > 1) {
+                    $query .= " AND (ss.department = '" . $department[0] . "'";
+                    foreach (array_slice($department, 1) as $s) {
+                        $query .= " OR ss.department ='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND ss.department = '" . $department[0] . "'";
+                }
+            }
+        }
+
+        if ((strlen($grade) != 0)) {
+            $grade = json_decode($grade);
+            if (is_array($grade) && count($grade) != 0) {
+                if (count($grade) > 1) {
+                    $query .= " AND (ss.grade = '" . $grade[0] . "'";
+                    foreach (array_slice($grade, 1) as $s) {
+                        $query .= " OR ss.grade ='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND ss.grade = '" . $grade[0] . "'";
+                }
+            }
+        }
+
+        $database = $this->database;
+
+        $page = ($page - 1) * $num;
+        $query .= " ORDER BY ss.grade DESC LIMIT $page,$num";
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
 }
 
 ?>

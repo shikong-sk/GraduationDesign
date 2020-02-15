@@ -583,5 +583,29 @@ if (isset($_POST['delCourse'])  && isset($_POST['cid']))
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if (isset($_POST['getScoreCount']))
+{
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getScoreCount($_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['getScore'])  && isset($_POST['page']) && isset($_POST['num']))
+{
+
+//
+
+    if($_SESSION['identity'] === 'admin'){
+        exit($db->getScore($_POST['page'],$_POST['num'],$_POST['grade'],$_POST['department'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');
