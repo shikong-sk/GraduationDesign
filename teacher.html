@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <script src="Assets/js/jquery-3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/popper.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/vue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="Assets/js/qs.min.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="Assets/css/swiper.min.css" />
+
+    <script src="Assets/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="Assets/js/element-ui.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="Assets/css/element-ui.css" />
+
+    <script src="Assets/js/vuex.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="Assets/js/tinymce/tinymce.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="Core/Front/jquery.base64.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+        /* 顶部导航栏 */
+        
+        #menu-icon {
+            width: 50px;
+            height: 50px;
+            z-index: 99999999;
+        }
+        
+        .header-menu-icon {
+            display: block;
+            width: 26px;
+            height: 2px;
+            margin-top: -1px;
+            right: auto;
+            bottom: auto;
+            background-color: white;
+            position: absolute;
+            left: 11px;
+            top: 50%;
+        }
+        
+        .header-menu-icon::before,
+        .header-menu-icon::after {
+            content: '';
+            width: 100%;
+            height: 100%;
+            background-color: inherit;
+            position: absolute;
+            left: 0;
+        }
+        
+        .header-menu-icon::before {
+            top: -8px;
+        }
+        
+        .header-menu-icon::after {
+            bottom: -8px;
+        }
+        
+        .header-nav__close {
+            z-index: 601;
+            display: block;
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            top: 50%;
+            right: auto;
+            font: 0/0 a;
+            text-shadow: none;
+            color: transparent;
+        }
+        
+        .header-nav__close span::before,
+        .header-nav__close span::after {
+            content: "";
+            display: block;
+            height: 2px;
+            width: 30px;
+            background-color: #FFFFFF;
+            position: absolute;
+            top: 0%;
+            left: 7px;
+            margin-top: -1px;
+        }
+        
+        .header-nav__close span::before {
+            -webkit-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+        
+        .header-nav__close span::after {
+            -webkit-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        
+        #menu li a {
+            font-family: Simsun;
+            font-weight: bold;
+            color: #bbb;
+        }
+        
+        #menu li:hover a {
+            transition-duration: 0.3s;
+            color: #fff;
+        }
+        
+        #h-nav .col {
+            text-align: center;
+        }
+        
+        #h-nav {
+            overflow: hidden;
+        }
+        /* 轮播 */
+        
+        #LB::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 200px;
+            width: 100%;
+            background-image: -webkit-gradient(linear, left top, left bottom, color-stop(50%, rgba(0, 0, 0, .5)), to(transparent));
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, .5) 50%, transparent);
+        }
+        
+        #LB .img-fluid {
+            width: 100%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        //公用函数定义
+        function sleep(fun, ms) {
+            setTimeout(fun, ms);
+        }
+
+        function loop(fun, ms) {
+            fun();
+            setInterval(fun, ms);
+        }
+
+        addEventListener(
+            "load",
+            function() {
+                setTimeout(hideURLbar, 0);
+            },
+            false
+        );
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+
+        function h_nav() {
+            if ($(window).width() <= 995) {
+
+                $('#menu-icon').css({
+                    'display': 'block'
+                })
+
+
+                $('#h-nav').addClass('row').css({
+                    position: 'relative',
+                    top: 0,
+                    display: 'none'
+                })
+
+                $('#h-nav').removeClass('row').css({
+                    'position': 'fixed',
+                    'paddingTop': '5%'
+                })
+
+                $('#menu-icon a').css({
+                    display: 'block'
+                })
+
+                $('#h-nav .col').css({
+                    'position': 'relative',
+                    'left': '100%',
+                    'opacity': '0'
+                })
+
+                $('#h-nav').css({
+                    'backgroundColor': '',
+                    'height': '',
+                    'paddingTop': '5%'
+                })
+            } else {
+                $('#h-nav').css({
+                    'backgroundColor': '',
+                    'height': '',
+                    'paddingTop': '',
+                    'display': ''
+                })
+
+                $('#h-nav .col').css({
+                    'position': 'relative',
+                    'left': '0%',
+                    'opacity': '1'
+                })
+                $('#menu-icon a').css({
+                    display: 'none'
+                })
+
+
+                $('#h-nav').addClass('row').css({
+                    position: 'relative',
+                    top: 0,
+                    paddingTop: '5px'
+                })
+
+                $('#menu-icon').css({
+                    'display': 'none'
+                })
+            }
+            $('#menu-icon a').addClass('header-menu-icon').removeClass('header-nav__close text-white')
+        }
+
+        $(document).ready(function() {
+            h_nav()
+            $(window).resize(function() {
+                h_nav()
+            })
+
+            $('#menu-icon').click(function() {
+                if ($('#menu-icon a').hasClass('header-menu-icon')) {
+                    var speed = 300;
+                    $('#menu-icon a').removeClass('header-menu-icon').addClass('header-nav__close text-white')
+                    $('#h-nav .col').css({
+                        'position': 'relative',
+                        'left': '100%',
+                        'opacity': '0',
+                    })
+
+                    $('#h-nav').css({
+                        'backgroundColor': head.h_nav_M_bgColor,
+                        'height': '100%',
+                        'display': 'block'
+                    })
+
+                    $('#h-nav .col').each(function() {
+                        $('#h-nav div').css({
+                            'display': 'block',
+                            'height': '50px'
+                        })
+                        $(this).animate({
+                                left: "0%",
+                                opacity: "1"
+                            },
+                            300 + $(this).index() * speed
+                        );
+                    });
+                } else {
+                    // $('#h-nav div').css({
+                    // 	'display': 'none'
+                    // })
+                    $('#h-nav').css({
+                        'backgroundColor': '',
+                        'height': '',
+                        'display': 'none',
+                    })
+
+                    $('#h-nav .col').each(function() {
+                        $('#h-nav div').css({
+                            'display': 'block'
+                        })
+                        $(this).stop(true, true)
+                        $(this).animate({
+                                left: "100%",
+                                opacity: "0"
+                            },
+                            300 + $(this).index() * speed
+                        );
+                    });
+
+                    $('#h-nav .col').css({
+                        'left': '100%',
+                        'opacity': '1'
+                    })
+                    $('#menu-icon a').addClass('header-menu-icon').removeClass('header-nav__close text-white')
+                }
+            })
+        })
+    </script>
+</head>
+
+<body class="body">
+
+    <div id="head" :style="{height:h_nav_height+'px','background-color':h_nav_bgColor}">
+        <div class="container-fluid row" style="padding-top: 10px;position: absolute;z-index: 9999999;width: 100%;top: 0;">
+            <div id="header" class="col-lg-4">
+                <img :style="{height:h_nav_height+'px',color:h_nav_color,top:'-10px',position:'relative'}" :src="h_nav_logo" alt="LOGO" class="wow flipInX" data-wow-duration="0.5s" data-wow-delay="0.2s">
+            </div>
+
+            <div id="menu-icon" style="position: fixed;right: 5%;top: 2px;">
+                <a class="header-menu-icon"><span></span></a>
+            </div>
+
+            <div id='h-nav' class="col-lg-8 row">
+                <div class="col" v-for="(v,k) in headerNav" :key="k">
+                    <a :href="v.url" :style="{color:h_nav_color,'text-decoration': 'none'}" :target="v.target">{{v.name}}</a>
+                </div>
+                <div class="col">
+                    <a href="login.php" :style="{color:h_nav_color,'text-decoration': 'none'}">登录</a>
+                </div>
+                <div class="col">
+                    <a href="register.php" :style="{color:h_nav_color,'text-decoration': 'none'}">注册</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var head = new Vue({
+            el: '#head',
+            data() {
+                return {
+                    title: "",
+                    headerNav: "",
+                    h_nav_logo: '',
+                    h_nav_bgColor: "#fff",
+                    h_nav_height: "60",
+                    h_nav_color: '#000',
+                    h_nav_M_bgColor: '#d8cec4'
+                }
+            },
+            watch: {
+                headerNav: function() {
+                    head.$nextTick(function() {
+                        h_nav()
+                    })
+                }
+            },
+            mounted() {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "baseConfig": ''
+                }), ).then(function(res) {
+                    head.title = res.data.title
+                    document.title = head.title
+                    head.h_nav_bgColor = res.data.h_nav_bgColor
+                    head.h_nav_height = res.data.h_nav_height
+                    head.h_nav_logo = res.data.h_nav_logo
+                    head.h_nav_color = res.data.h_nav_color
+                    head.h_nav_M_bgColor = res.data.h_nav_M_bgColor
+                })
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "h_nav": ''
+                }), ).then(function(res) {
+                    head.headerNav = res.data
+                    console.log(res.data)
+                })
+
+            }
+        })
+    </script>
+
+
+
+
+
+    <div id="teacher">
+
+		<el-row>
+			<el-col :span="24">
+				<div class="text-success" style="text-align: center;padding-left: 1.25rem;padding-right: 1.25rem;">欢迎您，XXX老师</div>
+			</el-col>
+		</el-row>
+
+        <el-tabs :tab-position="tabPosition" style="">
+
+            <el-tab-pane label="班级管理">
+                <div id="Class">
+                    <el-tabs tab-position="top" style="">
+                        <el-tab-pane label="班级概览">
+                            <el-table border :data="classes.data" style="width: 100%" @sort-change="" @filter-change="(x)=>classFilter(x)">
+                                <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="classes.gradeFilter">
+                                </el-table-column>
+                                <el-table-column prop="department" label="系" :column-key="'department'" :filters="classes.departmentFilter">
+                                </el-table-column>
+                                <el-table-column prop="major" label="专业" :column-key="'major'" :filters="classes.majorFilter">
+                                </el-table-column>
+                                <el-table-column prop="class" label="班级">
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+											<div class="text-center">
+												<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteClass(scope)">
+													删除
+												</el-button>
+											</div>
+										</template>
+                                </el-table-column>
+                            </el-table>
+
+                            <el-pagination @size-change="" @current-change="(v)=>{classCurrentChange(v)}" :current-page.sync="classes.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(classes.count)">
+                            </el-pagination>
+
+                        </el-tab-pane>
+					</el-tabs>
+                </div>
+            </el-tab-pane>
+
+
+        </el-tabs>
+
+    </div>
+
+    <script type="text/javascript">
+
+        var resetWindow = function() {
+            $('#Class').css({
+                'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+            })
+
+            if ($(window).width() <= 995) {
+                management.tabPosition = 'top'
+                $('#management').css({
+                    'margin': '0 10px',
+                    'margin-top': '5px'
+                })
+            } else {
+                management.tabPosition = 'left'
+                $('#management').css({
+                    'margin': '0 5px',
+                    'margin-top': '5px'
+                })
+            }
+        }
+        $(document).ready(function() {
+            resetWindow()
+        })
+        $(window).resize(function() {
+            resetWindow()
+        })
+
+        var management = new Vue({
+            el: '#teacher',
+            watch: {
+            },
+            computed: {
+            },
+            data() {
+
+                return {
+
+                    tabPosition: 'left',
+					
+                    classes: {
+                        data: [],
+                        grade: '',
+                        department: '',
+                        major: '',
+                        page: 1,
+                        count: 0,
+                        gradeFilter: [],
+                        departmentFilter: [],
+                        majorFilter: [],
+                    },
+                    addClasses: {
+
+                        department: '',
+                        departmentList: '',
+                        years: '3',
+                        major: '',
+                        majorList: '',
+                        grade: '',
+                        gradeList: "",
+                        Class: '',
+
+                        majorDisabled: true,
+                        gradeDisabled: true,
+                        classDisabled: true,
+                    },
+                    addClassesRules: {
+                        grade: [{
+                            required: true,
+                            message: '请选择年级',
+                            trigger: 'blur'
+                        }, ],
+                        department: [{
+                            required: true,
+                            message: '请选择学系',
+                            trigger: 'blur'
+                        }, ],
+                        major: [{
+                            required: true,
+                            message: '请选择专业',
+                            trigger: 'blur'
+                        }, ],
+                        Class: [{
+                            required: true,
+                            message: '请输入班级编号',
+                            trigger: ['blur', 'change'],
+                        }, {
+                            min: 1,
+                            max: 1,
+                            message: '请输入1~9的班级编号',
+                            trigger: ['blur', 'change']
+                        }, ],
+                    },
+
+
+                }
+            },
+            mounted() {
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getClass": '',
+                    'page': '1',
+                    'num': '10'
+                }), ).then(function(res) {
+                    management.classes.data = res.data
+                })
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getClassCount": ''
+                }), ).then(function(res) {
+                    management.classes.count = res.data.num
+                })
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getDepartment": '',
+                }), ).then(function(res) {
+                    management.classes.departmentFilter = res.data
+
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMajor": '',
+                    }), ).then(function(res) {
+                        management.classes.majorFilter = res.data
+                    })
+                })
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getGrade": '',
+                }), ).then(function(res) {
+                    management.classes.gradeFilter = res.data
+                })
+
+            },
+            methods: {
+				
+                addClassesSubmit() {
+                    management.$refs['addClassesForm'].validate((valid) => {
+                        if (valid) {
+                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                'addClass': '',
+                                'grade': management.addClasses.grade,
+                                'department': management.addClasses.department,
+                                'major': management.addClasses.major,
+                                'class': management.addClasses.Class
+                            }), ).then(function(res) {
+                                console.log(res.data)
+
+                                if ('error' in res.data) {
+                                    management.$alert(res.data.error, '错误', {
+                                        confirmButtonText: '确定',
+                                        type: 'error',
+                                        center: true,
+                                        callback: action => {}
+                                    })
+                                } else if ('success' in res.data) {
+                                    management.$alert('班级添加成功', '操作成功完成', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        center: true,
+                                        callback: action => {
+
+                                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                "getMaxClass": '',
+                                                'grade': management.addClasses.grade,
+                                                'department': management.addClasses.department,
+                                                'major': management.addClasses.major
+                                            }), ).then(function(res) {
+                                                management.addClasses.Class = res.data.classes
+                                            })
+
+                                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                "getClass": '',
+                                                'page': management.classes.page,
+                                                'num': '10',
+                                                'grade': JSON.stringify(management.classes.grade),
+                                                'department': JSON.stringify(management.classes.department),
+                                                'major': JSON.stringify(management.classes.major),
+                                            }), ).then(function(res) {
+                                                management.classes.data = res.data
+                                            })
+                                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                "getClassCount": '',
+                                                'grade': JSON.stringify(management.classes.grade),
+                                                'department': JSON.stringify(management.classes.department),
+                                                'major': JSON.stringify(management.classes.major),
+                                            }), ).then(function(res) {
+                                                management.classes.count = res.data.num
+                                            })
+
+                                        }
+                                    })
+                                }
+                            })
+                        } else {
+                            management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {
+
+                                }
+                            })
+                        }
+                    })
+                },
+                addClassesMajor(v) {
+                    console.log(v)
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMaxClass": '',
+                        'grade': management.addClasses.grade,
+                        'department': management.addClasses.department,
+                        'major': v
+                    }), ).then(function(res) {
+                        management.addClasses.Class = res.data.classes
+                    })
+                },
+                addClassesDepartment(v) {
+                    console.log(v)
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "MajorList": v,
+                        'grade': management.addClasses.grade
+                    }), ).then(function(res) {
+                        management.addClasses.majorList = res.data
+                        management.addClasses.major = ''
+                        management.addClasses.Class = ''
+                    })
+                },
+                addClassesGrade(v) {
+                    console.log(v)
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "DepartmentList": v
+                    }), ).then(function(res) {
+                        management.addClasses.departmentList = res.data
+
+                        management.addClasses.department = ''
+                        management.addClasses.major = ''
+                        management.addClasses.Class = ''
+                    })
+                },
+                deleteClass(scope) {
+                    console.log(scope)
+                    management.$confirm('此操作将删除该班级, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "delClass": '',
+                            "class": scope.row.class,
+                            "grade": scope.row.grade,
+                            "department": scope.row.department,
+                            "major": scope.row.major,
+                        }), ).then(function(res) {
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert(res.data.success, '操作成功', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getClass": '',
+                                            'page': management.classes.page,
+                                            'num': '10',
+                                            'grade': JSON.stringify(management.classes.grade),
+                                            'department': JSON.stringify(management.classes.department),
+                                            'major': JSON.stringify(management.classes.major),
+                                        }), ).then(function(res) {
+                                            management.classes.data = res.data
+                                        })
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getClassCount": '',
+                                            'grade': JSON.stringify(management.classes.grade),
+                                            'department': JSON.stringify(management.classes.department),
+                                            'major': JSON.stringify(management.classes.major),
+                                        }), ).then(function(res) {
+                                            management.classes.count = res.data.num
+                                        })
+
+                                        management.addClasses.department = ''
+                                        management.addClasses.major = ''
+                                        management.addClasses.Class = ''
+                                        management.addClasses.grade = ''
+                                    }
+                                })
+                            }
+                        })
+                    }).catch(() => {
+                        management.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                classFilter(val) {
+                    if ('grade' in val) {
+                        management.classes.grade = val['grade']
+                    }
+                    if ('department' in val) {
+                        management.classes.department = val['department']
+
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "getMajor": '',
+                            'department': JSON.stringify(val['department'])
+                        }), ).then(function(res) {
+                            management.classes.majorFilter = res.data
+                        })
+                    }
+                    if ('major' in val) {
+                        management.classes.major = val['major']
+                    }
+                    management.classes.page = 1
+                    this.classCurrentChange(management.classes.page)
+                    console.log(val)
+                },
+                classCurrentChange(val) {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getClass": '',
+                        'page': val,
+                        'num': '10',
+                        'grade': JSON.stringify(management.classes.grade),
+                        'department': JSON.stringify(management.classes.department),
+                        'major': JSON.stringify(management.classes.major),
+                    }), ).then(function(res) {
+                        management.classes.data = res.data
+                    })
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getClassCount": '',
+                        'grade': JSON.stringify(management.classes.grade),
+                        'department': JSON.stringify(management.classes.department),
+                        'major': JSON.stringify(management.classes.major),
+                    }), ).then(function(res) {
+                        management.classes.count = res.data.num
+                    })
+                }
+                
+
+            }
+        })
+
+    </script>
+
+
+    <div id="foot">
+        <el-backtop :bottom="100" :right="20">
+            <div style="{
+					        background-color: #f2f5f6;
+					        box-shadow: 0 0 6px rgba(0,0,0, .12);
+					        text-align: center;
+					        color: #1989fa;
+							width: 100%;
+							height: 100%;
+							border-radius: 50%;
+							line-height: 180%;
+					      }">
+                ▲
+            </div>
+        </el-backtop>
+
+        <el-row :style="{'background-color':foot_bgColor,'color':foot_color}">
+            <el-col :md="24" class="text-center">
+                Copyright © {{siteName}} All Rights Reserved
+            </el-col>
+
+            <el-col :md="24" v-if="foot_extend">
+                <div v-html="foot_extend_contain" class="row" style="padding: 0;margin: 0;"></div>
+            </el-col>
+
+        </el-row>
+    </div>
+
+    <script type="text/javascript">
+        var foot = new Vue({
+            el: '#foot',
+            data() {
+                return {
+                    siteName: '',
+                    foot_bgColor: '#000',
+                    foot_color: "#fff",
+                    foot_extend: false,
+                    foot_extend_contain: '',
+                }
+            },
+            mounted() {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "baseConfig": ''
+                }), ).then(function(res) {
+                    foot.siteName = res.data.title
+                    foot.foot_bgColor = res.data.foot_bgColor
+                    foot.foot_color = res.data.foot_color
+                    foot.foot_extend = res.data.foot_extend == 'true'
+                    if (foot.foot_extend) {
+                        foot.foot_extend_contain = res.data.foot_extend_contain
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+
+</html>
