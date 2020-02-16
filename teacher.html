@@ -372,9 +372,6 @@
     </script>
 
 
-
-
-
     <div id="teacher">
 
 		<el-row>
@@ -387,8 +384,8 @@
 
             <el-tab-pane label="班级管理">
                 <div id="Class">
-                    <el-tabs tab-position="top" style="">
-                        <el-tab-pane label="班级概览">
+                    <el-tabs v-model="tabIndex" tab-position="top" style="">
+                        <el-tab-pane label="班级概览" name="班级概览">
                             <el-table border :data="classes.data" style="width: 100%" @sort-change="" @filter-change="(x)=>classFilter(x)">
                                 <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="classes.gradeFilter">
                                 </el-table-column>
@@ -398,11 +395,18 @@
                                 </el-table-column>
                                 <el-table-column prop="class" label="班级">
                                 </el-table-column>
+								<el-table-column prop="course" label="课程">
+								</el-table-column>
+								<el-table-column prop="num" label="学生人数">
+								</el-table-column>
                                 <el-table-column label="操作">
                                     <template slot-scope="scope">
 											<div class="text-center">
-												<el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteClass(scope)">
-													删除
+												<el-button size="mini" type="" class="mx-auto text-center" @click="selectStudent(scope)">
+													查看学生
+												</el-button>
+												<el-button size="mini" type="danger" class="mx-auto text-center" @click="">
+													操作
 												</el-button>
 											</div>
 										</template>
@@ -430,14 +434,14 @@
             })
 
             if ($(window).width() <= 995) {
-                management.tabPosition = 'top'
-                $('#management').css({
+                teacher.tabPosition = 'top'
+                $('#teacher').css({
                     'margin': '0 10px',
                     'margin-top': '5px'
                 })
             } else {
-                management.tabPosition = 'left'
-                $('#management').css({
+                teacher.tabPosition = 'left'
+                $('#teacher').css({
                     'margin': '0 5px',
                     'margin-top': '5px'
                 })
@@ -450,7 +454,7 @@
             resetWindow()
         })
 
-        var management = new Vue({
+        var teacher = new Vue({
             el: '#teacher',
             watch: {
             },
@@ -460,6 +464,9 @@
 
                 return {
 
+					tid:10002,
+
+					tabIndex:'班级概览',
                     tabPosition: 'left',
 					
                     classes: {
@@ -522,244 +529,83 @@
             mounted() {
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                    "getClass": '',
+                    "getTeacherClass": '',
+					'tid': this.tid,
                     'page': '1',
                     'num': '10'
                 }), ).then(function(res) {
-                    management.classes.data = res.data
+                    teacher.classes.data = res.data
                 })
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                    "getClassCount": ''
+                    "getTeacherClassCount": '',
+					'tid': this.tid,
                 }), ).then(function(res) {
-                    management.classes.count = res.data.num
+                    teacher.classes.count = res.data.num
                 })
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
                     "getDepartment": '',
                 }), ).then(function(res) {
-                    management.classes.departmentFilter = res.data
+                    teacher.classes.departmentFilter = res.data
 
                     axios.post('/Core/Global/frontInit.php', Qs.stringify({
                         "getMajor": '',
                     }), ).then(function(res) {
-                        management.classes.majorFilter = res.data
+                        teacher.classes.majorFilter = res.data
                     })
                 })
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
                     "getGrade": '',
                 }), ).then(function(res) {
-                    management.classes.gradeFilter = res.data
+                    teacher.classes.gradeFilter = res.data
                 })
 
             },
             methods: {
-				
-                addClassesSubmit() {
-                    management.$refs['addClassesForm'].validate((valid) => {
-                        if (valid) {
-                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                'addClass': '',
-                                'grade': management.addClasses.grade,
-                                'department': management.addClasses.department,
-                                'major': management.addClasses.major,
-                                'class': management.addClasses.Class
-                            }), ).then(function(res) {
-                                console.log(res.data)
-
-                                if ('error' in res.data) {
-                                    management.$alert(res.data.error, '错误', {
-                                        confirmButtonText: '确定',
-                                        type: 'error',
-                                        center: true,
-                                        callback: action => {}
-                                    })
-                                } else if ('success' in res.data) {
-                                    management.$alert('班级添加成功', '操作成功完成', {
-                                        confirmButtonText: '确定',
-                                        type: 'success',
-                                        center: true,
-                                        callback: action => {
-
-                                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                                "getMaxClass": '',
-                                                'grade': management.addClasses.grade,
-                                                'department': management.addClasses.department,
-                                                'major': management.addClasses.major
-                                            }), ).then(function(res) {
-                                                management.addClasses.Class = res.data.classes
-                                            })
-
-                                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                                "getClass": '',
-                                                'page': management.classes.page,
-                                                'num': '10',
-                                                'grade': JSON.stringify(management.classes.grade),
-                                                'department': JSON.stringify(management.classes.department),
-                                                'major': JSON.stringify(management.classes.major),
-                                            }), ).then(function(res) {
-                                                management.classes.data = res.data
-                                            })
-                                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                                "getClassCount": '',
-                                                'grade': JSON.stringify(management.classes.grade),
-                                                'department': JSON.stringify(management.classes.department),
-                                                'major': JSON.stringify(management.classes.major),
-                                            }), ).then(function(res) {
-                                                management.classes.count = res.data.num
-                                            })
-
-                                        }
-                                    })
-                                }
-                            })
-                        } else {
-                            management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
-                                confirmButtonText: '确定',
-                                type: 'error',
-                                center: true,
-                                callback: action => {
-
-                                }
-                            })
-                        }
-                    })
-                },
-                addClassesMajor(v) {
-                    console.log(v)
-                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                        "getMaxClass": '',
-                        'grade': management.addClasses.grade,
-                        'department': management.addClasses.department,
-                        'major': v
-                    }), ).then(function(res) {
-                        management.addClasses.Class = res.data.classes
-                    })
-                },
-                addClassesDepartment(v) {
-                    console.log(v)
-                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                        "MajorList": v,
-                        'grade': management.addClasses.grade
-                    }), ).then(function(res) {
-                        management.addClasses.majorList = res.data
-                        management.addClasses.major = ''
-                        management.addClasses.Class = ''
-                    })
-                },
-                addClassesGrade(v) {
-                    console.log(v)
-                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                        "DepartmentList": v
-                    }), ).then(function(res) {
-                        management.addClasses.departmentList = res.data
-
-                        management.addClasses.department = ''
-                        management.addClasses.major = ''
-                        management.addClasses.Class = ''
-                    })
-                },
-                deleteClass(scope) {
-                    console.log(scope)
-                    management.$confirm('此操作将删除该班级, 是否继续?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                            "delClass": '',
-                            "class": scope.row.class,
-                            "grade": scope.row.grade,
-                            "department": scope.row.department,
-                            "major": scope.row.major,
-                        }), ).then(function(res) {
-                            if ('error' in res.data) {
-                                management.$alert(res.data.error, '错误', {
-                                    confirmButtonText: '确定',
-                                    type: 'error',
-                                    center: true,
-                                    callback: action => {}
-                                })
-                            } else if ('success' in res.data) {
-                                management.$alert(res.data.success, '操作成功', {
-                                    confirmButtonText: '确定',
-                                    type: 'success',
-                                    center: true,
-                                    callback: action => {
-                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                            "getClass": '',
-                                            'page': management.classes.page,
-                                            'num': '10',
-                                            'grade': JSON.stringify(management.classes.grade),
-                                            'department': JSON.stringify(management.classes.department),
-                                            'major': JSON.stringify(management.classes.major),
-                                        }), ).then(function(res) {
-                                            management.classes.data = res.data
-                                        })
-                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                                            "getClassCount": '',
-                                            'grade': JSON.stringify(management.classes.grade),
-                                            'department': JSON.stringify(management.classes.department),
-                                            'major': JSON.stringify(management.classes.major),
-                                        }), ).then(function(res) {
-                                            management.classes.count = res.data.num
-                                        })
-
-                                        management.addClasses.department = ''
-                                        management.addClasses.major = ''
-                                        management.addClasses.Class = ''
-                                        management.addClasses.grade = ''
-                                    }
-                                })
-                            }
-                        })
-                    }).catch(() => {
-                        management.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-                },
-                classFilter(val) {
+				selectStudent(scope){
+					console.log(scope.row)
+				},
+               classFilter(val) {
                     if ('grade' in val) {
-                        management.classes.grade = val['grade']
+                        teacher.classes.grade = val['grade']
                     }
                     if ('department' in val) {
-                        management.classes.department = val['department']
+                        teacher.classes.department = val['department']
 
                         axios.post('/Core/Global/frontInit.php', Qs.stringify({
                             "getMajor": '',
                             'department': JSON.stringify(val['department'])
                         }), ).then(function(res) {
-                            management.classes.majorFilter = res.data
+                            teacher.classes.majorFilter = res.data
                         })
                     }
                     if ('major' in val) {
-                        management.classes.major = val['major']
+                        teacher.classes.major = val['major']
                     }
-                    management.classes.page = 1
-                    this.classCurrentChange(management.classes.page)
+                    teacher.classes.page = 1
+                    this.classCurrentChange(teacher.classes.page)
                     console.log(val)
                 },
                 classCurrentChange(val) {
                     axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                        "getClass": '',
+                        "getTeacherClass": '',
                         'page': val,
                         'num': '10',
-                        'grade': JSON.stringify(management.classes.grade),
-                        'department': JSON.stringify(management.classes.department),
-                        'major': JSON.stringify(management.classes.major),
+						'tid': teacher.tid,
+                        'grade': JSON.stringify(teacher.classes.grade),
+                        'major': JSON.stringify(teacher.classes.major),
                     }), ).then(function(res) {
-                        management.classes.data = res.data
+                        teacher.classes.data = res.data
                     })
                     axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                        "getClassCount": '',
-                        'grade': JSON.stringify(management.classes.grade),
-                        'department': JSON.stringify(management.classes.department),
-                        'major': JSON.stringify(management.classes.major),
+                        "getTeacherClassCount": '',
+						'tid': teacher.tid,
+                        'grade': JSON.stringify(teacher.classes.grade),
+                        'major': JSON.stringify(teacher.classes.major),
                     }), ).then(function(res) {
-                        management.classes.count = res.data.num
+                        teacher.classes.count = res.data.num
                     })
                 }
                 

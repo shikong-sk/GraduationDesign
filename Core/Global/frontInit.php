@@ -607,5 +607,29 @@ if (isset($_POST['getScore'])  && isset($_POST['page']) && isset($_POST['num']))
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if (isset($_POST['getTeacherClassCount']) && isset($_POST['tid']))
+{
+
+    if($_SESSION['identity'] === 'teacher' || $_SESSION['identity'] === 'admin'){
+        exit($db->getTeacherClassCount($_POST['tid'],$_POST['grade'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['getTeacherClass'])  && isset($_POST['page']) && isset($_POST['num']) && isset($_POST['tid']))
+{
+
+//
+
+    if($_SESSION['identity'] === 'teacher' || $_SESSION['identity'] === 'admin'){
+        exit($db->getTeacherClass($_POST['page'],$_POST['num'],$_POST['tid'],$_POST['grade'],$_POST['major']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

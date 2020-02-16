@@ -1461,7 +1461,7 @@ WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.departm
     function getScoreCount($grade = "", $department = "", $major = '')
     {
         $database = $this->database;
-        $query = "SELECT count(*) FROM score s,s_student ss,course c,s_major sm,s_department sd,s_class sc WHERE s.sid = ss.id AND s.cid = c.id AND c.major = sm.id AND c.department = sd.id AND sm.department = sd.id AND c.department = sc.department AND c.major = sc.major AND c.class = sc.class AND ss.class = c.class AND ss.class = sc.class AND c.major = sc.major AND c.department = sc.department AND ss.grade = sc.grade";
+        $query = "SELECT count(*) as num FROM score s,s_student ss,course c,s_major sm,s_department sd,s_class sc WHERE s.sid = ss.id AND s.cid = c.id AND c.major = sm.id AND c.department = sd.id AND sm.department = sd.id AND c.department = sc.department AND c.major = sc.major AND c.class = sc.class AND ss.class = c.class AND ss.class = sc.class AND c.major = sc.major AND c.department = sc.department AND ss.grade = sc.grade";
 
         if ((strlen($major) != 0)) {
             $major = json_decode($major);
@@ -1568,6 +1568,124 @@ WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.departm
 
         $page = ($page - 1) * $num;
         $query .= " ORDER BY ss.grade DESC LIMIT $page,$num";
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+
+    function getTeacherClassCount($tid,$grade = "",$major = '')
+    {
+        $database = $this->database;
+        $department = $database->query("SELECT department FROM ".$this::teacher." WHERE id = $tid")->fetch_assoc()['department'];
+        $query = "SELECT count(*) as num FROM course c,t_teacher t,s_grade sg,s_department sd,s_major sm,s_class sc WHERE c.tid = t.id AND sd.id = c.department AND sm.department = c.department AND sm.id = c.major AND sg.grade = c.grade AND sg.department = sd.id AND sg.major = sm.id AND sc.department = sd.id AND sc.major = sm.id AND sc.grade = sg.grade AND sc.class = c.class AND t.id = $tid";
+
+        if ((strlen($major) != 0)) {
+            $major = json_decode($major);
+            if (is_array($major) && count($major) != 0) {
+                if (count($major) > 1) {
+                    $query .= " AND (`major` = '" . $major[0] . "'";
+                    foreach (array_slice($major, 1) as $s) {
+                        $query .= " OR `major`='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND `major` = '" . $major[0] . "'";
+                }
+            }
+        }
+
+        $query .= " AND `department` = '" . $department . "'";
+
+        if ((strlen($grade) != 0)) {
+            $grade = json_decode($grade);
+            if (is_array($grade) && count($grade) != 0) {
+                if (count($grade) > 1) {
+                    $query .= " AND (`grade` = '" . $grade[0] . "'";
+                    foreach (array_slice($grade, 1) as $s) {
+                        $query .= " OR `grade`='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND `grade` = '" . $grade[0] . "'";
+                }
+            }
+        }
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function getTeacherClass($page, $num,$tid, $grade = '', $major = '')
+    {
+        $database = $this->database;
+        $department = $database->query("SELECT department FROM ".$this::teacher." WHERE id = $tid")->fetch_assoc()['department'];
+        $query = "SELECT c.id,c.name as course,t.name,sg.grade,sd.departmentName as department,sm.name as major,sc.class,
+(
+	SELECT count(*) 
+	FROM ".$this::student." 
+	WHERE grade = c.grade AND department = c.department AND major = c.major AND class = c.class
+) as num
+FROM ".$this::course." c,".$this::teacher." t,".$this::grade." sg,".$this::department." sd,".$this::major." sm,".$this::_class." sc
+WHERE c.tid = t.id AND
+sd.id = c.department AND
+sm.department = c.department AND
+sm.id = c.major AND
+sg.grade = c.grade AND
+sg.department = sd.id AND
+sg.major = sm.id AND
+sc.department = sd.id AND
+sc.major = sm.id AND
+sc.grade = sg.grade AND
+sc.class = c.class AND
+t.id = $tid";
+
+
+        if ((strlen($major) != 0)) {
+            $major = json_decode($major);
+            if (is_array($major) && count($major) != 0) {
+                if (count($major) > 1) {
+                    $query .= " AND (c.major = '" . $major[0] . "'";
+                    foreach (array_slice($major, 1) as $s) {
+                        $query .= " OR c.major ='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND c.major = '" . $major[0] . "'";
+                }
+            }
+        }
+
+        $query .= " AND c.department = '" . $department . "'";
+
+        if ((strlen($grade) != 0)) {
+            $grade = json_decode($grade);
+            if (is_array($grade) && count($grade) != 0) {
+                if (count($grade) > 1) {
+                    $query .= " AND (c.grade = '" . $grade[0] . "'";
+                    foreach (array_slice($grade, 1) as $s) {
+                        $query .= " OR c.grade ='$s'";
+                    }
+                    $query .= ")";
+                } else {
+                    $query .= " AND c.grade = '" . $grade[0] . "'";
+                }
+            }
+        }
+
+        $page = ($page - 1) * $num;
+        $query .= " ORDER BY c.grade DESC,c.id ASC LIMIT $page,$num";
 
         $res = $database->query($query);
         $resNum = 0;

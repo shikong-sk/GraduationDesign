@@ -2150,6 +2150,14 @@
 				}), ).then(function(res) {
 				    management.score.data = res.data
 				})
+				
+				axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				    "getScoreCount": '',
+				    'page': '1',
+				    'num': '10'
+				}), ).then(function(res) {
+				    management.score.count = res.data.num
+				})
 
 				axios.post('/Core/Global/frontInit.php', Qs.stringify({
 				    "getCourse": '',
