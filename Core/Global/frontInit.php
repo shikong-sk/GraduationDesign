@@ -631,5 +631,27 @@ if (isset($_POST['getTeacherClass'])  && isset($_POST['page']) && isset($_POST['
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if (isset($_POST['getTeacherMajor']))
+{
+
+    if($_SESSION['identity'] === 'teacher' || $_SESSION['identity'] === 'admin'){
+        exit($db->getTeacherMajor($_POST['getTeacherMajor']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['getTeacherGrade']))
+{
+
+    if($_SESSION['identity'] === 'teacher' || $_SESSION['identity'] === 'admin'){
+        exit($db->getTeacherGrade($_POST['getTeacherGrade']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

@@ -389,7 +389,7 @@
                             <el-table border :data="classes.data" style="width: 100%" @sort-change="" @filter-change="(x)=>classFilter(x)">
                                 <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="classes.gradeFilter">
                                 </el-table-column>
-                                <el-table-column prop="department" label="系" :column-key="'department'" :filters="classes.departmentFilter">
+                                <el-table-column prop="department" label="系">
                                 </el-table-column>
                                 <el-table-column prop="major" label="专业" :column-key="'major'" :filters="classes.majorFilter">
                                 </el-table-column>
@@ -544,20 +544,14 @@
                     teacher.classes.count = res.data.num
                 })
 
-                axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                    "getDepartment": '',
-                }), ).then(function(res) {
-                    teacher.classes.departmentFilter = res.data
-
-                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                        "getMajor": '',
-                    }), ).then(function(res) {
-                        teacher.classes.majorFilter = res.data
-                    })
-                })
+				axios.post('/Core/Global/frontInit.php', Qs.stringify({
+				    "getTeacherMajor": this.tid,
+				}), ).then(function(res) {
+				    teacher.classes.majorFilter = res.data
+				})
 
                 axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                    "getGrade": '',
+                    "getTeacherGrade": this.tid,
                 }), ).then(function(res) {
                     teacher.classes.gradeFilter = res.data
                 })
@@ -570,16 +564,6 @@
                classFilter(val) {
                     if ('grade' in val) {
                         teacher.classes.grade = val['grade']
-                    }
-                    if ('department' in val) {
-                        teacher.classes.department = val['department']
-
-                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
-                            "getMajor": '',
-                            'department': JSON.stringify(val['department'])
-                        }), ).then(function(res) {
-                            teacher.classes.majorFilter = res.data
-                        })
                     }
                     if ('major' in val) {
                         teacher.classes.major = val['major']

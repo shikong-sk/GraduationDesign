@@ -13,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="1687" column="51" selection-start-line="1687" selection-start-column="51" selection-end-line="1687" selection-end-column="51" />
+            <state relative-caret-position="398">
+              <caret line="1719" column="29" lean-forward="true" selection-start-line="1719" selection-start-column="29" selection-end-line="1719" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -22,8 +22,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="625" lean-forward="true" selection-start-line="625" selection-end-line="625" />
+            <state relative-caret-position="486">
+              <caret line="639" column="5" lean-forward="true" selection-start-line="639" selection-start-column="5" selection-end-line="639" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -135,20 +135,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/template/default/front/login.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="27" column="62" selection-start-line="27" selection-start-column="62" selection-end-line="27" selection-end-column="62" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#el-form#0;n#div#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="38">
@@ -168,7 +154,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getGradeList</find>
       <find>channel</find>
       <find>update</find>
       <find>insert</find>
@@ -187,7 +172,6 @@
       <find>majorList</find>
       <find>addStudent</find>
       <find>addStudent.Class =</find>
-      <find>getGrade</find>
       <find>addStudent.both =</find>
       <find>MajorList</find>
       <find>classes.data</find>
@@ -198,6 +182,8 @@
       <find>delClass</find>
       <find>login</find>
       <find>getClass</find>
+      <find>value</find>
+      <find>getGrade</find>
     </findStrings>
     <replaceStrings>
       <replace>department</replace>
@@ -344,18 +330,18 @@
       <workItem from="1578834598974" duration="78565000" />
       <workItem from="1579720462144" duration="44164000" />
       <workItem from="1580618436211" duration="43068000" />
-      <workItem from="1581507440605" duration="18983000" />
+      <workItem from="1581507440605" duration="20236000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="184780000" />
+    <option name="totallyTimeSpent" value="186033000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.18431635" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18431635" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -557,13 +543,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/login.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/template/default/front/login.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
@@ -576,17 +555,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="625" lean-forward="true" selection-start-line="625" selection-end-line="625" />
+        <state relative-caret-position="486">
+          <caret line="639" column="5" lean-forward="true" selection-start-line="639" selection-start-column="5" selection-end-line="639" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="1687" column="51" selection-start-line="1687" selection-start-column="51" selection-end-line="1687" selection-end-column="51" />
+        <state relative-caret-position="398">
+          <caret line="1719" column="29" lean-forward="true" selection-start-line="1719" selection-start-column="29" selection-end-line="1719" selection-end-column="29" />
         </state>
       </provider>
     </entry>

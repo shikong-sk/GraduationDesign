@@ -1698,6 +1698,36 @@ t.id = $tid";
         $json = json_encode($json, JSON_UNESCAPED_UNICODE);
         return $json;
     }
+
+    function getTeacherMajor($tid)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT DISTINCT c.major,sm.name FROM ".$this::course." c,".$this::teacher." t,".$this::major." sm WHERE t.id = c.tid AND sm.department = c.department AND sm.id = c.major AND t.id = $tid ORDER BY c.major");
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['name'], 'value' => $data['major']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function getTeacherGrade($tid)
+    {
+        $database = $this->database;
+        $res = $database->query("SELECT DISTINCT c.grade FROM course c,t_teacher t WHERE t.id = c.tid AND t.id = $tid ORDER BY c.grade DESC");
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, Array('text' => $data['grade'] . '级', 'value' => $data['grade']));
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
 }
 
 ?>
