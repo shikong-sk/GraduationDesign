@@ -1586,36 +1586,37 @@ WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.departm
     {
         $database = $this->database;
         $department = $database->query("SELECT department FROM ".$this::teacher." WHERE id = $tid")->fetch_assoc()['department'];
+
         $query = "SELECT count(*) as num FROM course c,t_teacher t,s_grade sg,s_department sd,s_major sm,s_class sc WHERE c.tid = t.id AND sd.id = c.department AND sm.department = c.department AND sm.id = c.major AND sg.grade = c.grade AND sg.department = sd.id AND sg.major = sm.id AND sc.department = sd.id AND sc.major = sm.id AND sc.grade = sg.grade AND sc.class = c.class AND t.id = $tid";
 
         if ((strlen($major) != 0)) {
             $major = json_decode($major);
             if (is_array($major) && count($major) != 0) {
                 if (count($major) > 1) {
-                    $query .= " AND (`major` = '" . $major[0] . "'";
+                    $query .= " AND (c.major = '" . $major[0] . "'";
                     foreach (array_slice($major, 1) as $s) {
-                        $query .= " OR `major`='$s'";
+                        $query .= " OR c.major ='$s'";
                     }
                     $query .= ")";
                 } else {
-                    $query .= " AND `major` = '" . $major[0] . "'";
+                    $query .= " AND c.major = '" . $major[0] . "'";
                 }
             }
         }
 
-        $query .= " AND `department` = '" . $department . "'";
+        $query .= " AND c.department = '" . $department . "'";
 
         if ((strlen($grade) != 0)) {
             $grade = json_decode($grade);
             if (is_array($grade) && count($grade) != 0) {
                 if (count($grade) > 1) {
-                    $query .= " AND (`grade` = '" . $grade[0] . "'";
+                    $query .= " AND (c.grade = '" . $grade[0] . "'";
                     foreach (array_slice($grade, 1) as $s) {
-                        $query .= " OR `grade`='$s'";
+                        $query .= " OR c.grade ='$s'";
                     }
                     $query .= ")";
                 } else {
-                    $query .= " AND `grade` = '" . $grade[0] . "'";
+                    $query .= " AND c.grade = '" . $grade[0] . "'";
                 }
             }
         }
@@ -1734,7 +1735,7 @@ t.id = $tid";
         $query = "SELECT s.id,s.name,s.sex,s.both,s.phone,s.seat FROM " . $this::student . " s WHERE s.major = '$major' AND s.department = '$department' AND s.grade = '$grade' AND s.class = '$class'";
 
         $query .= " ORDER BY s.id ASC";
-        
+
         $database = $this->database;
 
         $res = $database->query($query);

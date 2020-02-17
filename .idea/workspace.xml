@@ -13,8 +13,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="1733" column="93" selection-start-line="1733" selection-start-column="93" selection-end-line="1733" selection-end-column="93" />
+            <state relative-caret-position="455">
+              <caret line="1623" column="25" selection-start-line="1623" selection-start-column="25" selection-end-line="1623" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -22,7 +22,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="524">
+            <state relative-caret-position="1037">
               <caret line="660" column="31" selection-start-line="660" selection-start-column="31" selection-end-line="660" selection-end-column="31" />
             </state>
           </provider>
@@ -330,12 +330,12 @@
       <workItem from="1578834598974" duration="78565000" />
       <workItem from="1579720462144" duration="44164000" />
       <workItem from="1580618436211" duration="43068000" />
-      <workItem from="1581507440605" duration="22019000" />
+      <workItem from="1581507440605" duration="22955000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="187816000" />
+    <option name="totallyTimeSpent" value="188752000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -564,15 +564,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/Global/frontInit.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="524">
+        <state relative-caret-position="1037">
           <caret line="660" column="31" selection-start-line="660" selection-start-column="31" selection-end-line="660" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="1733" column="93" selection-start-line="1733" selection-start-column="93" selection-end-line="1733" selection-end-column="93" />
+        <state relative-caret-position="455">
+          <caret line="1623" column="25" selection-start-line="1623" selection-start-column="25" selection-end-line="1623" selection-end-column="25" />
         </state>
       </provider>
     </entry>
