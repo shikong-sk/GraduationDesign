@@ -1750,6 +1750,37 @@ t.id = $tid";
         return $json;
     }
 
+    function getTeacherScore($cid, $grade, $department, $major,$class)
+    {
+        $query = "SELECT ss.id,ss.name,ss.seat,s.score,s.makeUp FROM ".$this::student." ss left join ".$this::score." s on ss.id = s.sid AND s.cid = '$cid' WHERE ss.grade = '$grade' AND ss.department = '$department' AND ss.major = '$major' AND ss.class = '$class' ORDER BY ss.id ASC";
+
+        $database = $this->database;
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function updateTeacherScore($cid,$sid,$score,$makeUp)
+    {
+
+        $database = $this->database;
+
+        $res = $database->query("REPLACE INTO ".$this::score."(`sid`, `cid`, `score`, `makeUp`) VALUES ($sid, $cid, $score, $makeUp);");
+        if ($res) {
+            return json_encode(Array('success' => '分数登记成功'), JSON_UNESCAPED_UNICODE);
+        } else {
+            return json_encode(Array('error' => '分数登记失败'), JSON_UNESCAPED_UNICODE);
+        }
+
+    }
 }
 
 ?>

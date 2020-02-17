@@ -405,8 +405,8 @@
 												<el-button size="mini" type="" class="mx-auto text-center" @click="selectStudent(scope)">
 													查看学生
 												</el-button>
-												<el-button size="mini" type="danger" class="mx-auto text-center" @click="">
-													操作
+												<el-button size="mini" type="primary" class="mx-auto text-center" @click="selectScore(scope)">
+													分数登记
 												</el-button>
 											</div>
 										</template>
@@ -431,6 +431,47 @@
 								<el-table-column prop="phone" label="联系电话">
 								</el-table-column>
 								<el-table-column prop="seat" label="座号">
+								</el-table-column>
+							</el-table>
+						</el-tab-pane>
+						
+						<el-tab-pane v-for="(item,index) in scoreTabs" :key="item.name" :label="item.name" :name="item.name" closable >
+							<el-table border :data="item.data" style="width: 100%">
+							    <el-table-column prop="id" label="学号">
+							    </el-table-column>
+							    <el-table-column prop="name" label="姓名">
+							    </el-table-column>
+								<el-table-column prop="seat" label="座号">
+								</el-table-column>
+								<el-table-column label="分数">
+								    <template slot-scope="scope">
+										<span v-if="scope.row.score && (item.edit != scope.$index)">{{scope.row.score}}</span>
+										<span v-else-if="(item.edit != scope.$index)"> 无 </span>
+										<input type="text" v-else v-model="scope.row.score" oninput="value=value.replace(/[^(0-9)]/g,'')" />
+									</template>
+								</el-table-column>
+								<el-table-column label="是否补考">
+								    <template slot-scope="scope">
+										<span v-if="scope.row.makeUp == '1' && (item.edit != scope.$index)">是</span>
+										<span v-else-if="(item.edit != scope.$index)"> 否 </span>
+										<el-select v-model="scope.row.makeUp" v-else>
+											<el-option :label="'否'" :value="0"></el-option>
+											<el-option :label="'是'" :value="1"></el-option>
+										</el-select>
+									</template>
+								</el-table-column>
+								<el-table-column label="操作">
+								    <template slot-scope="scope">
+											<div class="text-center">
+												<el-button size="mini" type="primary" class="mx-auto text-center" @click="updateScore(item,scope)" v-if="(item.edit != scope.$index)">
+													登记分数
+												</el-button>
+												
+												<el-button size="mini" type="warning" class="mx-auto text-center" @click="saveScore(item,scope)" v-else>
+													保存分数
+												</el-button>
+											</div>
+										</template>
 								</el-table-column>
 							</el-table>
 						</el-tab-pane>
@@ -485,6 +526,7 @@
 
 					tabIndex:'班级概览',
 					tabs:[],
+					scoreTabs:[],
                     tabPosition: 'left',
 					
                     classes: {
@@ -497,48 +539,6 @@
                         gradeFilter: [],
                         departmentFilter: [],
                         majorFilter: [],
-                    },
-                    addClasses: {
-
-                        department: '',
-                        departmentList: '',
-                        years: '3',
-                        major: '',
-                        majorList: '',
-                        grade: '',
-                        gradeList: "",
-                        Class: '',
-
-                        majorDisabled: true,
-                        gradeDisabled: true,
-                        classDisabled: true,
-                    },
-                    addClassesRules: {
-                        grade: [{
-                            required: true,
-                            message: '请选择年级',
-                            trigger: 'blur'
-                        }, ],
-                        department: [{
-                            required: true,
-                            message: '请选择学系',
-                            trigger: 'blur'
-                        }, ],
-                        major: [{
-                            required: true,
-                            message: '请选择专业',
-                            trigger: 'blur'
-                        }, ],
-                        Class: [{
-                            required: true,
-                            message: '请输入班级编号',
-                            trigger: ['blur', 'change'],
-                        }, {
-                            min: 1,
-                            max: 1,
-                            message: '请输入1~9的班级编号',
-                            trigger: ['blur', 'change']
-                        }, ],
                     },
 
 
@@ -576,21 +576,138 @@
 
             },
             methods: {
+				saveScore(item,scope){
+					if(scope.row.score < 0 || scope.row.score > 100)
+					{
+						teacher.$alert('分数格式有误', '错误', {
+						    confirmButtonText: '确定',
+						    type: 'error',
+						    center: true,
+						    callback: action => {}
+						})
+					}
+					else if(scope.row.score == null || scope.row.score.length == 0)
+					{
+						scope.row.makeUp = null
+						teacher.$message({
+						    type: 'info',
+						    message: '已取消操作'
+						});
+						item.edit = null
+					}
+					else if(scope.row.makeUp == null)
+					{
+						teacher.$alert('请选择是否为补考分数', '错误', {
+						    confirmButtonText: '确定',
+						    type: 'error',
+						    center: true,
+						    callback: action => {}
+						})
+					}
+					else{
+						console.log(item.cid)
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						    "updateTeacherScore": item.cid,
+						    'sid': scope.row.id,
+						    'score': scope.row.score,
+							'makeUp': scope.row.makeUp
+						}), ).then(function(res) {
+						    console.log(res.data)
+						
+						    if ('error' in res.data) {
+						        teacher.$alert(res.data.error, '错误', {
+						            confirmButtonText: '确定',
+						            type: 'error',
+						            center: true,
+						            callback: action => {}
+						        })
+						    } else if ('success' in res.data) {
+								teacher.$message({
+								    type: 'success',
+								    message: '分数登记成功'
+								});
+								item.edit = null
+						    }
+						})
+						
+					}
+				},
+				updateScore(item,scope){
+					if(item.edit != null)
+					{
+						teacher.$alert('请先填写完当前选中项，如需取消操作请将分数项留空', '错误', {
+						    confirmButtonText: '确定',
+						    type: 'error',
+						    center: true,
+						    callback: action => {}
+						})
+					}
+					else
+					{
+						item.edit = scope.$index
+					}
+						
+				},
+				selectScore(scope){
+					var name = scope.row.course +'-'+ scope.row.grade + scope.row.department + scope.row.major + scope.row.class
+					flag = false
+					this.scoreTabs.forEach((tab,index) => {
+						if(tab.name == name)
+						{
+							this.tabIndex = name
+							flag = true
+						}
+					})
+					if(!flag){
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						    "getTeacherScore": "",
+							"cid":scope.row.id,
+							"grade":scope.row.grade,
+							"department":scope.row.departmentId,
+							"major":scope.row.majorId,
+							"class":scope.row.class
+						}), ).then(function(res) {
+						    data = res.data
+							teacher.scoreTabs.push({
+								name: name,
+								data: data,
+								edit:null,
+								cid:scope.row.id,
+							})
+							teacher.tabIndex = name
+						})
+					}
+				},
 				removeTab(tabName){
 					console.log(tabName)
+					flag = true
 					if(this.tabIndex != tabName)
 					{
 						this.tabs.forEach((tab,index) => {
 							if(tab.name === tabName){
+								flag = false
 								nextTab = this.tabs[index + 1] || this.tabs[index - 1]
 								if(nextTab){
 									this.tabIndex = nextTab.name
 								}
 							}
 						})
+						if(flag){
+							this.scoreTabs.forEach((tab,index) => {
+								if(tab.name === tabName){
+									nextTab = this.scoreTabs[index + 1] || this.tabs[index - 1]
+									if(nextTab){
+										this.tabIndex = nextTab.name
+									}
+								}
+							})
+						}
 					}
+					
 					this.tabs = this.tabs.filter(tab => tab.name !== tabName)
-					if(this.tabs.length == 0)
+					this.scoreTabs = this.scoreTabs.filter(tab => tab.name !== tabName)
+					
+					if(this.tabs.length == 0 && this.scoreTabs.length == 0)
 					{
 						this.tabIndex = "班级概览"
 					}

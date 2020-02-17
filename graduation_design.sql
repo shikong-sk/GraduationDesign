@@ -11,7 +11,7 @@
  Target Server Version : 50529
  File Encoding         : 65001
 
- Date: 13/02/2020 01:36:31
+ Date: 18/02/2020 01:50:44
 */
 
 SET NAMES utf8mb4;
@@ -70,7 +70,7 @@ INSERT INTO `channel_content` VALUES ('1579414478967', 'news', '133123213', '<p>
 INSERT INTO `channel_content` VALUES ('1579414519372', 'message', '123123123', '<p>123123123123</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579414525989', 'message', '12312312', '<p>123123123</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579414534494', 'message', '1221332321132231213', '<p>123321321321332133231214212132132132133132</p>', 2);
-INSERT INTO `channel_content` VALUES ('1579419956225', 'message', '13123', '<p style=\"text-align: center;\">测试</p>', 2);
+INSERT INTO `channel_content` VALUES ('1579419956225', 'message', '13123', '<p style=\"text-align: center;\">测试</p>', 3);
 INSERT INTO `channel_content` VALUES ('1579421274688', 'notice', '132123', '<p>132132</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579428603412', 'notice', 'tz', '<p>tz</p>', 0);
 INSERT INTO `channel_content` VALUES ('1579428632173', 'notice', 'tztztztztz', '<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"Storage/notice/Logo.png\" alt=\"\" width=\"176\" height=\"86\" /></p>', 2);
@@ -117,6 +117,14 @@ CREATE TABLE `course`  (
   CONSTRAINT `course_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `t_teacher` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `course_ibfk_2` FOREIGN KEY (`class`, `grade`, `major`, `department`) REFERENCES `s_class` (`class`, `grade`, `major`, `department`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of course
+-- ----------------------------
+INSERT INTO `course` VALUES (10003, '信息安全技术', 0000010002, '1', '16', '02', '05', '2018/09/03', '2018/12/31', 36, 0, 0);
+INSERT INTO `course` VALUES (10000, '网络攻防技术', 0000010002, '1', '17', '02', '05', '2019/09/03', '2019/12/31', 36, 0, 0);
+INSERT INTO `course` VALUES (10002, '信息安全技术', 0000010002, '1', '17', '02', '05', '2019/09/03', '2019/12/31', 36, 0, 0);
+INSERT INTO `course` VALUES (10001, '网络综合布线技术', 0000010004, '1', '17', '02', '05', '2019/09/03', '2019/12/31', 36, 0, 0);
 
 -- ----------------------------
 -- Table structure for global_config
@@ -386,11 +394,17 @@ CREATE TABLE `score`  (
   `cid` int(10) NOT NULL COMMENT '课程号',
   `score` int(3) NOT NULL DEFAULT 0,
   `makeUp` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否补考',
-  PRIMARY KEY (`sid`, `cid`, `makeUp`) USING BTREE,
+  PRIMARY KEY (`sid`, `cid`) USING BTREE,
   INDEX `cid`(`cid`) USING BTREE,
   CONSTRAINT `score_ibfk_1` FOREIGN KEY (`sid`) REFERENCES `s_student` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `score_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `course` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+
+-- ----------------------------
+-- Records of score
+-- ----------------------------
+INSERT INTO `score` VALUES (1730502101, 10000, 70, 0);
+INSERT INTO `score` VALUES (1730502127, 10002, 100, 0);
 
 -- ----------------------------
 -- Table structure for t_teacher
@@ -411,7 +425,7 @@ CREATE TABLE `t_teacher`  (
   INDEX `学系`(`department`) USING BTREE,
   INDEX `id`(`id`) USING BTREE,
   CONSTRAINT `t_teacher_ibfk_1` FOREIGN KEY (`department`) REFERENCES `s_department` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 10004 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 10005 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of t_teacher
@@ -420,6 +434,7 @@ INSERT INTO `t_teacher` VALUES (0000010000, '测试', '男', '1990/10/01', '6656
 INSERT INTO `t_teacher` VALUES (0000010001, '邱伟发', '男', '1990/11/11', '665684', 'ae4237fcef88ae494b31cc87899f600fbc975b05', '13600000000', '05', 1, '440508199011111111');
 INSERT INTO `t_teacher` VALUES (0000010002, '徐逸', '女', '1990/10/01', '090939', '6016757fdfed0532605abced531bda87dbc562ca', '13600000000', '05', 1, '440508199010010000');
 INSERT INTO `t_teacher` VALUES (0000010003, '伍六七', '男', '1990/10/01', '839577', 'ff5095657f51dac674675135d4103d589059ac15', '13600000000', '05', 1, '440000199010010010');
+INSERT INTO `t_teacher` VALUES (0000010004, '侯明', '男', '1990/01/01', '978606', '21ab80e3142e61f76cf2310cc0c30bae3d54aa09', '13600000000', '05', 1, '440505199001010011');
 
 -- ----------------------------
 -- Table structure for top_swiper
