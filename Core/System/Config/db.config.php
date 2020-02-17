@@ -587,7 +587,7 @@ Class sqlHelper
 
     function getStudentList($page, $num, $sex = '', $grade = '', $department = "", $major = '')
     {
-        $query = "SELECT s.id,s.name,s.sex,s.both,s.phone,s.grade,s.years,d.departmentName as department,m.name as major,s.class,s.seat,s.active,s.idCard FROM " . $this::student . " s," . $this::department . " d," . $this::major . " m WHERE s.major = m.id AND s.department = d.id";
+        $query = "SELECT s.id,s.name,s.sex,s.both,s.phone,s.grade,s.years,d.departmentName as department,m.name as major,s.class,s.seat,s.active,s.idCard FROM " . $this::student . " s," . $this::department . " d," . $this::major . " m,".$this::_class. " c WHERE s.major = m.id AND s.department = d.id AND s.grade = c.grade AND d.id = c.department AND s.major = c.major AND s.class = c.class AND m.department = s.department";
 
         if ((strlen($major) != 0)) {
             $major = json_decode($major);
