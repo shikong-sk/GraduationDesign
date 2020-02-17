@@ -419,7 +419,20 @@
                         </el-tab-pane>
 						
 						<el-tab-pane v-for="(item,index) in tabs" :key="item.name" :label="item.name" :name="item.name" closable >
-							<span>{{item.name}}</span>
+							<el-table border :data="item.data" style="width: 100%">
+							    <el-table-column prop="id" label="学号">
+							    </el-table-column>
+							    <el-table-column prop="name" label="姓名">
+							    </el-table-column>
+							    <el-table-column prop="sex" label="性别">
+							    </el-table-column>
+							    <el-table-column prop="both" label="出生日期">
+							    </el-table-column>
+								<el-table-column prop="phone" label="联系电话">
+								</el-table-column>
+								<el-table-column prop="seat" label="座号">
+								</el-table-column>
+							</el-table>
 						</el-tab-pane>
 					</el-tabs>
                 </div>
@@ -594,10 +607,20 @@
 						}
 					})
 					if(!flag){
-						this.tabs.push({
-							name: name
+						axios.post('/Core/Global/frontInit.php', Qs.stringify({
+						    "getTeacherStudent": "",
+							"grade":scope.row.grade,
+							"department":scope.row.departmentId,
+							"major":scope.row.majorId,
+							"class":scope.row.class
+						}), ).then(function(res) {
+						    data = res.data
+							teacher.tabs.push({
+								name: name,
+								data: data,
+							})
+							teacher.tabIndex = name
 						})
-						this.tabIndex = name
 					}
 				},
                classFilter(val) {

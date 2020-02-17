@@ -1631,7 +1631,7 @@ WHERE c.grade = g.grade AND c.major = m.id AND m.department = d.id AND c.departm
     {
         $database = $this->database;
         $department = $database->query("SELECT department FROM ".$this::teacher." WHERE id = $tid")->fetch_assoc()['department'];
-        $query = "SELECT c.id,c.name as course,t.name,sg.grade,sd.departmentName as department,sm.name as major,sc.class,
+        $query = "SELECT c.id,c.name as course,t.name,sg.grade,sd.departmentName as department,sd.id as departmentId,sm.id as majorId,sm.name as major,sc.class,
 (
 	SELECT count(*) 
 	FROM ".$this::student." 
@@ -1728,6 +1728,27 @@ t.id = $tid";
         $json = json_encode($json, JSON_UNESCAPED_UNICODE);
         return $json;
     }
+
+    function getTeacherStudent($grade, $department, $major,$class)
+    {
+        $query = "SELECT s.id,s.name,s.sex,s.both,s.phone,s.seat FROM " . $this::student . " s WHERE s.major = '$major' AND s.department = '$department' AND s.grade = '$grade' AND s.class = '$class'";
+
+        $query .= " ORDER BY s.id ASC";
+        
+        $database = $this->database;
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
 }
 
 ?>
