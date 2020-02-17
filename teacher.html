@@ -384,8 +384,8 @@
 
             <el-tab-pane label="班级管理">
                 <div id="Class">
-                    <el-tabs v-model="tabIndex" tab-position="top" style="">
-                        <el-tab-pane label="班级概览" name="班级概览">
+                    <el-tabs v-model="tabIndex" tab-position="top" style="" @tab-remove="removeTab">
+                        <el-tab-pane label="班级概览" name="班级概览" >
                             <el-table border :data="classes.data" style="width: 100%" @sort-change="" @filter-change="(x)=>classFilter(x)">
                                 <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="classes.gradeFilter">
                                 </el-table-column>
@@ -417,6 +417,10 @@
                             </el-pagination>
 
                         </el-tab-pane>
+						
+						<el-tab-pane v-for="(item,index) in tabs" :key="item.name" :label="item.name" :name="item.name" closable >
+							<span>{{item.name}}</span>
+						</el-tab-pane>
 					</el-tabs>
                 </div>
             </el-tab-pane>
@@ -467,6 +471,7 @@
 					tid:10002,
 
 					tabIndex:'班级概览',
+					tabs:[],
                     tabPosition: 'left',
 					
                     classes: {
@@ -558,8 +563,42 @@
 
             },
             methods: {
+				removeTab(tabName){
+					console.log(tabName)
+					if(this.tabIndex != tabName)
+					{
+						this.tabs.forEach((tab,index) => {
+							if(tab.name === tabName){
+								nextTab = this.tabs[index + 1] || this.tabs[index - 1]
+								if(nextTab){
+									this.tabIndex = nextTab.name
+								}
+							}
+						})
+					}
+					this.tabs = this.tabs.filter(tab => tab.name !== tabName)
+					if(this.tabs.length == 0)
+					{
+						this.tabIndex = "班级概览"
+					}
+				},
 				selectStudent(scope){
 					console.log(scope.row)
+					var name = scope.row.grade + scope.row.department + scope.row.major + scope.row.class
+					flag = false
+					this.tabs.forEach((tab,index) => {
+						if(tab.name == name)
+						{
+							this.tabIndex = name
+							flag = true
+						}
+					})
+					if(!flag){
+						this.tabs.push({
+							name: name
+						})
+						this.tabIndex = name
+					}
 				},
                classFilter(val) {
                     if ('grade' in val) {
