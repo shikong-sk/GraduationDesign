@@ -1,0 +1,149 @@
+<div id="student">
+
+    <!-- 		<el-row>
+                <el-col :span="24">
+                    <div class="text-success" style="text-align: center;padding-left: 1.25rem;padding-right: 1.25rem;">欢迎您，XXX老师</div>
+                </el-col>
+            </el-row> -->
+
+    <el-tabs :tab-position="tabPosition" style="">
+
+        <el-tab-pane label="课程查询">
+            <div id="course">
+                <el-tabs v-model="tabIndex" tab-position="top" style="">
+                    <el-tab-pane label="课程概览" name="课程概览" >
+                        <el-table border :data="course.data" style="width: 100%">
+                            <el-table-column prop="course" label="课程">
+                            </el-table-column>
+                            <el-table-column prop="stime" label="课程开始时间">
+                            </el-table-column>
+                            <el-table-column prop="etime" label="课程结束时间">
+                            </el-table-column>
+                            <el-table-column prop="score" label="分数">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.score">{{scope.row.score}}</span>
+                                    <span v-else> 暂未登记分数 </span>
+                                </template>
+                            </el-table-column>
+
+                            <el-table-column label="是否补考">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.makeUp == '1'">是</span>
+                                    <span v-else> 否 </span>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{courseCurrentChange(v)}" :current-page.sync="course.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(course.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+
+    </el-tabs>
+
+</div>
+
+<script type="text/javascript">
+
+    var resetWindow = function() {
+        $('#course').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+
+        if ($(window).width() <= 995) {
+            student.tabPosition = 'top'
+            $('#student').css({
+                'margin': '0 10px',
+                'margin-top': '5px'
+            })
+        } else {
+            student.tabPosition = 'left'
+            $('#student').css({
+                'margin': '0 5px',
+                'margin-top': '5px'
+            })
+        }
+    }
+    $(document).ready(function() {
+        resetWindow()
+    })
+    $(window).resize(function() {
+        resetWindow()
+    })
+
+    var student = new Vue({
+        el: '#student',
+        watch: {
+        },
+        computed: {
+        },
+        data() {
+
+            return {
+
+                sid:'<?php echo $_SESSION["user"] ?>',
+
+                tabIndex:'课程概览',
+                tabs:[],
+                scoreTabs:[],
+                tabPosition: 'left',
+
+                course: {
+                    data: [],
+                    page: 1,
+                    count: 0,
+                },
+
+
+            }
+        },
+        mounted() {
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getStudentCourse": '',
+                'sid': this.sid,
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                student.course.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getStudentCourseCount": '',
+                'sid': this.sid,
+            }), ).then(function(res) {
+                student.course.count = res.data.num
+            })
+
+        },
+        methods: {
+            courseCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getStudentCourse": '',
+                    'sid': this.sid,
+                    'page': val,
+                    'num': '10'
+                }), ).then(function(res) {
+                    student.course.data = res.data
+                })
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getStudentCourseCount": '',
+                    'sid': this.sid,
+                }), ).then(function(res) {
+                    student.course.count = res.data.num
+                })
+
+
+            }
+
+
+        }
+    })
+
+</script>

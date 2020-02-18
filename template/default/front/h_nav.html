@@ -22,10 +22,10 @@
                 <div class=\"col\">
             ";
             if($_SESSION['identity'] === 'student') {
-            echo "<a href=\"#\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">学生中心";
+            echo "<a href=\"student.php\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">学生中心";
             }
             else if ($_SESSION['identity'] === 'teacher'){
-            echo "<a href=\"#\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">教工中心";
+            echo "<a href=\"teacher.php\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">教工中心";
             }
             else if ($_SESSION['identity'] === 'admin'){
             echo "<a href=\"management.html\" :style=\"{color:h_nav_color,'text-decoration': 'none'}\">后台管理";

@@ -686,5 +686,27 @@ if (isset($_POST['updateTeacherScore']) && isset($_POST['sid']) && isset($_POST[
         exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
     }
 }
+
+if (isset($_POST['getStudentCourseCount']) && isset($_POST['sid']))
+{
+
+    if($_SESSION['identity'] === 'student' || $_SESSION['identity'] === 'admin'){
+        exit($db->getStudentCourseCount($_POST['sid']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
+
+if (isset($_POST['getStudentCourse'])  && isset($_POST['page']) && isset($_POST['num']) && isset($_POST['sid']))
+{
+
+    if($_SESSION['identity'] === 'student' || $_SESSION['identity'] === 'admin'){
+        exit($db->getStudentCourse($_POST['page'],$_POST['num'],$_POST['sid']));
+    }
+    else{
+        exit(json_encode(Array('error'=>'您无权执行此操作'), JSON_UNESCAPED_UNICODE));
+    }
+}
 header('Content-Type:text/html;charset=utf-8');
 die('<h1>ForBidden</h1>');

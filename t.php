@@ -21,7 +21,7 @@ echo sha1($password.$salt);
 
 echo '<br>';
 
-$_SESSION['user'] = 'admin';
+$_SESSION['user'] = '10002';
 $_SESSION['name'] = 'admin';
 $_SESSION['identity'] = 'admin';
 

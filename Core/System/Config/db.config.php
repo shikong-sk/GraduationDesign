@@ -1781,6 +1781,43 @@ t.id = $tid";
         }
 
     }
+
+    function getStudentCourseCount($sid)
+    {
+        $database = $this->database;
+
+        $query = "SELECT count(*) as num FROM 
+(SELECT ss.id,ss.name,c.name as course,c.id as cid,c.stime,c.etime FROM ".$this::student." ss,".$this::course." c WHERE ss.grade = c.grade AND ss.department = c.department AND ss.major = c.major AND ss.class = c.class) as c 
+left join ".$this::score." s on s.cid = c.cid AND s.sid = c.id WHERE c.id = $sid";
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        $json = json_encode($res->fetch_assoc(), JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    function getStudentCourse($page, $num, $sid)
+    {
+        $database = $this->database;
+        $query = "SELECT c.id,c.name,c.course,c.stime,c.etime,s.score,s.makeUp FROM 
+(SELECT ss.id,ss.name,c.name as course,c.id as cid,c.stime,c.etime FROM ".$this::student." ss,".$this::course." c WHERE ss.grade = c.grade AND ss.department = c.department AND ss.major = c.major AND ss.class = c.class) as c 
+left join ".$this::score." s on s.cid = c.cid AND s.sid = c.id WHERE c.id = $sid";
+
+        $page = ($page - 1) * $num;
+        $query .= " ORDER BY c.stime DESC LIMIT $page,$num";
+
+        $res = $database->query($query);
+        $resNum = 0;
+        $json = Array();
+        while ($res->data_seek($resNum)) {
+            $data = $res->fetch_assoc();
+            array_push($json, $data);
+            $resNum++;
+        }
+        $json = json_encode($json, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
 }
 
 ?>
