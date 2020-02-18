@@ -1,5 +1,7 @@
 <?php
 
+require_once  './Core/System/core.php';
+
 session_start();
 
 include_once './template/default/front/head.html';

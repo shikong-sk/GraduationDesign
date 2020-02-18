@@ -7,6 +7,10 @@ define('__ROOT__',dirname(__FILE__).'/../');
 
 require_once __ROOT__ . './System/Config/db.config.php';
 
+$db = new sqlHelper();
+$db->__construct();
+
+
 function mtime()
 {
     $t = explode(' ',microtime());
