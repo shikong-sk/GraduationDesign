@@ -1,0 +1,3750 @@
+<div id="management">
+
+    <el-tabs :tab-position="tabPosition" style="">
+        <el-tab-pane label="网站设置">
+            <div id="setting" style="">
+                <el-form ref="settingform" :model="settingform" label-width="80px" label-position="right" :rules="settingRules" style="max-width: none;">
+
+                    <el-row>
+
+                        <el-col :md="6" :sm="12" :xs="24" class="text-center">
+                            网站标题
+                        </el-col>
+                        <el-col :md="6" :sm="12" :xs="24" class="text-center">
+                            <el-form-item label-width="0" label="" prop="title">
+                                <el-input placeholder="请输入标题" v-model="settingform.title">
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :md="6" :sm="12" :xs="24" class="text-center">
+                            导航栏高度
+                        </el-col>
+                        <el-col :md="6" :sm="12" :xs="24" class="text-center">
+                            <el-form-item label-width="0" prop="h_nav_height">
+                                <el-input oninput="value=value.replace(/[^\d]/g,'')" placeholder="请输入高度" v-model="settingform.h_nav_height">
+                                    <template slot="append">px</template>
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :md="6" :sm="6" :xs="12" class="text-center">
+                            导航栏颜色
+                        </el-col>
+                        <el-col :md="6" :sm="6" :xs="12" class="text-center">
+                            <el-color-picker v-model="settingform.h_nav_bgColor" :predefine="settingform.h_nav_bgColor_Predefine"></el-color-picker>
+                        </el-col>
+
+                        <el-col :md="6" :sm="6" :xs="12" class="text-center">
+                            导航栏字体颜色
+                        </el-col>
+                        <el-col :md="6" :sm="6" :xs="12" class="text-center">
+                            <el-color-picker v-model="settingform.h_nav_color" :predefine="settingform.h_nav_color_Predefine"></el-color-picker>
+                        </el-col>
+
+                        <el-col :md="12" :sm="12" :xs="12" class="text-center">
+                            移动端导航栏背景颜色
+                        </el-col>
+                        <el-col :md="12" :sm="12" :xs="12" class="text-center">
+                            <el-color-picker v-model="settingform.h_nav_M_bgColor" :predefine="settingform.h_nav_M_bgColor_Predefine"></el-color-picker>
+                        </el-col>
+
+                        <el-col :span="24">
+                            <input type="button" value="提交修改" class="btn mx-auto btn-block btn-primary" style="margin: 5px auto;" v-on:click="settingUpdate">
+                        </el-col>
+
+
+                        <el-col :span="12" class="text-center">
+                            网站Logo
+                        </el-col>
+                        <el-col :span="12" class="text-center">
+                            <el-upload :show-file-list="false" class="upload-demo" action="./Core/System/upload.php?uploadLogo" :on-success="uploadLogo" :on-error="uploadLogoError" :on-preview="handlePreview" :on-remove="handleRemove" list-type="picture">
+                                <el-button size="small" type="primary">点击上传</el-button>
+                                <!-- 										<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+                            </el-upload>
+                        </el-col>
+
+                    </el-row>
+                </el-form>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="文章管理">
+            <div id="channel">
+                <el-form ref="channelform" :model="channelform" label-width="80px" label-position="right" :rules="channelRules" style="max-width: none;">
+                    <el-tabs tab-position="top" style="">
+                        <el-tab-pane label="信息公开">
+
+                            <el-table border :data="channelData.messageData" style="width: 100%">
+                                <el-table-column prop="date" label="时间">
+                                </el-table-column>
+                                <el-table-column prop="title" label="标题">
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button size="mini" @click="showContent(scope.row.title,scope.row.content)">
+                                            查看内容
+                                        </el-button>
+                                        <el-button size="mini" type="danger" @click="deleteContent(scope.row.id, scope.row.title)">
+                                            删除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+
+                            <el-pagination @size-change="" @current-change="(v)=>{handleCurrentChange(v,'message')}" :current-page.sync="channelCount.messagePage" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(channelCount.message)">
+                            </el-pagination>
+
+                        </el-tab-pane>
+
+                        <el-tab-pane label="学院要闻">
+
+                            <el-table border :data="channelData.newsData" style="width: 100%">
+                                <el-table-column prop="date" label="时间">
+                                </el-table-column>
+                                <el-table-column prop="title" label="标题">
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button size="mini" @click="showContent(scope.row.title,scope.row.content)">
+                                            查看内容
+                                        </el-button>
+                                        <el-button size="mini" type="danger" @click="deleteContent(scope.row.id, scope.row.title)">
+                                            删除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+
+                            <el-pagination @size-change="" @current-change="(v)=>{handleCurrentChange(v,'news')}" :current-page.sync="channelCount.newsPage" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(channelCount.news)">
+                            </el-pagination>
+
+                        </el-tab-pane>
+
+                        <el-tab-pane label="通知公告">
+
+                            <el-table border :data="channelData.noticeData" style="width: 100%">
+                                <el-table-column prop="date" label="时间">
+                                </el-table-column>
+                                <el-table-column prop="title" label="标题">
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button size="mini" @click="showContent(scope.row.title,scope.row.content)">
+                                            查看内容
+                                        </el-button>
+                                        <el-button size="mini" type="danger" @click="deleteContent(scope.row.id, scope.row.title)">
+                                            删除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+
+                            <el-pagination @size-change="" @current-change="(v)=>{handleCurrentChange(v,'notice')}" :current-page.sync="channelCount.noticePage" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(channelCount.notice)">
+                            </el-pagination>
+
+                        </el-tab-pane>
+
+                        <el-tab-pane label="发布文章">
+                            <el-row>
+                                <el-col :span="12" class="text-center mx-auto">发布频道</el-col>
+                                <el-col :span="12" class="text-center mx-auto">
+                                    <el-form-item label="" prop="channel" label-width="0">
+                                        <el-select v-model="channelform.channel" placeholder="请选择发布频道">
+                                            <el-option v-for="data in channelform.channelList" :key="data.channel" :label="data.name" :value="data.channel">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+
+                            <el-form-item label="文章标题" prop="title">
+                                <el-input v-model="channelform.title"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="" prop="contain" label-width="0">
+                                    <textarea id="channelContainEditor" rows="" cols="" v-model="channelform.contain">
+											</textarea>
+                            </el-form-item>
+                            <input value="保存" type="button" id="editor-save" class="btn btn-success btn-block" @click="addContain" />
+
+                        </el-tab-pane>
+                    </el-tabs>
+                    </el-from>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="学生管理">
+            <div id="student">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="学生信息">
+
+                        <el-table border :data="student.data" style="width: 100%" @sort-change="(x)=>studentSort(x)" @filter-change="(x)=>studentFilter(x)">
+                            <!-- 							<el-table-column
+										prop="id"
+										label="学号"
+										sortable="custom"
+									> -->
+                            <el-table-column prop="id" label="学号">
+                            </el-table-column>
+                            <el-table-column label="姓名">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.name" v-if="(addStudent.currentEdit != scope.$index)"></span>
+                                    <input type="text" v-else v-model="scope.row.name" />
+                                </template>
+
+                            </el-table-column>
+                            <!-- 							<el-table-column prop="sex" label="性别">
+									</el-table-column> -->
+                            <el-table-column label="性别" :column-key="'sex'" :filters="student.sexFilter">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.sex" v-if="(addStudent.currentEdit != scope.$index)"></span>
+                                    <!-- 										<el-select v-model="scope.row.sex" v-else >
+												<el-option :label="'男'" :value="'男'"></el-option>
+												<el-option :label="'女'" :value="'女'"></el-option>
+											</el-select> -->
+                                    <span v-else class="text-danger">根据身份证号码自动选择</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="出生日期">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.both" v-if="(addStudent.currentEdit != scope.$index)"></span>
+                                    <!-- 										<el-date-picker
+												  v-else
+												  v-model="scope.row.both"
+												  type="date"
+												  value-format="yyyy/MM/dd"
+												  placeholder="根据身份证号自动填写">
+											</el-date-picker> -->
+                                    <span v-else class="text-danger">根据身份证号码自动生成</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="手机号码">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.phone" v-if="(addStudent.currentEdit != scope.$index)"></span>
+                                    <input type="text" v-else v-model="scope.row.phone" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="student.gradeFilter">
+                            </el-table-column>
+                            <el-table-column prop="years" label="学制">
+                            </el-table-column>
+                            <el-table-column prop="department" label="系" :column-key="'department'" :filters="student.departmentFilter">
+                            </el-table-column>
+                            <el-table-column prop="major" label="专业" :column-key="'major'" :filters="student.majorFilter">
+                            </el-table-column>
+                            <el-table-column prop="class" label="班级">
+                            </el-table-column>
+                            <el-table-column prop="seat" label="座号">
+                            </el-table-column>
+                            <el-table-column label="账号状态">
+                                <!-- 									<template slot-scope="scope">
+											<span v-if="scope.row.active == 0" class="text-danger">未激活</span>
+											<span v-else class="text-success">已激活</span>
+										</template> -->
+                                <template slot-scope="scope">
+                                    <span v-if="((addStudent.currentEdit != scope.$index) && (scope.row.active == 0))" class="text-danger">未激活</span>
+                                    <span v-else-if="((addStudent.currentEdit != scope.$index) && (scope.row.active == 1))" class="text-success">已激活</span>
+                                    <el-select v-model="scope.row.active" v-else>
+                                        <el-option :label="'未激活'" :value="0"></el-option>
+                                        <el-option :label="'已激活'" :value="1"></el-option>
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="身份证">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.idCard" v-if="(addStudent.currentEdit != scope.$index)"></span>
+                                    <input type="text" v-else v-model="scope.row.idCard" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" type="primary" class="mx-auto text-center" @click="updateStudent(scope)" v-if="(addStudent.currentEdit != scope.$index)">
+                                        修改
+                                    </el-button>
+
+                                    <el-button size="mini" type="warning" class="mx-auto text-center" @click="updateStudent(scope)" v-else>
+                                        保存
+                                    </el-button>
+
+                                    <el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteStudent(scope.row.id)">
+                                        删除
+                                    </el-button>
+
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{studentCurrentChange(v)}" :current-page.sync="student.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(student.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                    <el-tab-pane label="添加学生">
+                        <el-form ref="addStudentForm" :model="addStudent" label-width="80px" label-position="right" :rules="addStudentRules" style="max-width: none;">
+
+                            <el-form-item label="学制" prop="years">
+                                <el-input placeholder="请输入学制" v-model="addStudent.years" oninput="value=value.replace(/[^1-9]/g,'')">
+                                    <template slot="append">年</template>
+                                </el-input>
+                            </el-form-item>
+
+                            <el-form-item label="学系" prop="department">
+                                <el-select v-model="addStudent.department" placeholder="请选择所在学系">
+                                    <el-option v-for="data in addStudent.departmentList" :key="data.id" :label="data.id +' '+ data.departmentName" :value="data.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="专业" prop="major">
+                                <el-select v-model="addStudent.major" placeholder="请选择所在专业" :disabled="addStudent.majorDisabled">
+                                    <el-option v-for="data in addStudent.majorList" :key="data.id" :label="data.id + ' ' + data.name" :value="data.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="年级" prop="grade">
+                                <el-select v-model="addStudent.grade" placeholder="请选择所在年级" :disabled="addStudent.gradeDisabled">
+                                    <el-option v-for="data in addStudent.gradeList" :key="data.grade" :label="data.grade + ' 级'" :value="data.grade"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="班次" prop="Class">
+                                <el-select v-model="addStudent.Class" placeholder="请选择所在班次" :disabled="addStudent.classDisabled">
+                                    <el-option v-for="data in addStudent.classList" :key="data.class" :label="data.class + ' 班'" :value="data.class"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="学号" prop="seat">
+                                <el-input placeholder="请输入内容" v-model="addStudent.seat" v-if="!addStudent.seatDisabled" oninput="value=value.replace(/[^\d]/g,'')">
+                                    <template slot="prepend">{{addStudent.grade + addStudent.years + addStudent.department + addStudent.major + addStudent.Class}}</template>
+                                </el-input>
+
+                                <p v-else class="text-danger"> 信息填写完整后自动生成 </p>
+                            </el-form-item>
+
+                            <el-form-item label="姓名" prop="name">
+                                <el-input v-model="addStudent.name" placeholder="请输入姓名"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="身份证" prop="idCard">
+                                <el-input v-model="addStudent.idCard" placeholder="请填写身份证号"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="性别" prop="sex">
+                                <el-select v-model="addStudent.sex" placeholder="根据身份证号自动选择">
+                                    <el-option :label="'男'" :value="'男'"></el-option>
+                                    <el-option :label="'女'" :value="'女'"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="出生日期" prop="both">
+                                <el-date-picker v-model="addStudent.both" type="date" value-format="yyyy/MM/dd" placeholder="根据身份证号自动填写">
+                                </el-date-picker>
+                            </el-form-item>
+
+                            <el-form-item label="手机号码" prop="phone">
+                                <el-input v-model="addStudent.phone" placeholder="请输入手机号码"></el-input>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addStudentSubmit">添加学生</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="教工管理">
+            <div id="teacher">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="教工信息">
+                        <el-table border :data="teacher.data" style="width: 100%">
+                            <el-table-column prop="id" label="教工号">
+                            </el-table-column>
+                            <el-table-column prop="name" label="姓名">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.name" v-if="(addTeacher.currentEdit != scope.$index)"></span>
+                                    <input type="text" v-else v-model="scope.row.name" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="sex" label="性别">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.sex" v-if="(addTeacher.currentEdit != scope.$index)"></span>
+                                    <span v-else class="text-danger">根据身份证号码自动选择</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="both" label="出生日期">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.both" v-if="(addTeacher.currentEdit != scope.$index)"></span>
+                                    <span v-else class="text-danger">根据身份证号码自动生成</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="phone" label="手机号码">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.phone" v-if="(addTeacher.currentEdit != scope.$index)"></span>
+                                    <input type="text" v-else v-model="scope.row.phone" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="departmentName" label="系">
+                            </el-table-column>
+                            <el-table-column label="账号状态">
+                                <template slot-scope="scope">
+                                    <span v-if="((addTeacher.currentEdit != scope.$index) && (scope.row.active == 0))" class="text-danger">未激活</span>
+                                    <span v-else-if="((addTeacher.currentEdit != scope.$index) && (scope.row.active == 1))" class="text-success">已激活</span>
+                                    <el-select v-model="scope.row.active" v-else>
+                                        <el-option :label="'未激活'" :value="0"></el-option>
+                                        <el-option :label="'已激活'" :value="1"></el-option>
+                                    </el-select>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="idCard" label="身份证">
+                                <template slot-scope="scope">
+                                    <span v-text="scope.row.idCard" v-if="(addTeacher.currentEdit != scope.$index)"></span>
+                                    <input type="text" v-else v-model="scope.row.idCard" />
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <div class="text-center">
+                                        <el-button size="mini" type="primary" class="mx-auto text-center" @click="updateTeacher(scope)" v-if="(addTeacher.currentEdit != scope.$index)">
+                                            修改信息
+                                        </el-button>
+
+                                        <el-button size="mini" type="warning" class="mx-auto text-center" @click="updateTeacher(scope)" v-else>
+                                            保存修改
+                                        </el-button>
+
+                                        <el-button size="mini" type="info" class="mx-auto text-center" @click="changeTeacherPassword(scope.row.id)">修改密码</el-button>
+
+                                        <el-button size="mini" type="warning" class="mx-auto text-center" @click="upgradeToAdmin(scope)">设为管理员</el-button>
+
+                                        <el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteTeacher(scope.row.id)">
+                                            删除教工
+                                        </el-button>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{teacherCurrentChange(v)}" :current-page.sync="teacher.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(teacher.count)">
+                        </el-pagination>
+                    </el-tab-pane>
+
+                    <el-tab-pane label="添加教工">
+                        <el-form ref="addTeacherForm" :model="addTeacher" label-width="80px" label-position="right" :rules="addTeacherRules" style="max-width: none;">
+
+                            <el-form-item label="学系" prop="department">
+                                <el-select v-model="addTeacher.department" placeholder="请选择所在学系">
+                                    <el-option v-for="data in addTeacher.departmentList" :key="data.id" :label="data.departmentName" :value="data.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="账号状态" prop="active">
+                                <el-select v-model="addTeacher.active" placeholder="请选择账号激活状态（默认激活）">
+                                    <el-option :label="'激活'" :value="1"></el-option>
+                                    <el-option :label="'未激活'" :value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="姓名" prop="name">
+                                <el-input v-model="addTeacher.name" placeholder="请输入姓名"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="身份证" prop="idCard">
+                                <el-input v-model="addTeacher.idCard" placeholder="请填写身份证号"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="性别" prop="sex">
+                                <el-select v-model="addTeacher.sex" placeholder="根据身份证号自动选择">
+                                    <el-option :label="'男'" :value="'男'"></el-option>
+                                    <el-option :label="'女'" :value="'女'"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="出生日期" prop="both">
+                                <el-date-picker v-model="addTeacher.both" type="date" value-format="yyyy/MM/dd" placeholder="根据身份证号自动填写">
+                                </el-date-picker>
+                            </el-form-item>
+
+                            <el-form-item label="手机号码" prop="phone">
+                                <el-input v-model="addTeacher.phone" placeholder="请输入手机号码"></el-input>
+                            </el-form-item>
+
+                            <el-form-item label="登录密码" prop="password">
+                                <el-input v-model="addTeacher.password" placeholder="请输入登录号码"></el-input>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addTeacherSubmit">添加教工</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="管理员信息">
+            <div id="admin">
+                <el-table border :data="admin.data" style="width: 100%">
+                    <el-table-column prop="id" label="教工号">
+                    </el-table-column>
+                    <el-table-column prop="name" label="姓名">
+                    </el-table-column>
+                    <el-table-column prop="sex" label="性别">
+                    </el-table-column>
+                    <el-table-column prop="both" label="出生日期">
+                    </el-table-column>
+                    <el-table-column prop="phone" label="手机号码">
+                    </el-table-column>
+                    <el-table-column prop="departmentName" label="系">
+                    </el-table-column>
+                    <el-table-column label="账号状态">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.active == 0" class="text-danger">未激活</span>
+                            <span v-else class="text-success">已激活</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="idCard" label="身份证">
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <div class="text-center">
+                                <el-button size="mini" type="info" @click="changeAdminPassword(scope.row.id)">
+                                    修改密码
+                                </el-button>
+
+                                <el-button size="mini" type="danger" @click="deleteAdmin(scope.row.id)">
+                                    移除管理员权限
+                                </el-button>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+
+                <el-pagination @size-change="" @current-change="(v)=>{amdinCurrentChange(v)}" :current-page.sync="admin.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(admin.count)">
+                </el-pagination>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="班级管理">
+            <div id="Class">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="班级概览">
+                        <el-table border :data="classes.data" style="width: 100%" @sort-change="" @filter-change="(x)=>classFilter(x)">
+                            <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="classes.gradeFilter">
+                            </el-table-column>
+                            <el-table-column prop="department" label="系" :column-key="'department'" :filters="classes.departmentFilter">
+                            </el-table-column>
+                            <el-table-column prop="major" label="专业" :column-key="'major'" :filters="classes.majorFilter">
+                            </el-table-column>
+                            <el-table-column prop="class" label="班级">
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <div class="text-center">
+                                        <el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteClass(scope)">
+                                            删除
+                                        </el-button>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{classCurrentChange(v)}" :current-page.sync="classes.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(classes.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                    <el-tab-pane label="添加班级">
+                        <el-form ref="addClassesForm" :model="addClasses" label-width="80px" label-position="right" :rules="addClassesRules" style="max-width: none;">
+
+                            <el-form-item label="年级" prop="grade">
+                                <el-select v-model="addClasses.grade" placeholder="请选择年级" @change="(v)=>{addClassesGrade(v)}">
+                                    <el-option v-for="data in addClasses.gradeList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="系" prop="department">
+                                <el-select v-model="addClasses.department" placeholder="请选择系" @change="(v)=>{addClassesDepartment(v)}">
+                                    <el-option v-for="data in addClasses.departmentList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="专业" prop="major">
+                                <el-select v-model="addClasses.major" placeholder="请选择专业" @change="(v)=>{addClassesMajor(v)}">
+                                    <el-option v-for="data in addClasses.majorList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="班级" prop="Class">
+                                <el-input placeholder="请输入班号" v-model="addClasses.Class" oninput="value=value.replace(/[^(1-9)]/g,'')">
+                                </el-input>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addClassesSubmit">添加班级</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="专业管理">
+            <div id="major">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="专业概览">
+                        <el-table border :data="Major.data" style="width: 100%" @sort-change="" @filter-change="(x)=>majorFilter(x)">
+                            <el-table-column prop="department" label="系" :column-key="'department'" :filters="Major.departmentFilter">
+                            </el-table-column>
+                            <el-table-column prop="major" label="专业">
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <div class="text-center">
+                                        <el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteMajor(scope)">
+                                            删除
+                                        </el-button>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{majorCurrentChange(v)}" :current-page.sync="Major.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(Major.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                    <el-tab-pane label="添加专业">
+                        <el-form ref="addMajorForm" :model="addMajor" label-width="80px" label-position="right" :rules="addMajorRules" style="max-width: none;">
+
+                            <el-form-item label="系" prop="department">
+                                <el-select v-model="addMajor.department" placeholder="请选择系">
+                                    <el-option v-for="data in addMajor.departmentList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="专业" prop="major">
+                                <el-input placeholder="请输入专业名称" v-model="addMajor.major">
+                                </el-input>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addMajorSubmit">添加专业</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="院系管理">
+            <div id="department">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="院系概览">
+                        <el-table border :data="Department.data" style="width: 100%">
+                            <el-table-column prop="department" label="院系">
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <div class="text-center">
+                                        <el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteDepartment(scope)">
+                                            删除
+                                        </el-button>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{departmentCurrentChange(v)}" :current-page.sync="Department.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(Department.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                    <el-tab-pane label="添加院系">
+                        <el-form ref="addDepartmentForm" :model="addDepartment" label-width="80px" label-position="right" :rules="addDepartmentRules" style="max-width: none;">
+
+                            <el-form-item label="院系" prop="department">
+                                <el-input placeholder="请输入院系名" v-model="addDepartment.department">
+                                </el-input>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addDepartmentSubmit">添加院系</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="开设专业">
+            <div id="department">
+                <el-tabs tab-position="top" style="">
+
+                    <el-tab-pane label="开设专业">
+                        <el-form ref="addGradeForm" :model="addGrade" label-width="80px" label-position="right" :rules="addGradeRules" style="max-width: none;">
+
+                            <el-form-item label="年级" prop="grade">
+                                <el-select v-model="addGrade.grade" placeholder="请选择年级" @change="(v)=>{addGradeGrade(v)}">
+                                    <el-option v-for="data in addGrade.gradeList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="院系" prop="department">
+                                <el-select v-model="addGrade.department" placeholder="请选择院系" @change="(v)=>{addGradeDepartment(v)}">
+                                    <el-option v-for="data in addGrade.departmentList" :key="data.id" :label="data.departmentName" :value="data.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="专业" prop="major">
+                                <el-select v-model="addGrade.major" placeholder="请选择专业" @change="(v)=>{addGradeMajor(v)}">
+                                    <el-option v-for="data in addGrade.majorList" :key="data.id" :label="data.name" :value="data.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addGradeSubmit">开设专业</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="课程管理">
+            <div id="course">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="课程概览">
+                        <el-table border :data="course.data" style="width: 100%" @sort-change="" @filter-change="(x)=>courseFilter(x)">
+                            <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="course.gradeFilter">
+                            </el-table-column>
+                            <el-table-column prop="department" label="系" :column-key="'department'" :filters="course.departmentFilter">
+                            </el-table-column>
+                            <el-table-column prop="major" label="专业" :column-key="'major'" :filters="course.majorFilter">
+                            </el-table-column>
+                            <el-table-column prop="class" label="班级">
+                            </el-table-column>
+                            <el-table-column prop="course" label="课程">
+                            </el-table-column>
+                            <el-table-column prop="teacher" label="任课教师">
+                            </el-table-column>
+                            <el-table-column prop="stime" label="课程开始时间">
+                            </el-table-column>
+                            <el-table-column prop="etime" label="课程结束时间">
+                            </el-table-column>
+                            <el-table-column prop="period" label="总课时">
+                            </el-table-column>
+                            <el-table-column label="公选课">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.public == '0' ">否</span>
+                                    <span v-else>是</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="限制人数">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.num == '0' ">不限制</span>
+                                    <span v-else>{{scope.row.num}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <div class="text-center">
+                                        <el-button size="mini" type="danger" class="mx-auto text-center" @click="deleteCourse(scope)">
+                                            删除
+                                        </el-button>
+                                    </div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{courseCurrentChange(v)}" :current-page.sync="course.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(course.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                    <el-tab-pane label="添加课程">
+                        <el-form ref="addCourseForm" :model="addCourse" label-width="80px" label-position="right" :rules="addCourseRules" style="max-width: none;">
+
+                            <el-form-item label="年级" prop="grade">
+                                <el-select v-model="addCourse.grade" placeholder="请选择年级" @change="(v)=>{addCourseGrade(v)}">
+                                    <el-option v-for="data in addCourse.gradeList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="系" prop="department">
+                                <el-select v-model="addCourse.department" placeholder="请选择系" @change="(v)=>{addCourseDepartment(v)}">
+                                    <el-option v-for="data in addCourse.departmentList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="专业" prop="major">
+                                <el-select v-model="addCourse.major" placeholder="请选择专业" @change="(v)=>{addCourseMajor(v)}">
+                                    <el-option v-for="data in addCourse.majorList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="班级" prop="Class">
+                                <el-select v-model="addCourse.Class" placeholder="请选择班级">
+                                    <el-option v-for="data in addCourse.ClassList" :key="data.class" :label="data.class + ' 班'" :value="data.class"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="任课教师" prop="teacher">
+                                <el-select v-model="addCourse.teacher" placeholder="请选择任课教师">
+                                    <el-option v-for="data in addCourse.teacherList" :key="data.value" :label="data.text" :value="data.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+
+                            <el-form-item label="课程名" prop="course">
+                                <el-input placeholder="请输入课程名称" v-model="addCourse.course">
+                                </el-input>
+                            </el-form-item>
+
+                            <el-form-item label="公选课" prop="public">
+                                <el-radio v-model="addCourse.public" label="1">是</el-radio>
+                                <el-radio v-model="addCourse.public" label="0">否</el-radio>
+                            </el-form-item>
+
+                            <el-form-item label="开始时间" prop="stime">
+                                <el-date-picker v-model="addCourse.stime" type="date" value-format="yyyy/MM/dd" placeholder="请填写课程开始时间" @change="(v)=>{addCourseStime(v)}">
+                                </el-date-picker>
+                            </el-form-item>
+
+                            <el-form-item label="结束时间" prop="etime">
+                                <el-date-picker v-model="addCourse.etime" type="date" value-format="yyyy/MM/dd" placeholder="请填写课程结束时间">
+                                </el-date-picker>
+                            </el-form-item>
+
+                            <el-form-item label="总课时" prop="period">
+                                <el-input placeholder="请输入总课时" v-model="addCourse.period" oninput="value=value.replace(/[^(0-9)]/g,'')">
+                                </el-input>
+                            </el-form-item>
+
+                            <el-form-item label="限制人数" prop="numLock">
+                                <el-radio v-model="addCourse.numLock" label="1">是</el-radio>
+                                <el-radio v-model="addCourse.numLock" label="0">否</el-radio>
+                            </el-form-item>
+
+                            <el-form-item label="总人数" prop="num" v-if="addCourse.numLock == '1' ">
+                                <el-input placeholder="请输入限制人数(0为不限制)" v-model="addCourse.num" oninput="value=value.replace(/[^(0-9)]/g,'')">
+                                </el-input>
+                            </el-form-item>
+
+                            <div>
+                                <el-button type="primary" class="mx-auto text-center btn-block" @click="addCourseSubmit">添加课程</el-button>
+                            </div>
+
+                        </el-form>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="成绩查询">
+            <div id="score">
+                <el-tabs tab-position="top" style="">
+                    <el-tab-pane label="成绩概览">
+                        <el-table border :data="score.data" style="width: 100%" @sort-change="" @filter-change="(x)=>scoreFilter(x)">
+                            <el-table-column prop="grade" label="年级" :column-key="'grade'" :filters="score.gradeFilter">
+                            </el-table-column>
+                            <el-table-column prop="department" label="系" :column-key="'department'" :filters="score.departmentFilter">
+                            </el-table-column>
+                            <el-table-column prop="major" label="专业" :column-key="'major'" :filters="score.majorFilter">
+                            </el-table-column>
+                            <el-table-column prop="class" label="班级">
+                            </el-table-column>
+                            <el-table-column prop="course" label="课程">
+                            </el-table-column>
+                            <el-table-column prop="id" label="学号">
+                            </el-table-column>
+                            <el-table-column prop="name" label="学生">
+                            </el-table-column>
+                            <el-table-column prop="teacher" label="任课教师">
+                            </el-table-column>
+                            <el-table-column prop="score" label="分数">
+                            </el-table-column>
+                            <el-table-column label="补考">
+                                <template slot-scope="scope">
+                                    <span v-if="parseInt(scope.row.score) >= 60 ">无</span>
+                                    <span v-else>{{scope.row.makeUp}}</span>
+                                </template>
+                            </el-table-column>
+
+                        </el-table>
+
+                        <el-pagination @size-change="" @current-change="(v)=>{scoreCurrentChange(v)}" :current-page.sync="score.page" :page-size="10" layout="prev, pager, next, jumper" :total="parseInt(score.count)">
+                        </el-pagination>
+
+                    </el-tab-pane>
+
+                </el-tabs>
+            </div>
+        </el-tab-pane>
+
+    </el-tabs>
+
+</div>
+
+<script type="text/javascript">
+    var channelUpload = function(blobInfo, succFun, failFun) {
+        var xhr, formData;
+        var file = blobInfo.blob(); //转化为易于理解的file对象
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open('POST', './Core/System/upload.php');
+
+        if (!management.channelform.channel) {
+            failFun('请先选择频道再上传图片');
+            return;
+        }
+
+        xhr.onload = function() {
+            var json;
+            if (xhr.status != 200) {
+                failFun('HTTP Error: ' + xhr.status);
+                return;
+            }
+            json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != 'string') {
+                failFun('Invalid JSON: ' + xhr.responseText);
+                return;
+            }
+            succFun(json.location);
+        };
+        formData = new FormData();
+        formData.append('file', file, file.name); //此处与源文档不一样
+
+        formData.append('channel', management.channelform.channel); // 频道参数
+        xhr.send(formData);
+    }
+
+    $(document).ready(function() {
+        tinymce.init({
+            selector: '#channelContainEditor',
+            language: 'zh_CN',
+            skin: 'oxide',
+            statusbar: true,
+            plugins: 'image code insertdatetime indent2em preview autolink link quickbars autoresize hr',
+            branding: false,
+            menubar: false,
+            toolbar: 'undo redo preview | cut copy paste | alignleft aligncenter alignright indent2em bold italic | underline strikethrough hr | fontsizeselect forecolor backcolor styleselect removeformat link image insertdatetime code',
+            insertdatetime_formats: ["%Y-%m-%d %H:%M:%S"],
+            default_link_target: "_blank",
+            link_context_toolbar: true,
+            min_height: 350,
+            quickbars_insert_toolbar: 'cut copy paste | quickimage bold italic',
+            images_upload_handler: channelUpload
+            // images_upload_url: './upload.php',
+        })
+
+        // var editor = HE.getEditor('editor',{
+        // 	uploadPhoto:true,
+        // 	uploadPhotoHandler:'./upload.php'
+        // });
+    })
+
+    var resetWindow = function() {
+        $('#setting').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#channel').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#student').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#teacher').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#admin').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#Class').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#major').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#department').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#course').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+        $('#score').css({
+            'min-height': $(window).height() - $('#head').height() - $('#foot').height()
+        })
+
+        if ($(window).width() <= 995) {
+            management.tabPosition = 'top'
+            $('#management').css({
+                'margin': '0 10px',
+                'margin-top': '5px'
+            })
+        } else {
+            management.tabPosition = 'left'
+            $('#management').css({
+                'margin': '0 5px',
+                'margin-top': '5px'
+            })
+        }
+    }
+    $(document).ready(function() {
+        resetWindow()
+    })
+    $(window).resize(function() {
+        resetWindow()
+    })
+
+    var management = new Vue({
+        el: '#management',
+        watch: {
+            department(n, o) {
+                console.log(n)
+
+                if (n != '') {
+                    management.addStudent.majorDisabled = false
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "majorList": n
+                    }), ).then(function(res) {
+                        management.addStudent.majorList = res.data
+                        console.log(res.data)
+                    })
+                    management.addStudent.major = ''
+                    management.addStudent.grade = ''
+                    management.addStudent.Class = ''
+                } else {
+                    if (management.addStudent.majorDisabled == false)
+                        management.addStudent.majorDisabled = true
+                    else {
+                        management.addStudent.major = ''
+                        management.addStudent.grade = ''
+                        management.addStudent.Class = ''
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "majorList": n
+                        }), ).then(function(res) {
+                            management.addStudent.majorList = res.data
+                            console.log(res.data)
+                        })
+                    }
+                }
+
+                // management.$refs['addStudentForm'].validate((v) => {})
+            },
+            major(n, o) {
+                if (n != '') {
+                    management.addStudent.gradeDisabled = false
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "gradeList": '',
+                        "department": management.addStudent.department,
+                        "major": n,
+                    }), ).then(function(res) {
+                        management.addStudent.gradeList = res.data
+                        console.log(res.data)
+                    })
+                    management.addStudent.grade = ''
+                    management.addStudent.Class = ''
+                } else {
+                    if (management.addStudent.gradeDisabled == false)
+                        management.addStudent.gradeDisabled = true
+                    else {
+                        management.addStudent.grade = ''
+                        management.addStudent.Class = ''
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "gradeList": '',
+                            "department": management.addStudent.department,
+                            "major": n,
+                        }), ).then(function(res) {
+                            management.addStudent.gradeList = res.data
+                            console.log(res.data)
+                        })
+
+                    }
+                }
+            },
+            grade(n, o) {
+                if (n != '') {
+                    management.addStudent.classDisabled = false
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "classList": '',
+                        "department": management.addStudent.department,
+                        "major": management.addStudent.major,
+                        "grade": n
+                    }), ).then(function(res) {
+                        management.addStudent.classList = res.data
+                        console.log(res.data)
+                    })
+                    management.addStudent.Class = ''
+                } else {
+                    if (management.addStudent.classDisabled == false)
+                        management.addStudent.classDisabled = true
+                    else {
+                        management.addStudent.Class = ''
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "classList": '',
+                            "department": management.addStudent.department,
+                            "major": management.addStudent.major,
+                            "grade": n
+                        }), ).then(function(res) {
+                            management.addStudent.classList = res.data
+                            console.log(res.data)
+                        })
+                    }
+                }
+            },
+            Class(n, o) {
+                if (n != '') {
+                    management.addStudent.seatDisabled = false
+                    management.addStudent.seat = ''
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMaxSeat": '',
+                        "department": management.addStudent.department,
+                        "major": management.addStudent.major,
+                        "grade": management.addStudent.grade,
+                        "class": n,
+                    }), ).then(function(res) {
+                        if (res.data["seat"] < 10) {
+                            res.data["seat"] = '0' + res.data["seat"]
+                        }
+                        management.addStudent.seat = res.data["seat"]
+                        console.log(res.data)
+                    })
+                } else {
+                    if (management.addStudent.seatDisabled == false)
+                        management.addStudent.seatDisabled = true
+                    else {
+                        management.addStudent.seat = ''
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "getMaxSeat": '',
+                            "department": management.addStudent.department,
+                            "major": management.addStudent.major,
+                            "grade": management.addStudent.grade,
+                            "class": n,
+                        }), ).then(function(res) {
+                            if (res.data["seat"] < 10) {
+                                res.data["seat"] = '0' + res.data["seat"]
+                            }
+                            management.addStudent.seat = res.data["seat"]
+                            console.log(res.data)
+                        })
+                    }
+                }
+            },
+            seat(n, o) {
+                management.addStudent.id = management.addStudent.grade + management.addStudent.years + management.addStudent.department +
+                    management.addStudent.major + management.addStudent.Class + n
+            },
+            years(n, o) {
+                management.addStudent.id = management.addStudent.grade + n + management.addStudent.department + management.addStudent
+                    .major + management.addStudent.Class + management.addStudent.seat
+            },
+            idCard(n, o) {
+
+            }
+        },
+        computed: {
+            years() {
+                return this.addStudent.years
+            },
+            department() {
+                return this.addStudent.department
+            },
+            major() {
+                return this.addStudent.major
+            },
+            grade() {
+                return this.addStudent.grade
+            },
+            Class() {
+                return this.addStudent.Class
+            },
+            seat() {
+                return this.addStudent.seat
+            },
+            idCard() {
+                return this.addStudent.idCard
+            }
+        },
+        data() {
+            var validator_h_nav_height = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('导航栏高度不能为空'))
+                } else if (value < 50 || value > 100) {
+                    return callback(new Error('导航栏高度只能为 >=50 或 <=100'))
+                } else {
+                    return callback()
+                }
+            }
+
+            var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+            var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
+            var validatoridCard = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入身份证号'))
+                } else if (!(id18.test(value) || id15.test(value))) {
+                    return callback(new Error('身份证格式不正确'))
+                } else {
+                    management.addStudent.idCard = management.addStudent.idCard.toUpperCase()
+                    if (management.addStudent.idCard.length == 18) {
+                        management.addStudent.both = management.addStudent.idCard.substring(6, 10) + '/' +
+                            management.addStudent.idCard.substring(10, 12) + '/' +
+                            management.addStudent.idCard.substring(12, 14)
+
+                        if (management.addStudent.idCard.substring(16, 17) % 2 == 1) {
+                            management.addStudent.sex = '男'
+                        } else {
+                            management.addStudent.sex = '女'
+                        }
+                    } else {
+                        management.addStudent.both = '19' + management.addStudent.idCard.substring(6, 8) + '/' +
+                            management.addStudent.idCard.substring(8, 10) + '/' +
+                            management.addStudent.idCard.substring(10, 12)
+
+                        if (management.addStudent.idCard.substring(14, 15) % 2 == 1) {
+                            management.addStudent.sex = '男'
+                        } else {
+                            management.addStudent.sex = '女'
+                        }
+                    }
+                    return callback()
+                }
+            }
+
+            var validatorTeacherIdCard = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入身份证号'))
+                } else if (!(id18.test(value) || id15.test(value))) {
+                    return callback(new Error('身份证格式不正确'))
+                } else {
+                    management.addTeacher.idCard = management.addTeacher.idCard.toUpperCase()
+                    if (management.addTeacher.idCard.length == 18) {
+                        management.addTeacher.both = management.addTeacher.idCard.substring(6, 10) + '/' +
+                            management.addTeacher.idCard.substring(10, 12) + '/' +
+                            management.addTeacher.idCard.substring(12, 14)
+
+                        if (management.addTeacher.idCard.substring(16, 17) % 2 == 1) {
+                            management.addTeacher.sex = '男'
+                        } else {
+                            management.addTeacher.sex = '女'
+                        }
+                    } else {
+                        management.addTeacher.both = '19' + management.addTeacher.idCard.substring(6, 8) + '/' +
+                            management.addTeacher.idCard.substring(8, 10) + '/' +
+                            management.addTeacher.idCard.substring(10, 12)
+
+                        if (management.addTeacher.idCard.substring(14, 15) % 2 == 1) {
+                            management.addTeacher.sex = '男'
+                        } else {
+                            management.addTeacher.sex = '女'
+                        }
+                    }
+                    return callback()
+                }
+            }
+
+            var passWordExp = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/
+            var validatorPasswd = (rule, value, callback) => {
+                // console.log(value)
+                if (!value) {
+                    return callback(new Error('请输入密码'))
+                } else if (value.length < 6) {
+                    return callback(new Error('密码长度必须大于6个字符'))
+                } else if (!passWordExp.test(value)) {
+                    return callback(new Error('密码必须包含数字、大小写英文字母和符号'))
+                } else {
+                    return callback()
+                }
+            }
+
+            return {
+                // openeds: ['1'],
+                // menuActive: "1-1",
+                tabPosition: 'left',
+
+                score: {
+                    data: [],
+                    grade: '',
+                    department: '',
+                    major: '',
+                    page: 1,
+                    count: 0,
+                    gradeFilter: [],
+                    departmentFilter: [],
+                    majorFilter: [],
+                },
+                course: {
+                    data: [],
+                    grade: '',
+                    department: '',
+                    major: '',
+                    page: 1,
+                    count: 0,
+                    gradeFilter: [],
+                    departmentFilter: [],
+                    majorFilter: [],
+                },
+                addCourse: {
+
+                    department: '',
+                    departmentList: '',
+                    major: '',
+                    majorList: '',
+                    grade: '',
+                    gradeList: "",
+                    Class: '',
+                    ClassList: '',
+                    teacher: '',
+                    teacherList: '',
+                    course: '',
+                    stime:'',
+                    etime:'',
+                    period:'',
+                    public:'0',
+                    num:'0',
+                    numLock:'0',
+
+                    majorDisabled: true,
+                    gradeDisabled: true,
+                    classDisabled: true,
+                },
+                addCourseRules: {
+                    grade: [{
+                        required: true,
+                        message: '请选择年级',
+                        trigger: 'blur'
+                    }, ],
+                    department: [{
+                        required: true,
+                        message: '请选择学系',
+                        trigger: 'blur'
+                    }, ],
+                    major: [{
+                        required: true,
+                        message: '请选择专业',
+                        trigger: 'blur'
+                    }, ],
+                    Class: [{
+                        required: true,
+                        message: '请选择班级',
+                        trigger: 'blur',
+                    }, ],
+                    teacher: [{
+                        required: true,
+                        message: '请选择任课教师',
+                        trigger: 'blur',
+                    }, ],
+                    stime: [{
+                        required: true,
+                        message: '请选择课程开始时间',
+                        trigger: 'blur',
+                    }, ],
+                    etime: [{
+                        required: true,
+                        message: '请选择课程结束时间',
+                        trigger: ['blur','change'],
+                    }, ],
+                    course: [{
+                        required: true,
+                        message: '请输入课程名称',
+                        trigger: 'blur',
+                    }, ],
+                    public: [{
+                        required: true,
+                        message: '请选择是否为公选课',
+                        trigger: 'blur',
+                    }, ],
+                    period: [{
+                        required: true,
+                        message: '请输入总课时',
+                        trigger: 'blur',
+                    }, ],
+                    numLock: [{
+                        required: true,
+                        message: '请选择',
+                        trigger: 'blur',
+                    }, ],
+                    num: [{
+                        required: true,
+                        message: '请输入限制人数(0为不限制)',
+                        trigger: 'blur',
+                    }, ],
+                },
+
+                addStudent: {
+                    currentEdit: -1,
+
+                    department: '',
+                    departmentList: '',
+                    years: '3',
+                    major: '',
+                    majorList: '',
+                    grade: '',
+                    gradeList: "",
+                    Class: '',
+                    classList: '',
+                    seat: '',
+                    id: '',
+                    name: '',
+                    sex: '',
+                    both: '',
+                    phone: '',
+                    idCard: '',
+
+                    majorDisabled: true,
+                    gradeDisabled: true,
+                    classDisabled: true,
+                    seatDisabled: true,
+                },
+                addStudentRules: {
+                    department: [{
+                        required: true,
+                        message: '请选择学系',
+                        trigger: 'blur'
+                    }, ],
+                    years: [{
+                        required: true,
+                        message: '请输入学制',
+                        trigger: 'blur'
+                    }, {
+                        max: 1,
+                        message: '请输入不超过1个字符',
+                        trigger: ['blur', 'change']
+                    }],
+                    major: [{
+                        required: true,
+                        message: '请选择所在专业',
+                        trigger: 'blur'
+                    }, ],
+                    grade: [{
+                        required: true,
+                        message: '请选择所在年级',
+                        trigger: 'blur'
+                    }, ],
+                    Class: [{
+                        required: true,
+                        message: '请选择所在班级',
+                        trigger: 'blur'
+                    }, ],
+                    name: [{
+                        required: true,
+                        message: '请输入姓名',
+                        trigger: 'blur'
+                    }, {
+                        min: 2,
+                        max: 5,
+                        message: '请输入正确的姓名',
+                        trigger: 'blur'
+                    }, ],
+                    phone: [{
+                        required: true,
+                        message: '请输入手机号码',
+                        trigger: 'blur'
+                    }, {
+                        min: 11,
+                        max: 11,
+                        message: '请输入正确的手机号码',
+                        trigger: 'blur'
+                    }, ],
+                    idCard: [{
+                        required: true,
+                        validator: validatoridCard,
+                        trigger: "blur"
+                    }],
+                    sex: [{
+                        required: true,
+                        message: '请选择性别',
+                        trigger: ['blur', 'change']
+                    }, ],
+                    both: [{
+                        required: true,
+                        message: '请填写出生日期',
+                        trigger: ['blur', 'change']
+                    }, ],
+                },
+
+                addGrade: {
+
+                    department: '',
+                    departmentList: '',
+                    major: '',
+                    majorList: '',
+                    grade: '',
+                    gradeList: "",
+
+                    majorDisabled: true,
+                    gradeDisabled: true,
+                    classDisabled: true,
+                },
+                addGradeRules: {
+                    grade: [{
+                        required: true,
+                        message: '请选择年级',
+                        trigger: 'blur'
+                    }, ],
+                    department: [{
+                        required: true,
+                        message: '请选择学系',
+                        trigger: 'blur'
+                    }, ],
+                    major: [{
+                        required: true,
+                        message: '请选择专业',
+                        trigger: 'blur'
+                    }, ],
+                },
+
+                Department: {
+                    data: [],
+
+                    page: 1,
+                    count: 0,
+
+                },
+                addDepartment: {
+
+                    department: '',
+
+                },
+                addDepartmentRules: {
+                    department: [{
+                        required: true,
+                        message: '请输入学系名',
+                        trigger: ['blur', 'change']
+                    }, ],
+                },
+
+                Major: {
+                    data: [],
+
+                    department: '',
+                    major: '',
+                    page: 1,
+                    count: 0,
+
+                    departmentFilter: [],
+                },
+                addMajor: {
+
+                    department: '',
+                    departmentList: '',
+                    major: '',
+
+                    majorDisabled: true,
+                },
+                addMajorRules: {
+                    department: [{
+                        required: true,
+                        message: '请选择学系',
+                        trigger: 'blur'
+                    }, ],
+                    major: [{
+                        required: true,
+                        message: '请输入专业名称',
+                        trigger: ['blur', 'change']
+                    }, ],
+                },
+
+                classes: {
+                    data: [],
+                    grade: '',
+                    department: '',
+                    major: '',
+                    page: 1,
+                    count: 0,
+                    gradeFilter: [],
+                    departmentFilter: [],
+                    majorFilter: [],
+                },
+                addClasses: {
+
+                    department: '',
+                    departmentList: '',
+                    years: '3',
+                    major: '',
+                    majorList: '',
+                    grade: '',
+                    gradeList: "",
+                    Class: '',
+
+                    majorDisabled: true,
+                    gradeDisabled: true,
+                    classDisabled: true,
+                },
+                addClassesRules: {
+                    grade: [{
+                        required: true,
+                        message: '请选择年级',
+                        trigger: 'blur'
+                    }, ],
+                    department: [{
+                        required: true,
+                        message: '请选择学系',
+                        trigger: 'blur'
+                    }, ],
+                    major: [{
+                        required: true,
+                        message: '请选择专业',
+                        trigger: 'blur'
+                    }, ],
+                    Class: [{
+                        required: true,
+                        message: '请输入班级编号',
+                        trigger: ['blur', 'change'],
+                    }, {
+                        min: 1,
+                        max: 1,
+                        message: '请输入1~9的班级编号',
+                        trigger: ['blur', 'change']
+                    }, ],
+                },
+
+                student: {
+                    data: [],
+                    sex: '',
+                    grade: '',
+                    department: '',
+                    major: '',
+                    page: 1,
+                    count: 0,
+
+                    sexFilter: [{
+                        'text': '男',
+                        value: '男'
+                    }, {
+                        'text': '女',
+                        value: '女'
+                    }],
+                    gradeFilter: [],
+                    departmentFilter: [],
+                    majorFilter: [],
+                },
+
+                teacher: {
+                    data: [],
+                    page: 1,
+                    count: 0,
+                },
+                addTeacher: {
+                    currentEdit: -1,
+
+                    name: '',
+                    sex: '',
+                    both: '',
+                    phone: '',
+                    department: '',
+                    departmentList: '',
+                    active: 1,
+                    idCard: '',
+                    password: '',
+                },
+                addTeacherRules: {
+                    department: [{
+                        required: true,
+                        message: '请选择学系',
+                        trigger: 'blur'
+                    }, ],
+                    password: [{
+                        required: true,
+                        validator: validatorPasswd,
+                        trigger: 'blur'
+                    }],
+                    name: [{
+                        required: true,
+                        message: '请输入姓名',
+                        trigger: 'blur'
+                    }, {
+                        min: 2,
+                        max: 5,
+                        message: '请输入正确的姓名',
+                        trigger: 'blur'
+                    }, ],
+                    phone: [{
+                        required: true,
+                        message: '请输入手机号码',
+                        trigger: 'blur'
+                    }, {
+                        min: 11,
+                        max: 11,
+                        message: '请输入正确的手机号码',
+                        trigger: 'blur'
+                    }, ],
+                    idCard: [{
+                        required: true,
+                        validator: validatorTeacherIdCard,
+                        trigger: "blur"
+                    }],
+                    sex: [{
+                        required: true,
+                        message: '请选择性别',
+                        trigger: ['blur', 'change']
+                    }, ],
+                    both: [{
+                        required: true,
+                        message: '请填写出生日期',
+                        trigger: ['blur', 'change']
+                    }, ],
+                },
+
+                admin: {
+                    data: [],
+                    page: 1,
+                    count: 0,
+                },
+
+                channelData: {
+                    messageData: [''],
+                    newsData: [''],
+                    noticeData: [''],
+                },
+
+                channelCount: {
+                    message: 0,
+                    messagePage: 1,
+
+                    news: 0,
+                    newsPage: 1,
+
+                    notice: 0,
+                    noticePage: 1,
+
+                },
+
+                settingform: {
+                    title: '',
+                    h_nav_bgColor: '',
+                    h_nav_bgColor_Predefine: [''],
+
+                    h_nav_color: '',
+                    h_nav_color_Predefine: [''],
+
+                    h_nav_height: '',
+
+                    h_nav_logo: '',
+
+                    h_nav_M_bgColor: '',
+                    h_nav_M_bgColor_Predefine: [''],
+
+                },
+                settingRules: {
+                    h_nav_height: [{
+                        required: true,
+                        message: '导航栏高度不能为空',
+                        trigger: ['blur', 'change']
+                    }, {
+                        validator: validator_h_nav_height,
+                        trigger: ['blur', 'change']
+                    }]
+                },
+
+                channelform: {
+                    channel: '',
+                    channelList: '',
+                    title: '',
+                    contain: '',
+                },
+                channelRules: {
+                    channel: [{
+                        required: true,
+                        message: '请选择发布频道',
+                        trigger: ['blur', 'change']
+                    }],
+                    title: [{
+                        required: true,
+                        message: '请输入文章标题',
+                        trigger: ['blur', 'change']
+                    }]
+                }
+
+            }
+        },
+        mounted() {
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getScore": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.score.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getScoreCount": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.score.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getCourse": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.course.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getCourseCount": ''
+            }), ).then(function(res) {
+                management.course.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "Department": ''
+            }), ).then(function(res) {
+                management.addMajor.departmentList = res.data
+
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getGrade": ''
+            }), ).then(function(res) {
+                management.addClasses.gradeList = res.data
+                management.addCourse.gradeList = res.data
+
+                console.log(res.data)
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getClassGrade": ''
+            }), ).then(function(res) {
+                management.addGrade.gradeList = res.data
+
+                console.log(res.data)
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "DepartmentDetail": '',
+                'page': '1',
+                'num': '10',
+            }), ).then(function(res) {
+                management.Department.data = res.data
+            })
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "DepartmentCount": '',
+            }), ).then(function(res) {
+                management.Department.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getClass": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.classes.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getClassCount": ''
+            }), ).then(function(res) {
+                management.classes.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "departmentList": ''
+            }), ).then(function(res) {
+                management.addStudent.departmentList = res.data
+                management.addTeacher.departmentList = res.data
+                console.log(res.data)
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getDepartment": '',
+            }), ).then(function(res) {
+                management.student.departmentFilter = res.data
+                management.classes.departmentFilter = res.data
+                management.Major.departmentFilter = res.data
+                management.course.departmentFilter = res.data
+                management.score.departmentFilter = res.data
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getMajor": '',
+                }), ).then(function(res) {
+                    management.student.majorFilter = res.data
+                    management.classes.majorFilter = res.data
+                })
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getGrade": '',
+            }), ).then(function(res) {
+                management.student.gradeFilter = res.data
+                management.classes.gradeFilter = res.data
+                management.course.gradeFilter = res.data
+                management.score.gradeFilter = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "Major": '',
+                'page': '1',
+                'num': '10',
+            }), ).then(function(res) {
+                management.Major.data = res.data
+            })
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "MajorCount": '',
+            }), ).then(function(res) {
+                management.Major.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getAdminList": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.admin.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getAdminListCount": ''
+            }), ).then(function(res) {
+                management.admin.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getTeacherList": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.teacher.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getTeacherListCount": ''
+            }), ).then(function(res) {
+                management.teacher.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getStudentList": '',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.student.data = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getStudentListCount": ''
+            }), ).then(function(res) {
+                management.student.count = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannelTitle": 'message',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.channelData.messageData = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannelTitle": 'news',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.channelData.newsData = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannelTitle": 'notice',
+                'page': '1',
+                'num': '10'
+            }), ).then(function(res) {
+                management.channelData.noticeData = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannelCount": 'message'
+            }), ).then(function(res) {
+                management.channelCount.message = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannelCount": 'news'
+            }), ).then(function(res) {
+                management.channelCount.news = res.data.num
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannelCount": 'notice'
+            }), ).then(function(res) {
+                management.channelCount.notice = res.data.num
+            })
+
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "getChannel": ''
+            }), ).then(function(res) {
+                management.channelform.channelList = res.data
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "baseConfig": ''
+            }), ).then(function(res) {
+                management.settingform.title = res.data.title
+
+                management.settingform.h_nav_bgColor = res.data.h_nav_bgColor
+                management.settingform.h_nav_bgColor_Predefine = [res.data.h_nav_bgColor]
+
+                management.settingform.h_nav_height = res.data.h_nav_height
+
+
+                management.settingform.h_nav_logo = res.data.h_nav_logo
+
+                management.settingform.h_nav_color = res.data.h_nav_color
+                management.settingform.h_nav_color_Predefine = [res.data.h_nav_color]
+
+                management.settingform.h_nav_M_bgColor = res.data.h_nav_M_bgColor
+                management.settingform.h_nav_M_bgColor_Predefine = [res.data.h_nav_M_bgColor]
+            })
+
+            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                "h_nav": ''
+            }), ).then(function(res) {
+                management.settingform.headerNav = res.data
+                console.log(res.data)
+            })
+        },
+        methods: {
+
+            scoreFilter(val) {
+                if ('grade' in val) {
+                    management.score.grade = val['grade']
+                }
+                if ('department' in val) {
+                    management.score.department = val['department']
+
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMajor": '',
+                        'department': JSON.stringify(val['department'])
+                    }), ).then(function(res) {
+                        management.score.majorFilter = res.data
+                    })
+                }
+                if ('major' in val) {
+                    management.score.major = val['major']
+                }
+                management.score.page = 1
+                this.scoreCurrentChange(management.score.page)
+                console.log(val)
+            },
+            scoreCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getScore": '',
+                    'page': val,
+                    'num': '10',
+                    'grade': JSON.stringify(management.score.grade),
+                    'department': JSON.stringify(management.score.department),
+                    'major': JSON.stringify(management.score.major),
+                }), ).then(function(res) {
+                    management.score.data = res.data
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getScoreCount": '',
+                    'grade': JSON.stringify(management.score.grade),
+                    'department': JSON.stringify(management.score.department),
+                    'major': JSON.stringify(management.score.major),
+                }), ).then(function(res) {
+                    management.score.count = res.data.num
+                })
+            },
+
+            addCourseSubmit() {
+                management.$refs['addCourseForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            'addCourse': '',
+                            'name': management.addCourse.course,
+                            'tid':management.addCourse.teacher,
+                            'grade': management.addCourse.grade,
+                            'department': management.addCourse.department,
+                            'major': management.addCourse.major,
+                            'class': management.addCourse.Class,
+                            'stime': management.addCourse.stime,
+                            'etime': management.addCourse.etime,
+                            'period': management.addCourse.period,
+                            'public': management.addCourse.public,
+                            'num': management.addCourse.num,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('课程添加成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getCourse": '',
+                                            'page': management.course.page,
+                                            'num': '10',
+                                            'grade': JSON.stringify(management.course.grade),
+                                            'department': JSON.stringify(management.course.department),
+                                            'major': JSON.stringify(management.course.major),
+                                        }), ).then(function(res) {
+                                            management.course.data = res.data
+                                        })
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getCourseCount": '',
+                                            'grade': JSON.stringify(management.course.grade),
+                                            'department': JSON.stringify(management.course.department),
+                                            'major': JSON.stringify(management.course.major),
+                                        }), ).then(function(res) {
+                                            management.course.count = res.data.num
+                                        })
+
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            addCourseStime(v){
+                date = new Date(v)
+                date = new Date(date.valueOf() + (1000 * 60 * 60 * 24 * 7 * (18 - 1))) // 默认18周结束功课
+                y = date.getFullYear().toString()
+                m = date.getMonth() + 1
+                if(m < 10)
+                {
+                    m = '0' + m
+                }
+                else{
+                    m = m.toString()
+                }
+                d = date.getDate()
+                if(d < 10)
+                {
+                    d = '0' + d
+                }
+                else{
+                    d = d.toString()
+                }
+                console.log(y + '/' + m +'/' + d)
+                management.addCourse.etime = y + '/' + m +'/' + d
+            },
+            addCourseMajor(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "classList": '',
+                    "department": management.addCourse.department,
+                    "major": management.addCourse.major,
+                    "grade": management.addCourse.grade,
+                }), ).then(function(res) {
+                    management.addCourse.ClassList = res.data
+                    console.log(res.data)
+                })
+            },
+            addCourseDepartment(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "MajorList": v,
+                    'grade': management.addCourse.grade
+                }), ).then(function(res) {
+                    management.addCourse.majorList = res.data
+                    management.addCourse.major = ''
+                    management.addCourse.Class = ''
+                })
+
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "teacherList": v,
+                }), ).then(function(res) {
+                    management.addCourse.teacherList = res.data
+                    management.addCourse.teacher = ''
+                })
+
+
+            },
+            addCourseGrade(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "DepartmentList": v
+                }), ).then(function(res) {
+                    management.addCourse.departmentList = res.data
+
+                    management.addCourse.department = ''
+                    management.addCourse.major = ''
+                    management.addCourse.Class = ''
+                })
+            },
+            deleteCourse(scope) {
+                console.log(scope)
+                management.$confirm('此操作将删除该课程, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delCourse": '',
+                        'cid': scope.row.id
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getCourse": '',
+                                        'page': management.course.page,
+                                        'num': '10',
+                                        'grade': JSON.stringify(management.course.grade),
+                                        'department': JSON.stringify(management.course.department),
+                                        'major': JSON.stringify(management.course.major),
+                                    }), ).then(function(res) {
+                                        management.course.data = res.data
+                                    })
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getCourseCount": '',
+                                        'grade': JSON.stringify(management.course.grade),
+                                        'department': JSON.stringify(management.course.department),
+                                        'major': JSON.stringify(management.course.major),
+                                    }), ).then(function(res) {
+                                        management.course.count = res.data.num
+                                    })
+
+                                    management.addCourse.department = ''
+                                    management.addCourse.major = ''
+                                    management.addCourse.Class = ''
+                                    management.addCourse.grade = ''
+                                    management.addCourse.teacher = ''
+                                    management.addCourse.course = ''
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            courseFilter(val) {
+                if ('grade' in val) {
+                    management.course.grade = val['grade']
+                }
+                if ('department' in val) {
+                    management.course.department = val['department']
+
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMajor": '',
+                        'department': JSON.stringify(val['department'])
+                    }), ).then(function(res) {
+                        management.course.majorFilter = res.data
+                    })
+                }
+                if ('major' in val) {
+                    management.course.major = val['major']
+                }
+                management.course.page = 1
+                this.courseCurrentChange(management.course.page)
+                console.log(val)
+            },
+            courseCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getCourse": '',
+                    'page': val,
+                    'num': '10',
+                    'grade': JSON.stringify(management.course.grade),
+                    'department': JSON.stringify(management.course.department),
+                    'major': JSON.stringify(management.course.major),
+                }), ).then(function(res) {
+                    management.course.data = res.data
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getCourseCount": '',
+                    'grade': JSON.stringify(management.course.grade),
+                    'department': JSON.stringify(management.course.department),
+                    'major': JSON.stringify(management.course.major),
+                }), ).then(function(res) {
+                    management.course.count = res.data.num
+                })
+            },
+
+
+
+            addGradeSubmit() {
+                management.$refs['addGradeForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            'addGrade': '',
+                            'grade': management.addGrade.grade,
+                            'department': management.addGrade.department,
+                            'major': management.addGrade.major,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('专业开设成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            addGradeMajor(v) {
+                console.log(v)
+            },
+            addGradeDepartment(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "majorList": v
+                }), ).then(function(res) {
+                    management.addGrade.majorList = res.data
+                    management.addGrade.major = ''
+                })
+            },
+            addGradeGrade(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "departmentList": ''
+                }), ).then(function(res) {
+                    management.addGrade.departmentList = res.data
+
+                    management.addGrade.department = ''
+                    management.addGrade.major = ''
+                })
+            },
+            addDepartmentSubmit() {
+                management.$refs['addDepartmentForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            'addDepartment': '',
+                            'department': management.addDepartment.department,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('院系添加成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        management.addDepartment.major = ''
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "DepartmentDetail": '',
+                                            'page': management.Department.page,
+                                            'num': '10',
+                                        }), ).then(function(res) {
+                                            management.Department.data = res.data
+                                        })
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "DepartmentCount": '',
+                                        }), ).then(function(res) {
+                                            management.Department.count = res.data.num
+                                        })
+
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            deleteDepartment(scope) {
+                console.log(scope)
+                management.$confirm('此操作将删除该院系, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delDepartment": scope.row.department,
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "DepartmentDetail": '',
+                                        'page': management.Department.page,
+                                        'num': '10',
+                                    }), ).then(function(res) {
+                                        management.Department.data = res.data
+                                    })
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "DepartmentCount": '',
+                                    }), ).then(function(res) {
+                                        management.Department.count = res.data.num
+                                    })
+
+                                    management.addDepartment.department = ''
+
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            departmentCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "DepartmentDetail": '',
+                    'page': val,
+                    'num': '10',
+                }), ).then(function(res) {
+                    management.Department.data = res.data
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "DepartmentCount": '',
+                }), ).then(function(res) {
+                    management.Department.count = res.data.num
+                })
+            },
+            addMajorSubmit() {
+                management.$refs['addMajorForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            'addMajor': '',
+                            'department': management.addMajor.department,
+                            'major': management.addMajor.major,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('专业添加成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        management.addMajor.major = ''
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "Major": '',
+                                            'page': management.Major.page,
+                                            'num': '10',
+                                            'department': JSON.stringify(management.Major.department),
+                                        }), ).then(function(res) {
+                                            management.Major.data = res.data
+                                        })
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "MajorCount": '',
+                                            'department': JSON.stringify(management.Major.department),
+                                        }), ).then(function(res) {
+                                            management.Major.count = res.data.num
+                                        })
+
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            deleteMajor(scope) {
+                console.log(scope)
+                management.$confirm('此操作将删除该专业, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delMajor": '',
+                        "major": scope.row.major,
+                        "grade": scope.row.grade,
+                        "department": scope.row.department,
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "Major": '',
+                                        'page': management.Major.page,
+                                        'num': '10',
+                                        'department': JSON.stringify(management.Major.department),
+                                    }), ).then(function(res) {
+                                        management.Major.data = res.data
+                                    })
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "MajorCount": '',
+                                        'department': JSON.stringify(management.Major.department),
+                                    }), ).then(function(res) {
+                                        management.Major.count = res.data.num
+                                    })
+
+                                    management.addMajor.department = ''
+                                    management.addMajor.major = ''
+                                    management.addMajor.grade = ''
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            majorFilter(val) {
+                if ('department' in val) {
+                    management.Major.department = val['department']
+                }
+                management.Major.page = 1
+                this.majorCurrentChange(management.Major.page)
+                console.log(val)
+            },
+            majorCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "Major": '',
+                    'page': val,
+                    'num': '10',
+                    'department': JSON.stringify(management.Major.department),
+                }), ).then(function(res) {
+                    management.Major.data = res.data
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "MajorCount": '',
+                    'department': JSON.stringify(management.Major.department),
+                }), ).then(function(res) {
+                    management.Major.count = res.data.num
+                })
+            },
+            addClassesSubmit() {
+                management.$refs['addClassesForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            'addClass': '',
+                            'grade': management.addClasses.grade,
+                            'department': management.addClasses.department,
+                            'major': management.addClasses.major,
+                            'class': management.addClasses.Class
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('班级添加成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getMaxClass": '',
+                                            'grade': management.addClasses.grade,
+                                            'department': management.addClasses.department,
+                                            'major': management.addClasses.major
+                                        }), ).then(function(res) {
+                                            management.addClasses.Class = res.data.classes
+                                        })
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getClass": '',
+                                            'page': management.classes.page,
+                                            'num': '10',
+                                            'grade': JSON.stringify(management.classes.grade),
+                                            'department': JSON.stringify(management.classes.department),
+                                            'major': JSON.stringify(management.classes.major),
+                                        }), ).then(function(res) {
+                                            management.classes.data = res.data
+                                        })
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getClassCount": '',
+                                            'grade': JSON.stringify(management.classes.grade),
+                                            'department': JSON.stringify(management.classes.department),
+                                            'major': JSON.stringify(management.classes.major),
+                                        }), ).then(function(res) {
+                                            management.classes.count = res.data.num
+                                        })
+
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            addClassesMajor(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getMaxClass": '',
+                    'grade': management.addClasses.grade,
+                    'department': management.addClasses.department,
+                    'major': v
+                }), ).then(function(res) {
+                    management.addClasses.Class = res.data.classes
+                })
+            },
+            addClassesDepartment(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "MajorList": v,
+                    'grade': management.addClasses.grade
+                }), ).then(function(res) {
+                    management.addClasses.majorList = res.data
+                    management.addClasses.major = ''
+                    management.addClasses.Class = ''
+                })
+            },
+            addClassesGrade(v) {
+                console.log(v)
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "DepartmentList": v
+                }), ).then(function(res) {
+                    management.addClasses.departmentList = res.data
+
+                    management.addClasses.department = ''
+                    management.addClasses.major = ''
+                    management.addClasses.Class = ''
+                })
+            },
+            deleteClass(scope) {
+                console.log(scope)
+                management.$confirm('此操作将删除该班级, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delClass": '',
+                        "class": scope.row.class,
+                        "grade": scope.row.grade,
+                        "department": scope.row.department,
+                        "major": scope.row.major,
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getClass": '',
+                                        'page': management.classes.page,
+                                        'num': '10',
+                                        'grade': JSON.stringify(management.classes.grade),
+                                        'department': JSON.stringify(management.classes.department),
+                                        'major': JSON.stringify(management.classes.major),
+                                    }), ).then(function(res) {
+                                        management.classes.data = res.data
+                                    })
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getClassCount": '',
+                                        'grade': JSON.stringify(management.classes.grade),
+                                        'department': JSON.stringify(management.classes.department),
+                                        'major': JSON.stringify(management.classes.major),
+                                    }), ).then(function(res) {
+                                        management.classes.count = res.data.num
+                                    })
+
+                                    management.addClasses.department = ''
+                                    management.addClasses.major = ''
+                                    management.addClasses.Class = ''
+                                    management.addClasses.grade = ''
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            classFilter(val) {
+                if ('grade' in val) {
+                    management.classes.grade = val['grade']
+                }
+                if ('department' in val) {
+                    management.classes.department = val['department']
+
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMajor": '',
+                        'department': JSON.stringify(val['department'])
+                    }), ).then(function(res) {
+                        management.classes.majorFilter = res.data
+                    })
+                }
+                if ('major' in val) {
+                    management.classes.major = val['major']
+                }
+                management.classes.page = 1
+                this.classCurrentChange(management.classes.page)
+                console.log(val)
+            },
+            classCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getClass": '',
+                    'page': val,
+                    'num': '10',
+                    'grade': JSON.stringify(management.classes.grade),
+                    'department': JSON.stringify(management.classes.department),
+                    'major': JSON.stringify(management.classes.major),
+                }), ).then(function(res) {
+                    management.classes.data = res.data
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getClassCount": '',
+                    'grade': JSON.stringify(management.classes.grade),
+                    'department': JSON.stringify(management.classes.department),
+                    'major': JSON.stringify(management.classes.major),
+                }), ).then(function(res) {
+                    management.classes.count = res.data.num
+                })
+            },
+            deleteAdmin(id) {
+                console.log(id)
+                management.$confirm('此操作将移除该账号的管理员权限, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delAdmin": id,
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getAdminList": '',
+                                        'page': '1',
+                                        'num': '10'
+                                    }), ).then(function(res) {
+                                        management.admin.data = res.data
+                                    })
+
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getAdminListCount": ''
+                                    }), ).then(function(res) {
+                                        management.admin.count = res.data.num
+                                    })
+
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            changeAdminPassword(id) {
+                management.$prompt('请输入新的密码', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+                    inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+                }).then(({
+                             value
+                         }) => {
+                    // management.$message({
+                    //   type: 'success',
+                    //   message: '你的密码是: ' + value
+                    // });
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "changeAdminPassword": id,
+                        'password': value,
+                    }), ).then(function(res) {
+                        console.log(res.data)
+
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功完成', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {}
+                            })
+                        }
+                    })
+                }).catch(() => {});
+            },
+            upgradeToAdmin(scope) {
+                management.$confirm('是否将【' + scope.row.departmentName + '】 ' + scope.row.name + ' 设置为系统管理员', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    management.$prompt('请设置管理员密码', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+                        inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+                    }).then(({
+                                 value
+                             }) => {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "upgradeToAdmin": scope.row.id,
+                            'password': value,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert(res.data.success, '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getAdminList": '',
+                                            'page': '1',
+                                            'num': '10'
+                                        }), ).then(function(res) {
+                                            management.admin.data = res.data
+                                        })
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getAdminListCount": ''
+                                        }), ).then(function(res) {
+                                            management.admin.count = res.data.num
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }).catch(() => {});
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消操作'
+                    });
+                });
+            },
+            changeTeacherPassword(id) {
+                management.$prompt('请输入新的密码', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)(?=.*?[!@#$%^&*() `\/\-+]).*$/,
+                    inputErrorMessage: '密码必须大于6个字符 且 包含数字、大小写英文字母和符号'
+                }).then(({
+                             value
+                         }) => {
+                    // management.$message({
+                    //   type: 'success',
+                    //   message: '你的密码是: ' + value
+                    // });
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "changeTeacherPassword": id,
+                        'password': value,
+                    }), ).then(function(res) {
+                        console.log(res.data)
+
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功完成', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {}
+                            })
+                        }
+                    })
+                }).catch(() => {});
+            },
+            deleteTeacher(id) {
+                console.log(id)
+                management.$confirm('此操作将删除该教工, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delTeacher": id,
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getTeacherList": '',
+                                        'page': management.teacher.page,
+                                        'num': '10'
+                                    }), ).then(function(res) {
+                                        management.teacher.data = res.data
+                                    })
+
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getTeacherListCount": ''
+                                    }), ).then(function(res) {
+                                        management.teacher.count = res.data.num
+                                    })
+
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            updateTeacher(scope) {
+                // if ($(window).width() < 995) {
+                // 	$('#head').hide()
+                // }
+
+                if (management.addTeacher.currentEdit == scope.$index) {
+                    var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+                    var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
+
+                    if (!scope.row.idCard) {
+                        management.$alert('请输入身份证号', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {}
+                        })
+                    } else if (!(id18.test(scope.row.idCard) || id15.test(scope.row.idCard))) {
+                        management.$alert('身份证格式不正确', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {}
+                        })
+                    } else {
+                        scope.row.idCard = scope.row.idCard.toUpperCase()
+                        if (scope.row.idCard.length == 18) {
+                            scope.row.both = scope.row.idCard.substring(6, 10) + '/' +
+                                scope.row.idCard.substring(10, 12) + '/' +
+                                scope.row.idCard.substring(12, 14)
+
+                            if (scope.row.idCard.substring(16, 17) % 2 == 1) {
+                                scope.row.sex = '男'
+                            } else {
+                                scope.row.sex = '女'
+                            }
+                        } else {
+                            scope.row.both = '19' + scope.row.idCard.substring(6, 8) + '/' +
+                                scope.row.idCard.substring(8, 10) + '/' +
+                                scope.row.idCard.substring(10, 12)
+
+                            if (scope.row.idCard.substring(14, 15) % 2 == 1) {
+                                scope.row.sex = '男'
+                            } else {
+                                scope.row.sex = '女'
+                            }
+                        }
+                        if (!scope.row.name || scope.row.name.length < 2 || scope.row.name.length > 5) {
+                            management.$alert('姓名长度不正确', '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else {
+                            if (!scope.row.phone || scope.row.phone.length != 11) {
+                                management.$alert('手机号码长度不正确', '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else {
+                                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                    "updateTeacher": scope.row.id,
+                                    'name': scope.row.name,
+                                    'sex': scope.row.sex,
+                                    'both': scope.row.both,
+                                    'phone': scope.row.phone,
+                                    'idCard': scope.row.idCard,
+                                    'active': scope.row.active
+                                }), ).then(function(res) {
+                                    console.log(res.data)
+
+                                    if ('error' in res.data) {
+                                        management.$alert(res.data.error, '错误', {
+                                            confirmButtonText: '确定',
+                                            type: 'error',
+                                            center: true,
+                                            callback: action => {}
+                                        })
+                                    } else if ('success' in res.data) {
+                                        management.$alert('教工信息更新成功', '操作成功完成', {
+
+                                            confirmButtonText: '确定',
+                                            type: 'success',
+                                            center: true,
+                                            callback: action => {
+                                                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                    "getTeacherList": '',
+                                                    'page': management.teacher.page,
+                                                    'num': '10'
+                                                }), ).then(function(res) {
+                                                    management.teacher.data = res.data
+                                                })
+
+                                                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                    "getTeacherListCount": ''
+                                                }), ).then(function(res) {
+                                                    management.teacher.count = res.data.num
+                                                })
+
+                                                management.addTeacher.currentEdit = -1
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    }
+                } else {
+                    management.addTeacher.currentEdit = scope.$index
+                }
+                console.log(scope.$index)
+
+            },
+            addTeacherSubmit() {
+                management.$refs['addTeacherForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "addTeacher": '',
+                            'name': management.addTeacher.name,
+                            'sex': management.addTeacher.sex,
+                            'both': management.addTeacher.both,
+                            'phone': management.addTeacher.phone,
+                            'department': management.addTeacher.department,
+                            'idCard': management.addTeacher.idCard,
+                            'password': management.addTeacher.password,
+                            'active': management.addTeacher.active,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('教工添加成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        management.addTeacher.department = ''
+                                        management.addTeacher.name = ''
+                                        management.addTeacher.idCard = ''
+                                        management.addTeacher.both = ''
+                                        management.addTeacher.phone = ''
+                                        management.addTeacher.sex = ''
+                                        management.addTeacher.password = ''
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getTeacherList": '',
+                                            'page': management.teacher.page,
+                                            'num': '10'
+                                        }), ).then(function(res) {
+                                            management.teacher.data = res.data
+                                        })
+
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getTeacherListCount": ''
+                                        }), ).then(function(res) {
+                                            management.teacher.count = res.data.num
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            updateStudent(scope) {
+                // if ($(window).width() < 995) {
+                // 	$('#head').hide()
+                // }
+
+                if (management.addStudent.currentEdit == scope.$index) {
+                    // $('.updateStudent').eq(scope.$index).removeClass('el-button--warning').children().eq(0).text('修改')
+                    var id18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+                    var id15 = /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
+
+                    if (!scope.row.idCard) {
+                        management.$alert('请输入身份证号', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {}
+                        })
+                    } else if (!(id18.test(scope.row.idCard) || id15.test(scope.row.idCard))) {
+                        management.$alert('身份证格式不正确', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {}
+                        })
+                    } else {
+                        scope.row.idCard = scope.row.idCard.toUpperCase()
+                        if (scope.row.idCard.length == 18) {
+                            scope.row.both = scope.row.idCard.substring(6, 10) + '/' +
+                                scope.row.idCard.substring(10, 12) + '/' +
+                                scope.row.idCard.substring(12, 14)
+
+                            if (scope.row.idCard.substring(16, 17) % 2 == 1) {
+                                scope.row.sex = '男'
+                            } else {
+                                scope.row.sex = '女'
+                            }
+                        } else {
+                            scope.row.both = '19' + scope.row.idCard.substring(6, 8) + '/' +
+                                scope.row.idCard.substring(8, 10) + '/' +
+                                scope.row.idCard.substring(10, 12)
+
+                            if (scope.row.idCard.substring(14, 15) % 2 == 1) {
+                                scope.row.sex = '男'
+                            } else {
+                                scope.row.sex = '女'
+                            }
+                        }
+                        if (!scope.row.name || scope.row.name.length < 2 || scope.row.name.length > 5) {
+                            management.$alert('姓名长度不正确', '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else {
+                            if (!scope.row.phone || scope.row.phone.length != 11) {
+                                management.$alert('手机号码长度不正确', '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else {
+                                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                    "updateStudent": scope.row.id,
+                                    'name': scope.row.name,
+                                    'sex': scope.row.sex,
+                                    'both': scope.row.both,
+                                    'phone': scope.row.phone,
+                                    'idCard': scope.row.idCard,
+                                    'active': scope.row.active
+                                }), ).then(function(res) {
+                                    console.log(res.data)
+
+                                    if ('error' in res.data) {
+                                        management.$alert(res.data.error, '错误', {
+                                            confirmButtonText: '确定',
+                                            type: 'error',
+                                            center: true,
+                                            callback: action => {}
+                                        })
+                                    } else if ('success' in res.data) {
+                                        management.$alert('学生信息更新成功', '操作成功完成', {
+                                            confirmButtonText: '确定',
+                                            type: 'success',
+                                            center: true,
+                                            callback: action => {
+                                                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                    "getStudentList": '',
+                                                    'page': management.student.page,
+                                                    'num': '10',
+                                                    'sex': JSON.stringify(management.student.sex),
+                                                    'grade': JSON.stringify(management.student.grade),
+                                                    'department': JSON.stringify(management.student.department),
+                                                    'major': JSON.stringify(management.student.major),
+                                                }), ).then(function(res) {
+                                                    management.student.data = res.data
+                                                })
+
+                                                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                                    "getStudentListCount": '',
+                                                    'sex': JSON.stringify(management.student.sex),
+                                                    'grade': JSON.stringify(management.student.grade),
+                                                    'department': JSON.stringify(management.student.department),
+                                                    'major': JSON.stringify(management.student.major),
+                                                }), ).then(function(res) {
+                                                    management.student.count = res.data.num
+                                                })
+
+                                                management.addStudent.currentEdit = -1
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        }
+                    }
+                } else {
+                    management.addStudent.currentEdit = scope.$index
+                }
+                console.log(scope.$index)
+
+            },
+            deleteStudent(id) {
+                console.log(id)
+                management.$confirm('此操作将删除该学生, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "delStudent": id,
+                    }), ).then(function(res) {
+                        if ('error' in res.data) {
+                            management.$alert(res.data.error, '错误', {
+                                confirmButtonText: '确定',
+                                type: 'error',
+                                center: true,
+                                callback: action => {}
+                            })
+                        } else if ('success' in res.data) {
+                            management.$alert(res.data.success, '操作成功', {
+                                confirmButtonText: '确定',
+                                type: 'success',
+                                center: true,
+                                callback: action => {
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getStudentList": '',
+                                        'page': management.student.page,
+                                        'num': '10',
+                                        'sex': JSON.stringify(management.student.sex),
+                                        'grade': JSON.stringify(management.student.grade),
+                                        'department': JSON.stringify(management.student.department),
+                                        'major': JSON.stringify(management.student.major),
+                                    }), ).then(function(res) {
+                                        management.student.data = res.data
+                                    })
+                                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                        "getStudentListCount": '',
+                                        'sex': JSON.stringify(management.student.sex),
+                                        'grade': JSON.stringify(management.student.grade),
+                                        'department': JSON.stringify(management.student.department),
+                                        'major': JSON.stringify(management.student.major),
+                                    }), ).then(function(res) {
+                                        management.student.count = res.data.num
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }).catch(() => {
+                    management.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            addStudentSubmit() {
+                management.$refs['addStudentForm'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            "addStudent": '',
+                            'name': management.addStudent.name,
+                            'sex': management.addStudent.sex,
+                            'both': management.addStudent.both,
+                            'phone': management.addStudent.phone,
+                            'grade': management.addStudent.grade,
+                            'years': management.addStudent.years,
+                            'department': management.addStudent.department,
+                            'major': management.addStudent.major,
+                            'class': management.addStudent.Class,
+                            'seat': management.addStudent.seat,
+                            'idCard': management.addStudent.idCard
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert('学生添加成功', '操作成功完成', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        management.addStudent.name = ''
+                                        management.addStudent.idCard = ''
+                                        management.addStudent.both = ''
+                                        management.addStudent.phone = ''
+                                        management.addStudent.sex = ''
+                                        management.addStudent.seat = ''
+                                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                            "getMaxSeat": '',
+                                            "department": management.addStudent.department,
+                                            "major": management.addStudent.major,
+                                            "grade": management.addStudent.grade,
+                                            "class": management.addStudent.Class,
+                                        }), ).then(function(res) {
+                                            if (res.data["seat"] < 10) {
+                                                res.data["seat"] = '0' + res.data["seat"]
+                                            }
+                                            management.addStudent.seat = res.data["seat"]
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    } else {
+                        management.$alert('信息填写有误，请检查信息是否填写完整', '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {
+
+                            }
+                        })
+                    }
+                })
+            },
+            studentFilter(val) {
+                if ('sex' in val) {
+                    management.student.sex = val['sex']
+                }
+                if ('grade' in val) {
+                    management.student.grade = val['grade']
+                }
+                if ('department' in val) {
+                    management.student.department = val['department']
+
+                    axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                        "getMajor": '',
+                        'department': JSON.stringify(val['department'])
+                    }), ).then(function(res) {
+                        management.student.majorFilter = res.data
+                    })
+                }
+                if ('major' in val) {
+                    management.student.major = val['major']
+                }
+                management.student.page = 1
+                this.studentCurrentChange(management.student.page)
+                console.log(val)
+            },
+            studentCurrentChange(val) {
+                management.addStudent.currentEdit = -1
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getStudentList": '',
+                    'page': val,
+                    'num': '10',
+                    'sex': JSON.stringify(management.student.sex),
+                    'grade': JSON.stringify(management.student.grade),
+                    'department': JSON.stringify(management.student.department),
+                    'major': JSON.stringify(management.student.major),
+                }), ).then(function(res) {
+                    management.student.data = res.data
+                })
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getStudentListCount": '',
+                    'sex': JSON.stringify(management.student.sex),
+                    'grade': JSON.stringify(management.student.grade),
+                    'department': JSON.stringify(management.student.department),
+                    'major': JSON.stringify(management.student.major),
+                }), ).then(function(res) {
+                    management.student.count = res.data.num
+                })
+            },
+            adminCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getAdminList": '',
+                    'page': val,
+                    'num': '10',
+                }), ).then(function(res) {
+                    management.teacher.data = res.data
+                })
+            },
+            teacherCurrentChange(val) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getTeacherList": '',
+                    'page': val,
+                    'num': '10'
+                }), ).then(function(res) {
+                    management.teacher.data = res.data
+                })
+            },
+            handleCurrentChange(val, channel) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "getChannelTitle": channel,
+                    'page': val,
+                    'num': '10'
+                }), ).then(function(res) {
+                    management.channelData[channel + 'Data'] = res.data
+                })
+            },
+            showContent(title, content) {
+                if ($(window).width() < 995) {
+                    $('#head').hide()
+                }
+                this.$alert(content, '查看文章:' + title, {
+                    customClass: 'showChannelData',
+                    dangerouslyUseHTMLString: true,
+                    callback: action => {},
+                    center: true,
+                    confirmButtonText: '关闭',
+                    closeOnClickModal: true,
+                    callback: action => {
+                        $('#head').show()
+                    }
+                });
+            },
+            deleteContent(id, title) {
+                axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                    "deleteChannelContent": '',
+                    'id': id,
+                    'title': title,
+                }), ).then(function(res) {
+                    if ('error' in res.data) {
+                        management.$alert(res.data.error, '错误', {
+                            confirmButtonText: '确定',
+                            type: 'error',
+                            center: true,
+                            callback: action => {}
+                        })
+                    } else if ('success' in res.data) {
+                        management.$alert(res.data.success, '操作成功', {
+                            confirmButtonText: '确定',
+                            type: 'success',
+                            center: true,
+                            callback: action => {
+                                // location.reload()
+                                loadChannelData()
+                            }
+                        })
+                    }
+                })
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            uploadLogo(response, file, fileList) {
+                management.$alert('Logo上传成功', '上传成功', {
+                    confirmButtonText: '确定',
+                    type: 'success',
+                    center: true,
+                    callback: action => {}
+                })
+            },
+            uploadLogoError(err, file, fileList) {
+                management.$alert('Logo上传失败', '上传失败', {
+                    confirmButtonText: '确定',
+                    type: 'error',
+                    center: true,
+                    callback: action => {}
+                })
+            },
+            settingUpdate() {
+                management.$refs['settingform'].validate((valid) => {
+                    if (valid) {
+                        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                            'settingUpdate': '',
+                            'title': management.settingform.title,
+                            'h_nav_bgColor': management.settingform.h_nav_bgColor,
+                            'h_nav_height': management.settingform.h_nav_height,
+                            'h_nav_color': management.settingform.h_nav_color,
+                            'h_nav_M_bgColor': management.settingform.h_nav_M_bgColor,
+                        }), ).then(function(res) {
+                            console.log(res.data)
+
+                            if ('error' in res.data) {
+                                management.$alert(res.data.error, '错误', {
+                                    confirmButtonText: '确定',
+                                    type: 'error',
+                                    center: true,
+                                    callback: action => {}
+                                })
+                            } else if ('success' in res.data) {
+                                management.$alert(res.data.success, '操作成功', {
+                                    confirmButtonText: '确定',
+                                    type: 'success',
+                                    center: true,
+                                    callback: action => {
+                                        location.reload()
+                                    }
+                                })
+                            }
+
+                        })
+                    } else {
+
+                    }
+                })
+            },
+            addContain() {
+                tinyMCE.editors['channelContainEditor'].save();
+                management.channelform.contain = $.base64.encode($('#channelContainEditor').val())
+
+                if (!management.channelform.contain) {
+                    management.$alert('文章内容不能为空', '错误', {
+                        confirmButtonText: '返回',
+                        type: 'error',
+                        center: true,
+                        callback: action => {}
+                    })
+                } else {
+                    management.$refs['channelform'].validate((v) => {
+                        if (v) {
+                            axios.post('/Core/Global/frontInit.php', Qs.stringify({
+                                "channelAddContain": '',
+                                'channel': management.channelform.channel,
+                                'title': management.channelform.title,
+                                'contain': management.channelform.contain
+                            }), ).then(function(res) {
+                                if ('error' in res.data) {
+                                    management.$alert(res.data.error, '错误', {
+                                        confirmButtonText: '确定',
+                                        type: 'error',
+                                        center: true,
+                                        callback: action => {}
+                                    })
+                                } else if ('success' in res.data) {
+                                    management.$alert(res.data.success, '操作成功', {
+                                        confirmButtonText: '确定',
+                                        type: 'success',
+                                        center: true,
+                                        callback: action => {
+                                            // location.reload()
+                                            management.channelform.channel = '',
+                                                management.channelform.title = '',
+                                                management.channelform.title = '',
+                                                management.channelform.contain = '',
+                                                $('#channelContainEditor').val('')
+                                            tinyMCE.editors['channelContainEditor'].setContent('')
+                                            loadChannelData()
+                                        }
+                                    })
+                                }
+                            })
+
+                        }
+                    })
+
+                }
+            }
+
+        }
+    })
+
+    var loadChannelData = function() {
+        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+            "getChannelTitle": 'message',
+            'page': management.channelCount.messagePage,
+            'num': '10'
+        }), ).then(function(res) {
+            management.channelData.messageData = res.data
+        })
+
+        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+            "getChannelTitle": 'news',
+            'page': management.channelCount.newsPage,
+            'num': '10'
+        }), ).then(function(res) {
+            management.channelData.newsData = res.data
+        })
+
+        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+            "getChannelTitle": 'notice',
+            'page': management.channelCount.noticePage,
+            'num': '10'
+        }), ).then(function(res) {
+            management.channelData.noticeData = res.data
+        })
+
+        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+            "getChannelCount": 'message'
+        }), ).then(function(res) {
+            management.channelCount.message = res.data.num
+        })
+
+        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+            "getChannelCount": 'news'
+        }), ).then(function(res) {
+            management.channelCount.news = res.data.num
+        })
+
+        axios.post('/Core/Global/frontInit.php', Qs.stringify({
+            "getChannelCount": 'notice'
+        }), ).then(function(res) {
+            management.channelCount.notice = res.data.num
+        })
+
+    }
+</script>
+<style type="text/css">
+    .showChannelData {
+        width: 100%;
+    }
+</style>
