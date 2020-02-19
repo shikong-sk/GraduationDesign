@@ -11,15 +11,6 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Core/System/Config/db.config.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="33516">
-              <caret line="1785" column="5" lean-forward="true" selection-start-line="1785" selection-start-column="5" selection-end-line="1785" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/content.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="38">
@@ -28,10 +19,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/channel.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
+            <state relative-caret-position="-171">
               <caret line="6" column="50" lean-forward="true" selection-start-line="6" selection-start-column="50" selection-end-line="6" selection-end-column="50" />
             </state>
           </provider>
@@ -66,7 +57,18 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/register.html">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-7569" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Core/System/VerifyCode.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="80" column="23" selection-start-line="80" selection-start-column="23" selection-end-line="80" selection-end-column="23" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -150,7 +152,6 @@
         <option value="$PROJECT_DIR$/Core/Global/core.php" />
         <option value="$PROJECT_DIR$/template/default/front/topSwiper.html" />
         <option value="$PROJECT_DIR$/template/default/front/foot.html" />
-        <option value="$PROJECT_DIR$/Core/System/VerifyCode.php" />
         <option value="$PROJECT_DIR$/test.php" />
         <option value="$PROJECT_DIR$/template/default/front/h_nav.php" />
         <option value="$PROJECT_DIR$/template/default/front/register.html" />
@@ -176,6 +177,7 @@
         <option value="$PROJECT_DIR$/login.php" />
         <option value="$PROJECT_DIR$/content.php" />
         <option value="$PROJECT_DIR$/channel.php" />
+        <option value="$PROJECT_DIR$/Core/System/VerifyCode.php" />
       </list>
     </option>
   </component>
@@ -290,12 +292,12 @@
       <workItem from="1578834598974" duration="78565000" />
       <workItem from="1579720462144" duration="44164000" />
       <workItem from="1580618436211" duration="43068000" />
-      <workItem from="1581507440605" duration="32495000" />
+      <workItem from="1581507440605" duration="34474000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="198292000" />
+    <option name="totallyTimeSpent" value="200271000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="18" y="39" width="1492" height="780" extended-state="0" />
@@ -351,13 +353,6 @@
             <element signature="n#style#0;n#div#0;n#el-backtop#0;n#div#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#el-col#1;n#el-row#0;n#div#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Core/System/VerifyCode.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="76" column="8" lean-forward="true" selection-start-line="76" selection-start-column="8" selection-end-line="76" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -582,16 +577,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/register.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/register.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="39" selection-start-line="2" selection-start-column="39" selection-end-line="2" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/login.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -608,8 +593,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/channel.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
+        <state relative-caret-position="-171">
           <caret line="6" column="50" lean-forward="true" selection-start-line="6" selection-start-column="50" selection-end-line="6" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/register.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="2" column="39" selection-start-line="2" selection-start-column="39" selection-end-line="2" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7569" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Core/System/VerifyCode.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="80" column="23" selection-start-line="80" selection-start-column="23" selection-end-line="80" selection-end-column="23" />
         </state>
       </provider>
     </entry>

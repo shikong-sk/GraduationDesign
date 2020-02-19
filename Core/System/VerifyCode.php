@@ -4,7 +4,7 @@ session_start();
 require_once './core.php';
 
 //创建一张宽120高30的图像
-$image = "";
+$image = null;
 function VerifyCode($width=120,$height=30,$len=6)
 {
     global $image;
@@ -78,6 +78,7 @@ if(isset($_GET['authToken']) && $_GET['authToken'] === $_SESSION['authToken']) {
         if (strlen($_SESSION['authCode']) < 6) {
             $_SESSION['authCode'] = VerifyCode();
         } else {
+            ob_clean();
             //设置header图片格式为png
             header('content-type:image/png');
             //显示图片
